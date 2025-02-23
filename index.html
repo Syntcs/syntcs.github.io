@@ -1,1 +1,199 @@
-hallo
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Syntcs - Retro Home</title>
+    <!-- Google Font: Press Start 2P (Retro-Schriftart) -->
+    <link href="https://fonts.googleapis.com/css?family=Press+Start+2P" rel="stylesheet">
+    <!-- FontAwesome für Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* Globale Stile */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Press Start 2P', cursive;
+            background-color: #000;
+            color: #fff;
+            overflow: hidden;
+            height: 100vh;
+            position: relative;
+        }
+
+        /* Hintergrund-Effekt aus dem CodePen-Beispiel */
+        .background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.4) 100%);
+            z-index: 1;
+            mix-blend-mode: overlay;
+        }
+
+        .noise {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('https://ice-creme.de/images/background-noise.png');
+            opacity: 0.8;
+            pointer-events: none;
+            z-index: 2;
+            animation: noise 1s infinite alternate;
+        }
+
+        .scanlines {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(
+                to bottom,
+                transparent 0%,
+                transparent 1px,
+                rgba(0, 0, 0, 0.5) 1px,
+                rgba(0, 0, 0, 0.5) 2px
+            );
+            pointer-events: none;
+            z-index: 3;
+            animation: scanlines 0.2s linear infinite;
+        }
+
+        /* Hauptinhalt */
+        .main-content {
+            position: relative;
+            z-index: 4;
+            text-align: center;
+            padding: 2rem;
+            margin-top: 10%;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+            text-shadow: 0 0 10px #fd5d8d, 0 0 20px #fd5d8d;
+            animation: rgbText 2s infinite alternate;
+        }
+
+        /* Menü-Stil */
+        .menu {
+            list-style: none;
+            margin-top: 2rem;
+        }
+
+        .menu li {
+            margin: 1.5rem 0;
+        }
+
+        .menu a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 1.2rem;
+            text-shadow: 0 0 5px #fd5d8d;
+            transition: color 0.3s ease;
+        }
+
+        .menu a:hover {
+            color: #fd5d8d;
+            text-shadow: 0 0 10px #fd5d8d, 0 0 20px #fd5d8d;
+        }
+
+        /* Social Icons */
+        .social-icons {
+            position: absolute;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 1.5rem;
+            z-index: 4;
+        }
+
+        .social-icons a {
+            color: #fff;
+            font-size: 1.5rem;
+            text-shadow: 0 0 5px #fd5d8d;
+            transition: color 0.3s ease;
+        }
+
+        .social-icons a:hover {
+            color: #fd5d8d;
+            text-shadow: 0 0 10px #fd5d8d, 0 0 20px #fd5d8d;
+        }
+
+        /* Footer */
+        .footer {
+            position: absolute;
+            bottom: 1rem;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.8rem;
+            color: #fd5d8d;
+            z-index: 4;
+        }
+
+        /* Animationen */
+        @keyframes noise {
+            0% { background-position: 0 0; }
+            100% { background-position: 100% 100%; }
+        }
+
+        @keyframes scanlines {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(4px); }
+        }
+
+        @keyframes rgbText {
+            0% {
+                text-shadow: 0 0 10px #fd5d8d, 0 0 20px #fd5d8d;
+            }
+            50% {
+                text-shadow: 0 0 10px #3b82f6, 0 0 20px #3b82f6;
+            }
+            100% {
+                text-shadow: 0 0 10px #fd5d8d, 0 0 20px #fd5d8d;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Hintergrund-Effekte -->
+    <div class="background"></div>
+    <div class="noise"></div>
+    <div class="scanlines"></div>
+
+    <!-- Hauptinhalt -->
+    <div class="main-content">
+        <h1>Welcome to Syntcs</h1>
+        <ul class="menu">
+            <li><a href="https://syntcs.github.io/a3fov">Arma 3 FOV Calculator</a></li>
+            <li><a href="https://github.com/Syntcs">GitHub Profile</a></li>
+            <li><a href="https://discord.com/users/syntcs">Discord</a></li>
+        </ul>
+    </div>
+
+    <!-- Social Icons -->
+    <div class="social-icons">
+        <a href="https://discord.com/users/syntcs" target="_blank">
+            <i class="fab fa-discord"></i>
+        </a>
+        <a href="https://github.com/Syntcs" target="_blank">
+            <i class="fab fa-github"></i>
+        </a>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        &copy; 2023 Syntcs. All rights reserved.
+    </div>
+</body>
+</html>
