@@ -1,199 +1,127 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="de">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Syntcs - Retro Home</title>
-    <!-- Google Font: Press Start 2P (Retro-Schriftart) -->
-    <link href="https://fonts.googleapis.com/css?family=Press+Start+2P" rel="stylesheet">
-    <!-- FontAwesome für Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <title>Syntcs - Projects</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-        /* Globale Stile */
-        * {
+        body {
+            font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
+            background-color: #1e1e1e;
+            color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start; /* Änderung: Inhalt oben ausrichten */
+            min-height: 100vh;
         }
 
-        body {
-            font-family: 'Press Start 2P', cursive;
-            background-color: #000;
-            color: #fff;
-            overflow: hidden;
-            height: 100vh;
-            position: relative;
-        }
-
-        /* Hintergrund-Effekt aus dem CodePen-Beispiel */
-        .background {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.4) 100%);
-            z-index: 1;
-            mix-blend-mode: overlay;
-        }
-
-        .noise {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: url('https://ice-creme.de/images/background-noise.png');
-            opacity: 0.8;
-            pointer-events: none;
-            z-index: 2;
-            animation: noise 1s infinite alternate;
-        }
-
-        .scanlines {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: repeating-linear-gradient(
-                to bottom,
-                transparent 0%,
-                transparent 1px,
-                rgba(0, 0, 0, 0.5) 1px,
-                rgba(0, 0, 0, 0.5) 2px
-            );
-            pointer-events: none;
-            z-index: 3;
-            animation: scanlines 0.2s linear infinite;
-        }
-
-        /* Hauptinhalt */
-        .main-content {
-            position: relative;
-            z-index: 4;
+        header {
             text-align: center;
-            padding: 2rem;
-            margin-top: 10%;
+            margin-top: 2rem; /* Änderung: Abstand nach oben vergrößern */
+            margin-bottom: 1rem; /* Änderung: Abstand nach unten verringern */
         }
 
-        h1 {
-            font-size: 2.5rem;
-            margin-bottom: 2rem;
-            text-shadow: 0 0 10px #fd5d8d, 0 0 20px #fd5d8d;
-            animation: rgbText 2s infinite alternate;
+        header h1 {
+            font-size: 3rem;
+            margin: 0;
         }
 
-        /* Menü-Stil */
-        .menu {
-            list-style: none;
-            margin-top: 2rem;
-        }
-
-        .menu li {
-            margin: 1.5rem 0;
-        }
-
-        .menu a {
-            color: #fff;
-            text-decoration: none;
+        header p {
             font-size: 1.2rem;
-            text-shadow: 0 0 5px #fd5d8d;
-            transition: color 0.3s ease;
+            color: #a0a0a0;
         }
 
-        .menu a:hover {
-            color: #fd5d8d;
-            text-shadow: 0 0 10px #fd5d8d, 0 0 20px #fd5d8d;
+        .projects {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            width: 100%;
+            max-width: 600px;
+            margin-top: 1rem; /* Änderung: Abstand nach oben vergrößern */
         }
 
-        /* Social Icons */
+        .project-card {
+            background-color: #2e2e2e;
+            padding: 1rem;
+            border-radius: 8px;
+            text-decoration: none;
+            color: #ffffff;
+            transition: background-color 0.3s ease;
+        }
+
+        .project-card:hover {
+            background-color: #3e3e3e;
+        }
+
+        .project-card h2 {
+            margin: 0;
+            font-size: 1.5rem;
+        }
+
+        .project-card p {
+            margin: 0.5rem 0 0;
+            color: #a0a0a0;
+        }
+
         .social-icons {
-            position: absolute;
-            bottom: 2rem;
+            position: fixed;
+            bottom: 20px;
             left: 50%;
             transform: translateX(-50%);
             display: flex;
-            gap: 1.5rem;
-            z-index: 4;
+            gap: 1rem;
+            background-color: rgba(46, 46, 46, 0.8);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
         }
 
-        .social-icons a {
-            color: #fff;
+        .icon {
+            color: #ffffff;
+            text-decoration: none;
             font-size: 1.5rem;
-            text-shadow: 0 0 5px #fd5d8d;
-            transition: color 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
         }
 
-        .social-icons a:hover {
-            color: #fd5d8d;
-            text-shadow: 0 0 10px #fd5d8d, 0 0 20px #fd5d8d;
+        .icon span {
+            font-size: 1rem;
         }
 
-        /* Footer */
-        .footer {
-            position: absolute;
-            bottom: 1rem;
-            left: 50%;
-            transform: translateX(-50%);
-            font-size: 0.8rem;
-            color: #fd5d8d;
-            z-index: 4;
-        }
-
-        /* Animationen */
-        @keyframes noise {
-            0% { background-position: 0 0; }
-            100% { background-position: 100% 100%; }
-        }
-
-        @keyframes scanlines {
-            0% { transform: translateY(0); }
-            100% { transform: translateY(4px); }
-        }
-
-        @keyframes rgbText {
-            0% {
-                text-shadow: 0 0 10px #fd5d8d, 0 0 20px #fd5d8d;
-            }
-            50% {
-                text-shadow: 0 0 10px #3b82f6, 0 0 20px #3b82f6;
-            }
-            100% {
-                text-shadow: 0 0 10px #fd5d8d, 0 0 20px #fd5d8d;
-            }
+        .icon:hover {
+            color: #a0a0a0;
         }
     </style>
 </head>
 <body>
-    <!-- Hintergrund-Effekte -->
-    <div class="background"></div>
-    <div class="noise"></div>
-    <div class="scanlines"></div>
+    <header>
+        <h1>Syntcs</h1>
+        <p></p>
+    </header>
 
-    <!-- Hauptinhalt -->
-    <div class="main-content">
-        <h1>Welcome to Syntcs</h1>
-        <ul class="menu">
-            <li><a href="https://syntcs.github.io/a3fov">Arma 3 FOV Calculator</a></li>
-            <li><a href="https://github.com/Syntcs">GitHub Profile</a></li>
-            <li><a href="https://discord.com/users/syntcs">Discord</a></li>
-        </ul>
-    </div>
+    <main>
+        <section class="projects">
+            <a href="https://syntcs.github.io/a3fov/" class="project-card">
+                <h2>Arma 3 FOV Calculator</h2>
+                <p>A site for adjusting the field of view in Arma 3.</p>
+            </a>
+            <!-- Weitere Projekte können hier hinzugefügt werden -->
+        </section>
+    </main>
 
-    <!-- Social Icons -->
     <div class="social-icons">
-        <a href="https://discord.com/users/syntcs" target="_blank">
+        <a href="https://discord.com/channels/@me/1118498993895391232/" target="_blank" class="icon">
             <i class="fab fa-discord"></i>
+            <span>@syntcs</span>
         </a>
-        <a href="https://github.com/Syntcs" target="_blank">
+        <a href="https://github.com/syntcs" target="_blank" class="icon">
             <i class="fab fa-github"></i>
+            <span>syntcs</span>
         </a>
-    </div>
-
-    <!-- Footer -->
-    <div class="footer">
-        &copy; 2023 Syntcs. All rights reserved.
     </div>
 </body>
 </html>
