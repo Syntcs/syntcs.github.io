@@ -10,7 +10,7 @@
         body {
             margin: 0;
             height: 100vh;
-            background: url('BGB.jpg') center/cover no-repeat;
+            background: url('https://raw.githubusercontent.com/Syntcs/syntcs.github.io/refs/heads/main/BGB.jpg') center/cover no-repeat;
             font-family: 'SF Mono', monospace;
             overflow: hidden; /* Kein Scrollen auf der gesamten Seite */
         }
@@ -85,6 +85,7 @@
             color: #fff;
             border-radius: 5px 5px 0 0;
             cursor: pointer;
+text-decoration: none;
         }
 
         .active-tab {
@@ -150,7 +151,7 @@
             <div class="prompt">Projects</div>
             <ul>
                 <li><a href="https://syntcs.github.io/a3fov" style="color: #28c940">Arma3 FOV Calculator</a></li>
-                <!-- <li>Weiteres Projekt (coming soon)</li> -->
+                <li><a href="https://syntcs.github.io/clipbrowser" style="color: #28c940">Clip-Browser</a></li>
             </ul>
         <div class="prompt"></div>
         <div class="prompt"></div>
@@ -173,6 +174,9 @@
             <div class="taskbar-tab">
                 <i class="fa-solid fa-terminal" style="margin-right: 5px;"></i> Terminal | syntcs.com
             </div>
+            <a href="https://syntcs.github.io/clipbrowser" class="taskbar-tab">
+                <i class="fas fa-globe" style="margin-right: 5px;"></i> Clip-Browser
+            </a>
         </div>
         <div id="clock"></div> <!-- Uhrzeit-Element -->
     </div>
