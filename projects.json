@@ -1,38 +1,30 @@
 [
   {
-    "title": "E-Commerce Platform",
-    "description": "A fully responsive e-commerce website with product filtering, cart functionality, and secure checkout process.",
-    "tags": ["React", "Node.js", "MongoDB"],
-    "url": "https://example.com/ecommerce"
+    "title": "Team ELAN - Crafting Recipes",
+    "description": "All crafting recipes for Team ELAN ",
+    "tags": [
+      "Team ELAN",
+      "Arma Reforger",
+      "Crafting Recipes"
+    ],
+    "url": "https://syntcs.com/elancrafting/"
   },
   {
-    "title": "Weather Dashboard",
-    "description": "Real-time weather application with 5-day forecast, location search, and interactive maps.",
-    "tags": ["JavaScript", "Weather API", "CSS3"],
-    "url": "https://example.com/weather"
+    "title": "Team ELAN - Crafting Recipes Editor",
+    "description": "Team ELAN - Crafting Recipes Editor for editing the JSON-file",
+    "tags": [
+      "json editor"
+    ],
+    "url": "https://syntcs.com/elancraftingeditor/"
   },
   {
-    "title": "Task Management App",
-    "description": "Kanban-style task management tool with drag-and-drop functionality, task assignments, and deadline tracking.",
-    "tags": ["Vue.js", "Firebase", "Tailwind CSS"],
-    "url": "https://example.com/tasks"
-  },
-  {
-    "title": "Portfolio Website",
-    "description": "Personal portfolio website with animated transitions, project showcase, and contact form.",
-    "tags": ["HTML5", "CSS3", "JavaScript"],
-    "url": "https://example.com/portfolio"
-  },
-  {
-    "title": "Recipe Finder",
-    "description": "Search and discover recipes based on ingredients, dietary restrictions, and cuisine preferences.",
-    "tags": ["React", "Food API", "Styled Components"],
-    "url": "https://example.com/recipes"
-  },
-  {
-    "title": "Fitness Tracker",
-    "description": "Track workouts, set goals, and visualize progress with interactive charts and statistics.",
-    "tags": ["Angular", "Chart.js", "Node.js"],
-    "url": "https://example.com/fitness"
+    "title": "Arma 3 FOV Calculator",
+    "description": "A website to calculate Arma 3 FOV",
+    "tags": [
+      "Arma 3",
+      "FOV changer",
+      "FOV calculater"
+    ],
+    "url": "https://syntcs.com/a3fov/"
   }
 ]
