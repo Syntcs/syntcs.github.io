@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>syntcs</title>
+    <style>
+        /* Base styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        }
+
+        body {
+            background-color: #0a0a0f;
+            color: white;
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        /* Header styles */
+        header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            background: linear-gradient(to right, #ffffff, #a8a8a8);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: #a8a8a8;
+            margin-bottom: 2rem;
+        }
+
+        /* Projects container */
+        .projects-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Project card styles */
+        .project-card {
+            position: relative;
+            background-color: rgba(30, 30, 40, 0.4);
+            border-radius: 12px;
+            padding: 1.5rem;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+            text-decoration: none;
+            color: white;
+            display: block;
+        }
+
+        .project-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Glow effect */
+        .project-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, 
+                rgba(255, 0, 255, 0.7), 
+                rgba(0, 255, 255, 0.7), 
+                rgba(255, 0, 255, 0.7));
+            border-radius: 12px 12px 0 0;
+            z-index: 1;
+        }
+
+        .project-card::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(
+                circle at center,
+                rgba(255, 0, 255, 0.1) 0%,
+                rgba(0, 255, 255, 0.1) 25%,
+                transparent 70%
+            );
+            opacity: 0;
+            z-index: -1;
+            transition: opacity 0.3s ease;
+        }
+
+        .project-card:hover::after {
+            opacity: 0.5;
+        }
+
+        /* Project content */
+        .project-title {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            color: white;
+        }
+
+        .project-description {
+            color: #a8a8a8;
+            margin-bottom: 1rem;
+            line-height: 1.5;
+        }
+
+        .project-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .tag {
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            color: #d0d0d0;
+        }
+
+        /* Loading indicator */
+        .loading {
+            text-align: center;
+            font-size: 1.5rem;
+            color: #a8a8a8;
+            margin: 2rem auto;
+        }
+
+        /* Error message */
+        .error {
+            text-align: center;
+            color: #ff6b6b;
+            margin: 2rem auto;
+            padding: 1rem;
+            background-color: rgba(255, 107, 107, 0.1);
+            border-radius: 8px;
+            max-width: 600px;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.5rem;
+            }
+            
+            .projects-container {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>syntcs.com</h1>
+    </header>
+
+    <div class="projects-container" id="projects-container">
+        <div class="loading">Loading projects...</div>
+    </div>
+
+    <script>
+        // Function to fetch and load projects from JSON file
+        async function loadProjects() {
+            try {
+                const response = await fetch('projects.json');
+                
+                if (!response.ok) {
+                    throw new Error(`Failed to load projects (Status: ${response.status})`);
+                }
+                
+                const projects = await response.json();
+                renderProjects(projects);
+            } catch (error) {
+                console.error('Error loading projects:', error);
+                document.getElementById('projects-container').innerHTML = `
+                    <div class="error">
+                        <h3>Error Loading Projects</h3>
+                        <p>${error.message}</p>
+                        <p>Make sure your projects.json file is in the same directory as this HTML file.</p>
+                    </div>
+                `;
+            }
+        }
+
+        // Function to render projects to the DOM
+        function renderProjects(projects) {
+            const container = document.getElementById('projects-container');
+            
+            // Clear loading message
+            container.innerHTML = '';
+            
+            // Create project cards
+            projects.forEach(project => {
+                const projectCard = document.createElement('a');
+                projectCard.href = project.url;
+                projectCard.className = 'project-card';
+                projectCard.target = '_blank'; // Open in new tab
+                
+                // Create project content
+                projectCard.innerHTML = `
+                    <h2 class="project-title">${project.title}</h2>
+                    <p class="project-description">${project.description}</p>
+                    <div class="project-tags">
+                        ${project.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
+                    </div>
+                `;
+                
+                container.appendChild(projectCard);
+            });
+        }
+
+        // Load projects when the page loads
+        document.addEventListener('DOMContentLoaded', loadProjects);
+    </script>
+</body>
+</html>
