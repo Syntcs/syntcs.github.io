@@ -5,43 +5,33 @@
     {
       "name": "Crosshair",
       "commands": [
-        "cl_crosshairsize 2",
-        "cl_crosshairgap -3",
-        "cl_crosshairthickness 1",
-        "cl_crosshair_drawoutline 1",
-        "cl_crosshaircolor 1",
-        "cl_crosshairstyle 4",
-        "cl_crosshair_sniper_width 1"
+        "CSGO-LUfiJ-pUELG-6GCpP-MpkNN-ERNMB",
+        "cl_crosshairsize 1.45;",
+        "cl_crosshairgap -2;",
+        "cl_crosshairgap_useweaponvalue false;",
+        "cl_crosshairthickness 0.5;",
+        "cl_crosshair_drawoutline true;",
+        "cl_crosshaircolor 5;",
+        "cl_crosshairstyle 4;",
+        "cl_crosshair_sniper_width 1;"
       ]
     },
     {
       "name": "Viewmodel",
       "commands": [
-        "viewmodel_fov 68",
-        "viewmodel_offset_x 2.5",
-        "viewmodel_offset_y 0",
-        "viewmodel_offset_z -1.5",
-        "viewmodel_presetpos 3",
-        "cl_righthand 1"
+        "viewmodel_presetpos 0;",
+        "viewmodel_offset_x 2.5;",
+        "viewmodel_offset_y 0;",
+        "viewmodel_offset_z -1.5;",
+        "viewmodel_fov 68;",
+        "cl_prefer_lefthanded 0;"
       ]
     },
     {
       "name": "Mouse & Sensitivity",
-      "commands": ["sensitivity 1.2", "zoom_sensitivity_ratio 1.0", "m_rawinput 1"]
-    },
-    {
-      "name": "Network",
-      "commands": ["rate 786432", "cl_interp_ratio 1", "cl_interp 0", "cl_cmdrate 128", "cl_updaterate 128"]
-    },
-    {
-      "name": "Keybinds",
       "commands": [
-        "bind \"mwheelup\" \"+jump\"",
-        "bind \"mwheeldown\" \"+jump\"",
-        "bind \"c\" \"+duck\"",
-        "bind \"f\" \"+lookatweapon\"",
-        "bind \"x\" \"slot7\"",
-        "bind \"4\" \"slot4\""
+        "sensitivity 0.48;",
+        "zoom_sensitivity_ratio 1.0;"
       ]
     }
   ]
