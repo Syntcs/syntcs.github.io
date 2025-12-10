@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CS2 Config Editor</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #0a0e14 0%, #121820 50%, #0d1117 100%);
+      color: #e6edf3;
+      min-height: 100vh;
+      padding: 2rem;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      color: #ffffff;
+      text-shadow: 
+        0 0 10px rgba(255, 255, 255, 0.3),
+        0 0 20px rgba(255, 255, 255, 0.15);
+      margin-bottom: 0.5rem;
+      letter-spacing: 3px;
+      font-weight: 700;
+    }
+
+    .subtitle {
+      color: #8b949e;
+      font-size: 0.95rem;
+    }
+
+    /* Navigation */
+    .nav-link {
+      display: inline-block;
+      margin-top: 1rem;
+      color: #58a6ff;
+      text-decoration: none;
+      font-size: 0.9rem;
+      transition: all 0.3s ease;
+    }
+
+    .nav-link:hover {
+      color: #79c0ff;
+      text-shadow: 0 0 10px rgba(88, 166, 255, 0.3);
+    }
+
+    /* Top Actions */
+    .top-actions {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .action-btn {
+      background: linear-gradient(145deg, rgba(22, 27, 34, 0.95), rgba(13, 17, 23, 0.98));
+      color: #e6edf3;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 0.75rem 1.25rem;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: all 0.3s ease;
+      backdrop-filter: blur(4px);
+    }
+
+    .action-btn:hover {
+      border-color: rgba(255, 255, 255, 0.25);
+      box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+      transform: translateY(-2px);
+    }
+
+    .action-btn.primary {
+      background: linear-gradient(135deg, #238636 0%, #2ea043 100%);
+      border-color: #238636;
+    }
+
+    .action-btn.primary:hover {
+      box-shadow: 0 0 25px rgba(35, 134, 54, 0.4);
+    }
+
+    .action-btn svg {
+      width: 18px;
+      height: 18px;
+    }
+
+    /* Hidden file input */
+    #file-input {
+      display: none;
+    }
+
+    /* Meta Inputs */
+    .meta-section {
+      background: linear-gradient(145deg, rgba(22, 27, 34, 0.95), rgba(13, 17, 23, 0.98));
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    .meta-section h2 {
+      font-size: 1rem;
+      color: #8b949e;
+      margin-bottom: 1rem;
+      font-weight: 500;
+    }
+
+    .meta-inputs {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .input-group {
+      flex: 1;
+      min-width: 200px;
+    }
+
+    .input-group label {
+      display: block;
+      font-size: 0.8rem;
+      color: #6e7681;
+      margin-bottom: 0.5rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .input-group input {
+      width: 100%;
+      background: rgba(13, 17, 23, 0.8);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+      padding: 0.75rem 1rem;
+      color: #e6edf3;
+      font-size: 0.95rem;
+      transition: all 0.3s ease;
+    }
+
+    .input-group input:focus {
+      outline: none;
+      border-color: rgba(88, 166, 255, 0.5);
+      box-shadow: 0 0 15px rgba(88, 166, 255, 0.15);
+    }
+
+    /* Sections Container */
+    #sections-container {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .section-card {
+      background: linear-gradient(145deg, rgba(22, 27, 34, 0.95), rgba(13, 17, 23, 0.98));
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 12px;
+      padding: 1.5rem;
+      box-shadow: 
+        0 4px 20px rgba(0, 0, 0, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.05);
+      transition: all 0.3s ease;
+    }
+
+    .section-card:hover {
+      border-color: rgba(255, 255, 255, 0.15);
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+      gap: 1rem;
+    }
+
+    .section-name-input {
+      flex: 1;
+      background: rgba(13, 17, 23, 0.8);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+      padding: 0.6rem 1rem;
+      color: #f0f6fc;
+      font-size: 1.1rem;
+      font-weight: 600;
+    }
+
+    .section-name-input:focus {
+      outline: none;
+      border-color: rgba(88, 166, 255, 0.5);
+    }
+
+    .delete-section-btn {
+      background: rgba(248, 81, 73, 0.15);
+      color: #f85149;
+      border: 1px solid rgba(248, 81, 73, 0.3);
+      padding: 0.5rem 0.75rem;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .delete-section-btn:hover {
+      background: rgba(248, 81, 73, 0.25);
+      box-shadow: 0 0 15px rgba(248, 81, 73, 0.2);
+    }
+
+    .commands-textarea {
+      width: 100%;
+      min-height: 150px;
+      background: rgba(13, 17, 23, 0.9);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 8px;
+      padding: 1rem;
+      color: #79c0ff;
+      font-family: 'Consolas', 'Monaco', monospace;
+      font-size: 0.9rem;
+      line-height: 1.7;
+      resize: vertical;
+      transition: all 0.3s ease;
+    }
+
+    .commands-textarea:focus {
+      outline: none;
+      border-color: rgba(88, 166, 255, 0.4);
+      box-shadow: 0 0 20px rgba(88, 166, 255, 0.1);
+    }
+
+    /* Add Section Button */
+    .add-section-btn {
+      width: 100%;
+      background: transparent;
+      border: 2px dashed rgba(255, 255, 255, 0.15);
+      border-radius: 12px;
+      padding: 1.25rem;
+      color: #8b949e;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      margin-top: 1rem;
+    }
+
+    .add-section-btn:hover {
+      border-color: rgba(88, 166, 255, 0.4);
+      color: #58a6ff;
+      background: rgba(88, 166, 255, 0.05);
+    }
+
+    /* Bottom Actions */
+    .bottom-actions {
+      display: flex;
+      gap: 1rem;
+      margin-top: 2.5rem;
+      padding-top: 2rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      flex-wrap: wrap;
+    }
+
+    .export-btn {
+      flex: 1;
+      min-width: 200px;
+      background: linear-gradient(135deg, #f0f6fc 0%, #c9d1d9 100%);
+      color: #0d1117;
+      border: none;
+      padding: 1rem 1.5rem;
+      border-radius: 12px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      box-shadow: 0 4px 15px rgba(255, 255, 255, 0.1);
+    }
+
+    .export-btn:hover {
+      background: linear-gradient(135deg, #ffffff 0%, #e6edf3 100%);
+      box-shadow: 0 4px 25px rgba(255, 255, 255, 0.2);
+      transform: translateY(-2px);
+    }
+
+    .export-btn.copied {
+      background: linear-gradient(135deg, #238636 0%, #2ea043 100%);
+      color: #fff;
+    }
+
+    .export-btn svg {
+      width: 20px;
+      height: 20px;
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 3rem;
+      color: #6e7681;
+      font-size: 0.85rem;
+    }
+
+    @keyframes subtleGlow {
+      0%, 100% { text-shadow: 0 0 10px rgba(255, 255, 255, 0.3), 0 0 20px rgba(255, 255, 255, 0.15); }
+      50% { text-shadow: 0 0 15px rgba(255, 255, 255, 0.4), 0 0 30px rgba(255, 255, 255, 0.2); }
+    }
+
+    h1 {
+      animation: subtleGlow 4s ease-in-out infinite;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>CONFIG EDITOR</h1>
+      <p class="subtitle">Edit your CS2 config and export as JSON</p>
+      <a href="index.html" class="nav-link">← Back to Config View</a>
+    </header>
+
+    <!-- Top Actions -->
+    <div class="top-actions">
+      <button class="action-btn primary" onclick="loadFromFile()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+          <polyline points="17 8 12 3 7 8"/>
+          <line x1="12" y1="3" x2="12" y2="15"/>
+        </svg>
+        Load JSON File
+      </button>
+      <input type="file" id="file-input" accept=".json" onchange="handleFileUpload(event)">
+      
+      <button class="action-btn" onclick="loadDefault()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
+          <path d="M3 3v5h5"/>
+        </svg>
+        Load Default Config
+      </button>
+      
+      <button class="action-btn" onclick="clearAll()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="3 6 5 6 21 6"/>
+          <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+        </svg>
+        Clear All
+      </button>
+    </div>
+
+    <!-- Meta Section -->
+    <div class="meta-section">
+      <h2>Page Settings</h2>
+      <div class="meta-inputs">
+        <div class="input-group">
+          <label>Title</label>
+          <input type="text" id="config-title" placeholder="MY CS2 CONFIG">
+        </div>
+        <div class="input-group">
+          <label>Subtitle</label>
+          <input type="text" id="config-subtitle" placeholder="Click any copy button to copy commands">
+        </div>
+      </div>
+    </div>
+
+    <!-- Sections -->
+    <div id="sections-container"></div>
+
+    <!-- Add Section Button -->
+    <button class="add-section-btn" onclick="addSection()">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <line x1="12" y1="5" x2="12" y2="19"/>
+        <line x1="5" y1="12" x2="19" y2="12"/>
+      </svg>
+      Add New Section
+    </button>
+
+    <!-- Export Buttons -->
+    <div class="bottom-actions">
+      <button class="export-btn" onclick="downloadJSON(this)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+          <polyline points="7 10 12 15 17 10"/>
+          <line x1="12" y1="15" x2="12" y2="3"/>
+        </svg>
+        Download JSON
+      </button>
+      <button class="export-btn" onclick="copyJSON(this)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+          <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+        </svg>
+        Copy JSON
+      </button>
+    </div>
+
+    <footer>
+      <p>Changes are not saved automatically - remember to export your config!</p>
+    </footer>
+  </div>
+
+  <script>
+    let sections = [];
+
+    // Load default config on start
+    async function loadDefault() {
+      try {
+        const response = await fetch('config.json');
+        const config = await response.json();
+        
+        document.getElementById('config-title').value = config.title || '';
+        document.getElementById('config-subtitle').value = config.subtitle || '';
+        sections = config.sections || [];
+        
+        renderSections();
+      } catch (error) {
+        console.error('Error loading default config:', error);
+        // Start with empty config
+        document.getElementById('config-title').value = 'MY CS2 CONFIG';
+        document.getElementById('config-subtitle').value = 'Click any copy button to copy commands to clipboard';
+        sections = [];
+        renderSections();
+      }
+    }
+
+    function loadFromFile() {
+      document.getElementById('file-input').click();
+    }
+
+    function handleFileUpload(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        try {
+          const config = JSON.parse(e.target.result);
+          document.getElementById('config-title').value = config.title || '';
+          document.getElementById('config-subtitle').value = config.subtitle || '';
+          sections = config.sections || [];
+          renderSections();
+        } catch (error) {
+          alert('Invalid JSON file!');
+        }
+      };
+      reader.readAsText(file);
+      event.target.value = ''; // Reset input
+    }
+
+    function clearAll() {
+      if (confirm('Are you sure you want to clear everything?')) {
+        document.getElementById('config-title').value = '';
+        document.getElementById('config-subtitle').value = '';
+        sections = [];
+        renderSections();
+      }
+    }
+
+    function renderSections() {
+      const container = document.getElementById('sections-container');
+      container.innerHTML = '';
+
+      sections.forEach((section, index) => {
+        const sectionHtml = `
+          <div class="section-card" data-index="${index}">
+            <div class="section-header">
+              <input type="text" class="section-name-input" value="${section.name}" 
+                     onchange="updateSectionName(${index}, this.value)" placeholder="Section Name">
+              <button class="delete-section-btn" onclick="deleteSection(${index})">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="3 6 5 6 21 6"/>
+                  <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                </svg>
+              </button>
+            </div>
+            <textarea class="commands-textarea" 
+                      onchange="updateCommands(${index}, this.value)"
+                      placeholder="Enter commands, one per line...">${section.commands.join('\n')}</textarea>
+          </div>
+        `;
+        container.innerHTML += sectionHtml;
+      });
+    }
+
+    function addSection() {
+      sections.push({
+        name: 'New Section',
+        commands: []
+      });
+      renderSections();
+      
+      // Focus the new section's name input
+      const inputs = document.querySelectorAll('.section-name-input');
+      if (inputs.length > 0) {
+        inputs[inputs.length - 1].focus();
+        inputs[inputs.length - 1].select();
+      }
+    }
+
+    function deleteSection(index) {
+      if (confirm('Delete this section?')) {
+        sections.splice(index, 1);
+        renderSections();
+      }
+    }
+
+    function updateSectionName(index, name) {
+      sections[index].name = name;
+    }
+
+    function updateCommands(index, value) {
+      // Split by newlines and filter empty lines
+      sections[index].commands = value.split('\n').filter(cmd => cmd.trim() !== '');
+    }
+
+    function getConfigJSON() {
+      return JSON.stringify({
+        title: document.getElementById('config-title').value,
+        subtitle: document.getElementById('config-subtitle').value,
+        sections: sections
+      }, null, 2);
+    }
+
+    function downloadJSON(button) {
+      const json = getConfigJSON();
+      const blob = new Blob([json], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'config.json';
+      a.click();
+      
+      URL.revokeObjectURL(url);
+      
+      // Show feedback
+      const originalHTML = button.innerHTML;
+      button.classList.add('copied');
+      button.innerHTML = `
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="20 6 9 17 4 12"/>
+        </svg>
+        Downloaded!
+      `;
+      
+      setTimeout(() => {
+        button.classList.remove('copied');
+        button.innerHTML = originalHTML;
+      }, 2000);
+    }
+
+    function copyJSON(button) {
+      const json = getConfigJSON();
+      
+      navigator.clipboard.writeText(json).then(() => {
+        const originalHTML = button.innerHTML;
+        button.classList.add('copied');
+        button.innerHTML = `
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="20 6 9 17 4 12"/>
+          </svg>
+          Copied!
+        `;
+        
+        setTimeout(() => {
+          button.classList.remove('copied');
+          button.innerHTML = originalHTML;
+        }, 2000);
+      });
+    }
+
+    // Load default config on page load
+    loadDefault();
+  </script>
+</body>
+</html>
