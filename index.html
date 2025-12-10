@@ -1,236 +1,320 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>syntcs</title>
-    <style>
-        /* Base styles */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My CS2 Config</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-        body {
-            background-color: #0a0a0f;
-            color: white;
-            min-height: 100vh;
-            padding: 2rem;
-        }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      /* Added gradient background for more depth */
+      background: linear-gradient(135deg, #0a0e14 0%, #121820 50%, #0d1117 100%);
+      color: #e6edf3;
+      min-height: 100vh;
+      padding: 2rem;
+    }
 
-        /* Header styles */
-        header {
-            text-align: center;
-            margin-bottom: 4rem;
-        }
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+    }
 
-        h1 {
-            font-size: 3.5rem;
-            font-weight: 700;
-            margin-bottom: 1rem;
-            background: linear-gradient(to right, #ffffff, #a8a8a8);
-            -webkit-background-clip: text;
-            background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
+    header {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
 
-        .subtitle {
-            font-size: 1.2rem;
-            color: #a8a8a8;
-            margin-bottom: 2rem;
-        }
+    h1 {
+      font-size: 3rem;
+      /* White/light color with subtle glow effect */
+      color: #ffffff;
+      text-shadow: 
+        0 0 10px rgba(255, 255, 255, 0.3),
+        0 0 20px rgba(255, 255, 255, 0.15),
+        0 0 40px rgba(255, 255, 255, 0.05);
+      margin-bottom: 0.75rem;
+      letter-spacing: 4px;
+      font-weight: 700;
+    }
 
-        /* Projects container */
-        .projects-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-            gap: 2rem;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
+    .subtitle {
+      color: #8b949e;
+      font-size: 1rem;
+      letter-spacing: 1px;
+    }
 
-        /* Project card styles */
-        .project-card {
-            position: relative;
-            background-color: rgba(30, 30, 40, 0.4);
-            border-radius: 12px;
-            padding: 1.5rem;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            overflow: hidden;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            cursor: pointer;
-            text-decoration: none;
-            color: white;
-            display: block;
-        }
+    .config-section {
+      margin-bottom: 2rem;
+    }
 
-        .project-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
-        }
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.75rem;
+    }
 
-        /* Glow effect */
-        .project-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 2px;
-            background: linear-gradient(90deg, 
-                rgba(255, 0, 255, 0.7), 
-                rgba(0, 255, 255, 0.7), 
-                rgba(255, 0, 255, 0.7));
-            border-radius: 12px 12px 0 0;
-            z-index: 1;
-        }
+    .section-title {
+      font-size: 1.25rem;
+      /* White title with subtle glow */
+      color: #f0f6fc;
+      text-shadow: 0 0 8px rgba(255, 255, 255, 0.15);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-weight: 600;
+    }
 
-        .project-card::after {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(
-                circle at center,
-                rgba(255, 0, 255, 0.1) 0%,
-                rgba(0, 255, 255, 0.1) 25%,
-                transparent 70%
-            );
-            opacity: 0;
-            z-index: -1;
-            transition: opacity 0.3s ease;
-        }
+    .section-title::before {
+      content: "//";
+      /* Accent color for the comment prefix */
+      color: #58a6ff;
+    }
 
-        .project-card:hover::after {
-            opacity: 0.5;
-        }
+    .copy-btn {
+      /* Glass-like button with glow on hover */
+      background-color: rgba(33, 38, 45, 0.8);
+      color: #e6edf3;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 0.875rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: all 0.3s ease;
+      backdrop-filter: blur(4px);
+    }
 
-        /* Project content */
-        .project-title {
-            font-size: 1.5rem;
-            margin-bottom: 0.5rem;
-            color: white;
-        }
+    .copy-btn:hover {
+      background-color: rgba(48, 54, 61, 0.9);
+      border-color: rgba(255, 255, 255, 0.25);
+      box-shadow: 0 0 15px rgba(255, 255, 255, 0.1);
+      transform: translateY(-1px);
+    }
 
-        .project-description {
-            color: #a8a8a8;
-            margin-bottom: 1rem;
-            line-height: 1.5;
-        }
+    .copy-btn.copied {
+      background-color: #238636;
+      border-color: #238636;
+      box-shadow: 0 0 15px rgba(35, 134, 54, 0.4);
+    }
 
-        .project-tags {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.5rem;
-            margin-top: 1rem;
-        }
+    .copy-icon {
+      width: 16px;
+      height: 16px;
+    }
 
-        .tag {
-            background-color: rgba(255, 255, 255, 0.1);
-            padding: 0.3rem 0.8rem;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            color: #d0d0d0;
-        }
+    .config-box {
+      /* Enhanced box with subtle glow border */
+      background: linear-gradient(145deg, rgba(22, 27, 34, 0.95), rgba(13, 17, 23, 0.98));
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 12px;
+      padding: 1.5rem;
+      font-family: 'Consolas', 'Monaco', monospace;
+      font-size: 0.9rem;
+      line-height: 1.8;
+      overflow-x: auto;
+      white-space: pre-wrap;
+      word-break: break-word;
+      box-shadow: 
+        0 4px 20px rgba(0, 0, 0, 0.3),
+        0 0 30px rgba(255, 255, 255, 0.02),
+        inset 0 1px 0 rgba(255, 255, 255, 0.05);
+      transition: all 0.3s ease;
+    }
 
-        /* Loading indicator */
-        .loading {
-            text-align: center;
-            font-size: 1.5rem;
-            color: #a8a8a8;
-            margin: 2rem auto;
-        }
+    .config-box:hover {
+      border-color: rgba(255, 255, 255, 0.15);
+      box-shadow: 
+        0 4px 25px rgba(0, 0, 0, 0.4),
+        0 0 40px rgba(255, 255, 255, 0.04),
+        inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    }
 
-        /* Error message */
-        .error {
-            text-align: center;
-            color: #ff6b6b;
-            margin: 2rem auto;
-            padding: 1rem;
-            background-color: rgba(255, 107, 107, 0.1);
-            border-radius: 8px;
-            max-width: 600px;
-        }
+    .config-box .comment {
+      color: #6e7681;
+    }
 
-        /* Responsive adjustments */
-        @media (max-width: 768px) {
-            h1 {
-                font-size: 2.5rem;
-            }
-            
-            .projects-container {
-                grid-template-columns: 1fr;
-            }
-        }
-    </style>
+    .config-box .command {
+      color: #79c0ff;
+    }
+
+    .config-box .value {
+      color: #a5d6ff;
+    }
+
+    .copy-all-section {
+      margin-top: 3rem;
+      padding-top: 2rem;
+      /* Glowing separator line */
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 -1px 20px rgba(255, 255, 255, 0.03);
+    }
+
+    .copy-all-btn {
+      width: 100%;
+      /* Refined white/light button with glow */
+      background: linear-gradient(135deg, #f0f6fc 0%, #c9d1d9 100%);
+      color: #0d1117;
+      border: none;
+      padding: 1rem 1.5rem;
+      border-radius: 12px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      letter-spacing: 1px;
+      box-shadow: 
+        0 4px 15px rgba(255, 255, 255, 0.1),
+        0 0 30px rgba(255, 255, 255, 0.05);
+    }
+
+    .copy-all-btn:hover {
+      background: linear-gradient(135deg, #ffffff 0%, #e6edf3 100%);
+      box-shadow: 
+        0 4px 20px rgba(255, 255, 255, 0.2),
+        0 0 40px rgba(255, 255, 255, 0.1);
+      transform: translateY(-2px);
+    }
+
+    .copy-all-btn.copied {
+      background: linear-gradient(135deg, #238636 0%, #2ea043 100%);
+      color: #fff;
+      box-shadow: 0 0 25px rgba(35, 134, 54, 0.4);
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 3rem;
+      color: #6e7681;
+      font-size: 0.875rem;
+    }
+
+    /* Added subtle animation for the header */
+    @keyframes subtleGlow {
+      0%, 100% { text-shadow: 0 0 10px rgba(255, 255, 255, 0.3), 0 0 20px rgba(255, 255, 255, 0.15); }
+      50% { text-shadow: 0 0 15px rgba(255, 255, 255, 0.4), 0 0 30px rgba(255, 255, 255, 0.2); }
+    }
+
+    h1 {
+      animation: subtleGlow 4s ease-in-out infinite;
+    }
+  </style>
 </head>
 <body>
+  <div class="container">
     <header>
-        <h1>syntcs.com</h1>
+      <!-- Title and subtitle now loaded dynamically from JSON -->
+      <h1 id="page-title">Loading...</h1>
+      <p class="subtitle" id="page-subtitle"></p>
     </header>
 
-    <div class="projects-container" id="projects-container">
-        <div class="loading">Loading projects...</div>
+    <!-- Sections container - will be populated from JSON -->
+    <div id="config-sections"></div>
+
+    <!-- Copy All Button -->
+    <div class="copy-all-section">
+      <button class="copy-all-btn" onclick="copyAll(this)">COPY ENTIRE CONFIG</button>
     </div>
 
-    <script>
-        // Function to fetch and load projects from JSON file
-        async function loadProjects() {
-            try {
-                const response = await fetch('projects.json');
-                
-                if (!response.ok) {
-                    throw new Error(`Failed to load projects (Status: ${response.status})`);
-                }
-                
-                const projects = await response.json();
-                renderProjects(projects);
-            } catch (error) {
-                console.error('Error loading projects:', error);
-                document.getElementById('projects-container').innerHTML = `
-                    <div class="error">
-                        <h3>Error Loading Projects</h3>
-                        <p>${error.message}</p>
-                        <p>Make sure your projects.json file is in the same directory as this HTML file.</p>
-                    </div>
-                `;
-            }
-        }
+    <footer>
+      <p>Edit config.json to customize your commands</p>
+    </footer>
+  </div>
 
-        // Function to render projects to the DOM
-        function renderProjects(projects) {
-            const container = document.getElementById('projects-container');
-            
-            // Clear loading message
-            container.innerHTML = '';
-            
-            // Create project cards
-            projects.forEach(project => {
-                const projectCard = document.createElement('a');
-                projectCard.href = project.url;
-                projectCard.className = 'project-card';
-                projectCard.target = '_blank'; // Open in new tab
-                
-                // Create project content
-                projectCard.innerHTML = `
-                    <h2 class="project-title">${project.title}</h2>
-                    <p class="project-description">${project.description}</p>
-                    <div class="project-tags">
-                        ${project.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
-                    </div>
-                `;
-                
-                container.appendChild(projectCard);
-            });
-        }
+  <script>
+    async function loadConfig() {
+      try {
+        const response = await fetch('config.json');
+        const config = await response.json();
+        
+        // Set title and subtitle
+        document.getElementById('page-title').textContent = config.title;
+        document.getElementById('page-subtitle').textContent = config.subtitle;
+        document.title = config.title;
+        
+        // Render sections
+        const sectionsContainer = document.getElementById('config-sections');
+        
+        config.sections.forEach((section, index) => {
+          const sectionHtml = `
+            <section class="config-section">
+              <div class="section-header">
+                <h2 class="section-title">${section.name}</h2>
+                <button class="copy-btn" onclick="copyConfig(this, 'config-${index}')">
+                  <svg class="copy-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                  </svg>
+                  Copy
+                </button>
+              </div>
+              <div class="config-box" id="config-${index}">${section.commands.join('\n')}</div>
+            </section>
+          `;
+          sectionsContainer.innerHTML += sectionHtml;
+        });
+      } catch (error) {
+        console.error('Error loading config:', error);
+        document.getElementById('config-sections').innerHTML = '<p style="color: #f85149;">Error loading config.json</p>';
+      }
+    }
 
-        // Load projects when the page loads
-        document.addEventListener('DOMContentLoaded', loadProjects);
-    </script>
+    function copyConfig(button, configId) {
+      const configBox = document.getElementById(configId);
+      const text = configBox.innerText;
+      
+      navigator.clipboard.writeText(text).then(() => {
+        button.classList.add('copied');
+        button.innerHTML = `
+          <svg class="copy-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="20 6 9 17 4 12"></polyline>
+          </svg>
+          Copied!
+        `;
+        
+        setTimeout(() => {
+          button.classList.remove('copied');
+          button.innerHTML = `
+            <svg class="copy-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+            </svg>
+            Copy
+          `;
+        }, 2000);
+      });
+    }
+
+    function copyAll(button) {
+      const configBoxes = document.querySelectorAll('.config-box');
+      let allConfig = '';
+      
+      configBoxes.forEach((box) => {
+        const sectionTitle = box.closest('.config-section').querySelector('.section-title').innerText;
+        allConfig += `// ${sectionTitle}\n${box.innerText}\n\n`;
+      });
+      
+      navigator.clipboard.writeText(allConfig.trim()).then(() => {
+        button.classList.add('copied');
+        button.textContent = 'COPIED!';
+        
+        setTimeout(() => {
+          button.classList.remove('copied');
+          button.textContent = 'COPY ENTIRE CONFIG';
+        }, 2000);
+      });
+    }
+
+    // Load config on page load
+    loadConfig();
+  </script>
 </body>
 </html>
