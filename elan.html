@@ -272,6 +272,7 @@
             gap: 1rem;
         }
 
+        /* Changed checkbox to editable number input with green glow when 0 */
         .crafting-item {
             background: rgba(40, 40, 40, 0.8);
             border-radius: 6px;
@@ -281,6 +282,13 @@
             display: flex;
             align-items: center;
             gap: 0.8rem;
+            transition: all 0.3s ease;
+        }
+
+        .crafting-item.completed {
+            border-left-color: rgba(46, 204, 113, 0.8);
+            box-shadow: 0 0 25px rgba(46, 204, 113, 0.5);
+            background: rgba(46, 204, 113, 0.15);
         }
 
         .crafting-item.nested {
@@ -289,20 +297,51 @@
             box-shadow: 0 0 15px rgba(255, 200, 100, 0.1);
         }
 
+        .crafting-item.nested.completed {
+            border-left-color: rgba(46, 204, 113, 0.8);
+            box-shadow: 0 0 25px rgba(46, 204, 113, 0.5);
+        }
+
         .crafting-item.nested-2 {
             margin-left: 4rem;
             border-left-color: rgba(200, 100, 255, 0.6);
             box-shadow: 0 0 15px rgba(200, 100, 255, 0.1);
         }
 
-        /* Added checkbox styling */
-        .crafting-checkbox {
+        .crafting-item.nested-2.completed {
+            border-left-color: rgba(46, 204, 113, 0.8);
+            box-shadow: 0 0 25px rgba(46, 204, 113, 0.5);
+        }
+
+        /* Added styling for number input */
+        .crafting-amount-input {
+            width: 60px;
+            padding: 0.4rem;
+            background: rgba(30, 30, 30, 0.8);
+            border: 2px solid rgba(100, 200, 255, 0.4);
+            border-radius: 4px;
+            color: #64c8ff;
+            font-weight: bold;
+            font-size: 1rem;
+            text-align: center;
+            flex-shrink: 0;
+            transition: all 0.3s ease;
+        }
+
+        .crafting-amount-input:focus {
+            outline: none;
+            border-color: rgba(100, 200, 255, 0.8);
+            box-shadow: 0 0 10px rgba(100, 200, 255, 0.3);
+        }
+
+        /* Removed checkbox styling as it's no longer used */
+        /* .crafting-checkbox {
             width: 20px;
             height: 20px;
             cursor: pointer;
             accent-color: #64c8ff;
             flex-shrink: 0;
-        }
+        } */
 
         .crafting-content {
             flex: 1;
@@ -2169,11 +2208,34 @@
     <!-- Updated JavaScript with accordion functionality -->
     <script>
         let gameData = {};
+        let materialStates = {};
+
+        function loadStatesFromCookies() {
+            const cookieValue = document.cookie
+                .split('; ')
+                .find(row => row.startsWith('materialStates='));
+            
+            if (cookieValue) {
+                try {
+                    materialStates = JSON.parse(decodeURIComponent(cookieValue.split('=')[1]));
+                } catch (e) {
+                    console.error('Error parsing cookie:', e);
+                    materialStates = {};
+                }
+            }
+        }
+
+        function saveStatesToCookies() {
+            const expires = new Date();
+            expires.setFullYear(expires.getFullYear() + 1); // Cookie expires in 1 year
+            document.cookie = `materialStates=${encodeURIComponent(JSON.stringify(materialStates))}; expires=${expires.toUTCString()}; path=/`;
+        }
 
         async function loadData() {
             try {
                 const response = await fetch('data.json');
                 gameData = await response.json();
+                loadStatesFromCookies();
                 renderCategories();
             } catch (error) {
                 console.error('Error loading data:', error);
@@ -2184,7 +2246,7 @@
             const container = document.getElementById('categories-container');
             container.innerHTML = '';
 
-            gameData.categories.forEach(category => {
+            gameData.categories.forEach((category, categoryIndex) => {
                 const section = document.createElement('div');
                 section.className = 'category-section';
                 
@@ -2199,11 +2261,11 @@
                 const items = document.createElement('div');
                 items.className = 'category-items';
                 
-                category.items.forEach(item => {
+                category.items.forEach((item, itemIndex) => {
                     const link = document.createElement('div');
                     link.className = 'item-link';
                     link.textContent = item.name;
-                    link.onclick = () => showDetail(item.id);
+                    link.onclick = () => showDetail(categoryIndex, itemIndex);
                     items.appendChild(link);
                 });
                 
@@ -2218,13 +2280,28 @@
             section.classList.toggle('open');
         }
 
-        function showDetail(itemId) {
-            const item = findItem(itemId);
-            if (!item) return;
+        function showDetail(categoryIndex, itemIndex) {
+            const category = gameData.categories[categoryIndex];
+            const item = category.items[itemIndex];
+            
+            document.getElementById('home-section').classList.remove('active');
+            document.getElementById('detail-section').classList.add('active');
 
-            const detailSection = document.getElementById('detail-section');
-            detailSection.innerHTML = `
-                <div class="back-button" onclick="showHome()">← Back to Overview</div>
+            let craftingHTML = '';
+            if (item.crafting && item.crafting.direct) {
+                craftingHTML = `
+                    <div class="crafting-calculator">
+                        <h3>Crafting Rezept</h3>
+                        <div class="crafting-list">
+                            ${generateCraftingItems(item.crafting.direct, item.id, '')}
+                        </div>
+                        ${renderCraftingTotals(item.crafting.direct, item.id)}
+                    </div>
+                `;
+            }
+
+            document.getElementById('detail-section').innerHTML = `
+                <div class="back-button" onclick="showHome()">← Zurück zur Übersicht</div>
                 
                 <div class="detail-view">
                     <div class="detail-image">
@@ -2240,20 +2317,8 @@
                         </div>
                     </div>
                 </div>
-
-                ${renderCrafting(item.crafting)}
+                ${craftingHTML}
             `;
-
-            document.getElementById('home-section').classList.remove('active');
-            detailSection.classList.add('active');
-        }
-
-        function findItem(itemId) {
-            for (const category of gameData.categories) {
-                const item = category.items.find(i => i.id === itemId);
-                if (item) return item;
-            }
-            return null;
         }
 
         function renderStats(stats) {
@@ -2280,43 +2345,115 @@
             return html;
         }
 
-        function renderCrafting(crafting) {
-            if (!crafting || !crafting.direct) return '';
-
-            let html = '<div class="crafting-calculator"><h3>Crafting Recipe</h3><div class="crafting-list">';
-            const totals = {};
-
-            function addMaterial(material, level = 0) {
+        function generateCraftingItems(materials, itemId, path, level = 0) {
+            if (!materials) return '';
+            
+            let html = '';
+            materials.forEach((material, index) => {
+                const materialPath = path ? `${path}.${index}` : `${index}`;
+                const stateKey = `${itemId}.${materialPath}`;
+                const currentAmount = materialStates[stateKey] !== undefined ? materialStates[stateKey] : material.amount;
+                const isCompleted = currentAmount === 0;
                 const nestClass = level === 0 ? '' : level === 1 ? 'nested' : 'nested-2';
-                const prefix = level > 0 ? '↳ ' : '';
                 
                 html += `
-                    <div class="crafting-item ${nestClass}">
-                        <input type="checkbox" class="crafting-checkbox">
+                    <div class="crafting-item ${nestClass} ${isCompleted ? 'completed' : ''}" id="item-${stateKey}">
+                        <input 
+                            type="number" 
+                            class="crafting-amount-input" 
+                            value="${currentAmount}" 
+                            min="0"
+                            onchange="updateMaterialAmount('${stateKey}', this.value)"
+                            data-max="${material.amount}"
+                        >
                         <div class="crafting-content">
-                            <div class="material-name">${prefix}${material.name}</div>
+                            <div class="material-name">${material.name}</div>
                             <div class="material-amount">× ${material.amount}</div>
                             ${material.description ? `<div class="material-description">${material.description}</div>` : ''}
                         </div>
                     </div>
                 `;
-
+                
                 if (material.components) {
-                    material.components.forEach(comp => addMaterial(comp, level + 1));
+                    html += generateCraftingItems(material.components, itemId, `${materialPath}.components`, level + 1);
+                }
+            });
+            
+            return html;
+        }
+
+        function updateMaterialAmount(stateKey, value) {
+            const numValue = parseInt(value) || 0;
+            materialStates[stateKey] = Math.max(0, numValue);
+            saveStatesToCookies();
+            
+            // Update UI
+            const itemElement = document.getElementById(`item-${stateKey}`);
+            if (itemElement) {
+                if (materialStates[stateKey] === 0) {
+                    itemElement.classList.add('completed');
                 } else {
-                    totals[material.name] = (totals[material.name] || 0) + material.amount;
+                    itemElement.classList.remove('completed');
                 }
             }
 
-            crafting.direct.forEach(material => addMaterial(material));
+            // Update totals
+            updateCraftingTotals(document.getElementById('detail-section').querySelector('.crafting-calculator'));
+        }
 
-            html += '</div><div class="total-materials"><h4>Total Base Materials:</h4>';
-            for (const [name, amount] of Object.entries(totals)) {
-                html += `<div class="total-item"><span>${name}</span><span>× ${amount}</span></div>`;
+        // Function to calculate and render total base materials
+        function renderCraftingTotals(materials, itemId) {
+            const totals = {};
+            
+            function calculateTotals(currentMaterials, currentPath = '') {
+                if (!currentMaterials) return;
+
+                currentMaterials.forEach((material, index) => {
+                    const materialPath = currentPath ? `${currentPath}.${index}` : `${index}`;
+                    const stateKey = `${itemId}.${materialPath}`;
+                    const amountNeeded = materialStates[stateKey] !== undefined ? materialStates[stateKey] : material.amount;
+
+                    if (material.components) {
+                        calculateTotals(material.components, `${materialPath}.components`);
+                    } else {
+                        totals[material.name] = (totals[material.name] || 0) + amountNeeded;
+                    }
+                });
             }
-            html += '</div></div>';
 
-            return html;
+            calculateTotals(materials);
+
+            let totalsHTML = '<div class="total-materials"><h4>Total Base Materials:</h4>';
+            for (const [name, amount] of Object.entries(totals)) {
+                if (amount > 0) {
+                    totalsHTML += `<div class="total-item"><span>${name}</span><span>× ${amount}</span></div>`;
+                }
+            }
+            totalsHTML += '</div>';
+            return totalsHTML;
+        }
+
+        // Function to update the displayed totals
+        function updateCraftingTotals(calculatorElement) {
+            const detailSection = document.getElementById('detail-section');
+            const itemId = detailSection.querySelector('.back-button').nextElementSibling.querySelector('.detail-info h2').textContent.replace(/\s+/g, '-').toLowerCase(); // A bit hacky to get item ID
+            
+            // Re-fetch materials to recalculate totals based on current states
+            // This assumes gameData is accessible and we can find the item again
+            let currentItem = null;
+            for (const category of gameData.categories) {
+                const item = category.items.find(i => i.name.toLowerCase().replace(/\s+/g, '-') === itemId);
+                if (item) {
+                    currentItem = item;
+                    break;
+                }
+            }
+
+            if (currentItem && currentItem.crafting && currentItem.crafting.direct) {
+                const totalsElement = calculatorElement.querySelector('.total-materials');
+                const newTotalsHTML = renderCraftingTotals(currentItem.crafting.direct, currentItem.id);
+                totalsElement.outerHTML = newTotalsHTML; // Replace the old totals section
+            }
         }
 
         function showHome() {
@@ -2324,7 +2461,7 @@
             document.getElementById('home-section').classList.add('active');
         }
 
-        loadData();
+        window.onload = loadData;
     </script>
 </body>
 </html>
