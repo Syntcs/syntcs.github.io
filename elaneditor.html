@@ -248,6 +248,11 @@
             border-left-color: rgba(255, 200, 100, 0.6);
         }
 
+        .material-entry.nested-2 {
+            margin-left: 4rem;
+            border-left-color: rgba(255, 150, 50, 0.6);
+        }
+
         .json-output {
             background: rgba(15, 15, 15, 0.9);
             padding: 1.5rem;
@@ -406,7 +411,7 @@
                 `;
             }
 
-            let craftingHTML = renderCraftingEditor(item.crafting.direct, 0);
+            let craftingHTML = renderCraftingEditor(item.crafting.direct, 0, '');
 
             editorMain.innerHTML = `
                 <h2 style="color: #ffffff; margin-bottom: 1.5rem;">Editing: ${item.name}</h2>
@@ -448,7 +453,8 @@
             let html = '';
             materials.forEach((material, index) => {
                 const currentPath = path ? `${path}.${index}` : `${index}`;
-                const nestClass = level === 0 ? '' : level === 1 ? 'nested' : '';
+                const componentPath = path ? `${path}.${index}.components` : `${index}.components`;
+                const nestClass = level === 0 ? '' : level === 1 ? 'nested' : 'nested-2';
                 
                 html += `
                     <div class="material-entry ${nestClass}">
@@ -466,15 +472,21 @@
                             <label>Description</label>
                             <input type="text" value="${material.description}" onchange="updateMaterial('${currentPath}', 'description', this.value)">
                         </div>` : ''}
-                        ${material.components ? `
-                            <div style="margin-top: 1rem;">
-                                <strong style="color: #ccc;">Components:</strong>
-                                ${renderCraftingEditor(material.components, level + 1, currentPath + '.components')}
-                                <button class="add-btn" onclick="addSubMaterial('${currentPath}')">➕ Add Component</button>
-                            </div>
-                        ` : `<button class="add-btn" onclick="addSubMaterial('${currentPath}')">➕ Add Components</button>`}
-                    </div>
                 `;
+                
+                if (material.components && material.components.length > 0) {
+                    html += `
+                        <div style="margin-top: 1rem;">
+                            <strong style="color: #ccc;">Components:</strong>
+                            ${renderCraftingEditor(material.components, level + 1, componentPath)}
+                            <button class="add-btn" onclick="addSubMaterial('${currentPath}')">➕ Add Component</button>
+                        </div>
+                    `;
+                } else {
+                    html += `<button class="add-btn" onclick="addSubMaterial('${currentPath}')">➕ Add Components</button>`;
+                }
+                
+                html += `</div>`;
             });
             
             return html;
@@ -540,7 +552,13 @@
                 if (parts[i] === 'components') {
                     target = target.components;
                 } else {
-                    target = target[Number(parts[i])];
+                    const index = Number(parts[i]);
+                    target = target[index];
+                    if (i + 1 < parts.length && parts[i + 1] === 'components') {
+                        i++; // Skip 'components' keyword
+                        if (!target.components) target.components = [];
+                        target = target.components;
+                    }
                 }
             }
             
@@ -580,23 +598,33 @@
         }
 
         function addNewItem() {
-            const categoryIndex = Number(prompt('Enter category index (0-' + (gameData.categories.length - 1) + '):'));
+            const categoryNames = gameData.categories.map((cat, i) => `${i}: ${cat.name}`).join('\n');
+            const categoryIndex = Number(prompt(`Enter category index:\n${categoryNames}`));
             if (isNaN(categoryIndex) || categoryIndex < 0 || categoryIndex >= gameData.categories.length) {
                 alert('Invalid category index');
                 return;
             }
 
             const newItem = {
-                id: 'new-item-' + Date.now(),
+                id: `new-item-${Date.now()}`,
                 name: 'New Item',
                 description: 'Description here',
-                stats: { speed: { value: 100, max: 200, unit: 'km/h' } },
-                crafting: { direct: [{ name: 'Material', amount: 10 }] }
+                stats: {
+                    stat1: { value: 50, max: 100, unit: '' }
+                },
+                crafting: {
+                    direct: [
+                        { name: 'Material 1', amount: 10 }
+                    ]
+                }
             };
 
             gameData.categories[categoryIndex].items.push(newItem);
+            currentCategory = categoryIndex;
+            currentItem = gameData.categories[categoryIndex].items.length - 1;
+            
             renderSidebar();
-            selectItem(categoryIndex, gameData.categories[categoryIndex].items.length - 1);
+            renderEditor();
             updateJSONPreview();
         }
 
