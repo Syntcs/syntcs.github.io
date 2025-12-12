@@ -3,214 +3,87 @@
     {
       "id": "car",
       "name": "Car",
-      "items": [
-        {
-          "id": "sports-car",
-          "name": "Sports Car",
-          "description": "A high-performance vehicle designed for speed and agility on paved roads.",
-          "stats": {
-            "speed": { "value": 180, "max": 200, "unit": "km/h" },
-            "fuel": { "value": 60, "max": 100, "unit": "L" },
-            "durability": { "value": 70, "max": 100, "unit": "%" },
-            "cargo": { "value": 20, "max": 150, "unit": "" }
-          },
-          "crafting": {
-            "direct": [
-              {
-                "name": "Aluminum Frame",
-                "amount": 15,
-                "components": [{ "name": "Aluminum Ore", "amount": 35 }, { "name": "Carbon Fiber", "amount": 10 }]
-              },
-              {
-                "name": "High-Performance Engine",
-                "amount": 1,
-                "components": [
-                  { "name": "Steel Parts", "amount": 20 },
-                  {
-                    "name": "Electronic Circuit",
-                    "amount": 8,
-                    "components": [{ "name": "Silicon Wafer", "amount": 16 }, { "name": "Gold Wire", "amount": 4 }]
-                  }
-                ]
-              },
-              {
-                "name": "Racing Tires",
-                "amount": 4,
-                "components": [{ "name": "Rubber", "amount": 25 }, { "name": "Steel Wire", "amount": 8 }]
-              }
-            ]
-          }
-        },
-        {
-          "id": "sedan",
-          "name": "Sedan",
-          "description": "A comfortable family vehicle with balanced performance.",
-          "stats": {
-            "speed": { "value": 120, "max": 200, "unit": "km/h" },
-            "fuel": { "value": 80, "max": 100, "unit": "L" },
-            "durability": { "value": 85, "max": 100, "unit": "%" },
-            "cargo": { "value": 60, "max": 150, "unit": "" }
-          },
-          "crafting": {
-            "direct": [
-              {
-                "name": "Steel Frame",
-                "amount": 18,
-                "components": [{ "name": "Iron Ore", "amount": 40 }, { "name": "Carbon Powder", "amount": 12 }]
-              },
-              {
-                "name": "Standard Engine",
-                "amount": 1,
-                "components": [{ "name": "Steel Parts", "amount": 15 }, { "name": "Copper Wire", "amount": 20 }]
-              },
-              { "name": "Standard Tires", "amount": 4, "components": [{ "name": "Rubber", "amount": 20 }] }
-            ]
-          }
-        },
-        {
-          "id": "suv",
-          "name": "SUV",
-          "description": "A robust vehicle suitable for off-road and urban environments.",
-          "stats": {
-            "speed": { "value": 110, "max": 200, "unit": "km/h" },
-            "fuel": { "value": 120, "max": 200, "unit": "L" },
-            "durability": { "value": 90, "max": 100, "unit": "%" },
-            "cargo": { "value": 80, "max": 150, "unit": "" },
-            "offroad": { "value": 95, "max": 120, "unit": "" }
-          },
-          "crafting": {
-            "direct": [
-              {
-                "name": "Reinforced Frame",
-                "amount": 22,
-                "components": [{ "name": "Iron Ore", "amount": 50 }, { "name": "Titanium Plate", "amount": 8 }]
-              },
-              {
-                "name": "Heavy Engine",
-                "amount": 1,
-                "components": [
-                  { "name": "Steel Parts", "amount": 25 },
-                  {
-                    "name": "Electronic Circuit",
-                    "amount": 6,
-                    "components": [{ "name": "Silicon Wafer", "amount": 12 }, { "name": "Copper Wire", "amount": 18 }]
-                  }
-                ]
-              },
-              {
-                "name": "Off-Road Tires",
-                "amount": 4,
-                "components": [{ "name": "Rubber", "amount": 30 }, { "name": "Steel Reinforcement", "amount": 10 }]
-              }
-            ]
-          }
-        }
-      ]
+      "items": []
     },
     {
       "id": "truck",
       "name": "Truck",
       "items": [
         {
-          "id": "ural",
+          "id": "new-item-1765571788389",
           "name": "Ural Device",
-          "description": "A robust military truck designed for heavy loads and rough terrain, ideal for transporting ores and materials.",
+          "description": "The Ural Device is a craftable-only auto-farmer truck, unavailable for direct purchase in shops. Unlike standard Ural-4320 variants (Fuel or Transport), it passively harvests resources like ingots, oil, or crops during loops without manual loading, maximizing efficiency for high-volume farming routes.",
           "stats": {
-            "speed": { "value": 85, "max": 200, "unit": "km/h" },
-            "orestorage": { "value": 125, "max": 150, "unit": "" },
-            "fuel": { "value": 200, "max": 250, "unit": "L" },
-            "durability": { "value": 95, "max": 100, "unit": "%" },
-            "offroad": { "value": 110, "max": 120, "unit": "" }
+            "ore space": {
+              "value": 108,
+              "max": 125,
+              "unit": "unit"
+            }
           },
           "crafting": {
             "direct": [
               {
-                "name": "Steel Frame",
-                "amount": 25,
-                "components": [{ "name": "Iron Ore", "amount": 50 }, { "name": "Carbon Powder", "amount": 15 }]
-              },
-              {
-                "name": "Engine Components",
-                "amount": 8,
+                "name": "Mechanical component (HQ)",
+                "amount": 29,
                 "components": [
-                  { "name": "Copper Wire", "amount": 30 },
                   {
-                    "name": "Electronic Circuit",
-                    "amount": 12,
-                    "components": [{ "name": "Silicon Wafer", "amount": 24 }, { "name": "Gold Wire", "amount": 6 }]
+                    "name": "Mechanical component",
+                    "amount": 261,
+                    "components": [
+                      {
+                        "name": "Iron ingot",
+                        "amount": 522
+                      },
+                      {
+                        "name": "Copper ingot",
+                        "amount": 522
+                      }
+                    ]
                   }
                 ]
               },
               {
-                "name": "Rubber Tires",
-                "amount": 6,
-                "components": [{ "name": "Rubber", "amount": 40 }, { "name": "Steel Reinforcement", "amount": 12 }]
-              }
-            ]
-          }
-        },
-        {
-          "id": "kamaz",
-          "name": "Kamaz Transport",
-          "description": "A heavy-duty transport truck with exceptional cargo capacity.",
-          "stats": {
-            "speed": { "value": 90, "max": 200, "unit": "km/h" },
-            "orestorage": { "value": 140, "max": 150, "unit": "" },
-            "fuel": { "value": 220, "max": 250, "unit": "L" },
-            "durability": { "value": 92, "max": 100, "unit": "%" },
-            "offroad": { "value": 105, "max": 120, "unit": "" }
-          },
-          "crafting": {
-            "direct": [
-              {
-                "name": "Heavy Steel Frame",
-                "amount": 28,
-                "components": [{ "name": "Iron Ore", "amount": 60 }, { "name": "Carbon Powder", "amount": 18 }]
-              },
-              {
-                "name": "Diesel Engine",
-                "amount": 1,
-                "components": [{ "name": "Steel Parts", "amount": 30 }, { "name": "Fuel Injector", "amount": 4 }]
-              },
-              {
-                "name": "Heavy Duty Tires",
-                "amount": 6,
-                "components": [{ "name": "Rubber", "amount": 45 }, { "name": "Steel Reinforcement", "amount": 15 }]
-              }
-            ]
-          }
-        },
-        {
-          "id": "man",
-          "name": "MAN Truck",
-          "description": "A reliable European truck known for its efficiency and power.",
-          "stats": {
-            "speed": { "value": 95, "max": 200, "unit": "km/h" },
-            "orestorage": { "value": 115, "max": 150, "unit": "" },
-            "fuel": { "value": 180, "max": 250, "unit": "L" },
-            "durability": { "value": 88, "max": 100, "unit": "%" },
-            "offroad": { "value": 100, "max": 120, "unit": "" }
-          },
-          "crafting": {
-            "direct": [
-              {
-                "name": "Advanced Frame",
-                "amount": 22,
-                "components": [{ "name": "Iron Ore", "amount": 45 }, { "name": "Aluminum Ore", "amount": 20 }]
-              },
-              {
-                "name": "Efficient Engine",
-                "amount": 1,
+                "name": "Interior part (HQ)",
+                "amount": 26,
                 "components": [
-                  { "name": "Steel Parts", "amount": 25 },
                   {
-                    "name": "Electronic Circuit",
-                    "amount": 10,
-                    "components": [{ "name": "Silicon Wafer", "amount": 20 }, { "name": "Copper Wire", "amount": 15 }]
+                    "name": "Interior Part",
+                    "amount": 234,
+                    "components": [
+                      {
+                        "name": "Fabric",
+                        "amount": 468
+                      },
+                      {
+                        "name": "Polyester",
+                        "amount": 468
+                      }
+                    ]
+                  },
+                  {
+                    "name": "Wooden planks",
+                    "amount": 1170
                   }
                 ]
               },
-              { "name": "Performance Tires", "amount": 6, "components": [{ "name": "Rubber", "amount": 35 }] }
+              {
+                "name": "Engine part (HQ)",
+                "amount": 18,
+                "components": [
+                  {
+                    "name": "Engine part",
+                    "amount": 162
+                  },
+                  {
+                    "name": "Copper ingot",
+                    "amount": 810
+                  },
+                  {
+                    "name": "Canister (petrol)",
+                    "amount": 810
+                  }
+                ]
+              }
             ]
           }
         }
@@ -219,357 +92,17 @@
     {
       "id": "helicopter",
       "name": "Helicopter",
-      "items": [
-        {
-          "id": "transport-heli",
-          "name": "Transport Helicopter",
-          "description": "A versatile transport helicopter for moving cargo and personnel.",
-          "stats": {
-            "speed": { "value": 220, "max": 300, "unit": "km/h" },
-            "fuel": { "value": 400, "max": 500, "unit": "L" },
-            "durability": { "value": 75, "max": 100, "unit": "%" },
-            "cargo": { "value": 120, "max": 150, "unit": "" },
-            "altitude": { "value": 6000, "max": 8000, "unit": "m" }
-          },
-          "crafting": {
-            "direct": [
-              {
-                "name": "Aircraft Frame",
-                "amount": 35,
-                "components": [{ "name": "Aluminum Ore", "amount": 80 }, { "name": "Titanium Plate", "amount": 20 }]
-              },
-              {
-                "name": "Turbine Engine",
-                "amount": 2,
-                "components": [
-                  { "name": "Steel Parts", "amount": 40 },
-                  {
-                    "name": "Advanced Circuit",
-                    "amount": 15,
-                    "components": [
-                      { "name": "Silicon Wafer", "amount": 35 },
-                      { "name": "Gold Wire", "amount": 12 },
-                      { "name": "Rare Earth", "amount": 5 }
-                    ]
-                  }
-                ]
-              },
-              {
-                "name": "Rotor Blades",
-                "amount": 4,
-                "components": [
-                  { "name": "Carbon Fiber", "amount": 25 },
-                  { "name": "Steel Reinforcement", "amount": 18 }
-                ]
-              }
-            ]
-          }
-        },
-        {
-          "id": "attack-heli",
-          "name": "Attack Helicopter",
-          "description": "A combat helicopter equipped for military operations.",
-          "stats": {
-            "speed": { "value": 280, "max": 300, "unit": "km/h" },
-            "fuel": { "value": 350, "max": 500, "unit": "L" },
-            "durability": { "value": 85, "max": 100, "unit": "%" },
-            "firepower": { "value": 140, "max": 150, "unit": "" },
-            "altitude": { "value": 7000, "max": 8000, "unit": "m" }
-          },
-          "crafting": {
-            "direct": [
-              {
-                "name": "Military Frame",
-                "amount": 40,
-                "components": [{ "name": "Titanium Plate", "amount": 35 }, { "name": "Kevlar Armor", "amount": 25 }]
-              },
-              {
-                "name": "Combat Turbine",
-                "amount": 2,
-                "components": [
-                  { "name": "Steel Parts", "amount": 50 },
-                  {
-                    "name": "Military Circuit",
-                    "amount": 20,
-                    "components": [
-                      { "name": "Silicon Wafer", "amount": 45 },
-                      { "name": "Gold Wire", "amount": 18 },
-                      { "name": "Rare Earth", "amount": 8 }
-                    ]
-                  }
-                ]
-              },
-              {
-                "name": "Weapon Systems",
-                "amount": 4,
-                "components": [{ "name": "Steel Parts", "amount": 30 }, { "name": "Explosive Material", "amount": 15 }]
-              }
-            ]
-          }
-        },
-        {
-          "id": "scout-heli",
-          "name": "Scout Helicopter",
-          "description": "A lightweight, fast helicopter for reconnaissance missions.",
-          "stats": {
-            "speed": { "value": 260, "max": 300, "unit": "km/h" },
-            "fuel": { "value": 280, "max": 500, "unit": "L" },
-            "durability": { "value": 65, "max": 100, "unit": "%" },
-            "stealth": { "value": 90, "max": 100, "unit": "" },
-            "altitude": { "value": 5500, "max": 8000, "unit": "m" }
-          },
-          "crafting": {
-            "direct": [
-              {
-                "name": "Light Frame",
-                "amount": 25,
-                "components": [{ "name": "Aluminum Ore", "amount": 60 }, { "name": "Carbon Fiber", "amount": 18 }]
-              },
-              {
-                "name": "Efficient Turbine",
-                "amount": 1,
-                "components": [
-                  { "name": "Steel Parts", "amount": 25 },
-                  {
-                    "name": "Electronic Circuit",
-                    "amount": 12,
-                    "components": [{ "name": "Silicon Wafer", "amount": 28 }, { "name": "Copper Wire", "amount": 20 }]
-                  }
-                ]
-              },
-              {
-                "name": "Sensor Array",
-                "amount": 2,
-                "components": [
-                  {
-                    "name": "Advanced Circuit",
-                    "amount": 8,
-                    "components": [{ "name": "Silicon Wafer", "amount": 18 }, { "name": "Gold Wire", "amount": 6 }]
-                  },
-                  { "name": "Optical Lens", "amount": 4 }
-                ]
-              }
-            ]
-          }
-        }
-      ]
+      "items": []
     },
     {
       "id": "weapon",
       "name": "Weapon",
-      "items": [
-        {
-          "id": "assault-rifle",
-          "name": "Assault Rifle MK-47",
-          "description": "A reliable assault rifle with excellent accuracy and fire rate.",
-          "stats": {
-            "damage": { "value": 45, "max": 100, "unit": "" },
-            "accuracy": { "value": 85, "max": 100, "unit": "%" },
-            "firerate": { "value": 650, "max": 1000, "unit": "rpm" },
-            "magazine": { "value": 30, "max": 50, "unit": "" },
-            "range": { "value": 400, "max": 800, "unit": "m" }
-          },
-          "crafting": {
-            "direct": [
-              {
-                "name": "Weapon Frame",
-                "amount": 1,
-                "components": [{ "name": "Steel Parts", "amount": 15 }, { "name": "Polymer Material", "amount": 8 }]
-              },
-              {
-                "name": "Barrel Assembly",
-                "amount": 1,
-                "components": [{ "name": "Steel Parts", "amount": 12 }, { "name": "Chrome Plating", "amount": 3 }]
-              },
-              {
-                "name": "Firing Mechanism",
-                "amount": 1,
-                "components": [{ "name": "Precision Spring", "amount": 4 }, { "name": "Steel Pin", "amount": 8 }]
-              }
-            ]
-          }
-        },
-        {
-          "id": "sniper",
-          "name": "Sniper Rifle",
-          "description": "A long-range precision weapon for taking out targets from distance.",
-          "stats": {
-            "damage": { "value": 95, "max": 100, "unit": "" },
-            "accuracy": { "value": 98, "max": 100, "unit": "%" },
-            "firerate": { "value": 60, "max": 1000, "unit": "rpm" },
-            "magazine": { "value": 10, "max": 50, "unit": "" },
-            "range": { "value": 800, "max": 800, "unit": "m" }
-          },
-          "crafting": {
-            "direct": [
-              {
-                "name": "Heavy Weapon Frame",
-                "amount": 1,
-                "components": [{ "name": "Steel Parts", "amount": 20 }, { "name": "Carbon Fiber", "amount": 10 }]
-              },
-              {
-                "name": "Precision Barrel",
-                "amount": 1,
-                "components": [{ "name": "Steel Parts", "amount": 18 }, { "name": "Chrome Plating", "amount": 5 }]
-              },
-              {
-                "name": "Scope System",
-                "amount": 1,
-                "components": [
-                  { "name": "Optical Lens", "amount": 6 },
-                  {
-                    "name": "Electronic Circuit",
-                    "amount": 4,
-                    "components": [{ "name": "Silicon Wafer", "amount": 8 }, { "name": "Copper Wire", "amount": 6 }]
-                  }
-                ]
-              }
-            ]
-          }
-        },
-        {
-          "id": "pistol",
-          "name": "Combat Pistol",
-          "description": "A reliable sidearm for close-quarters combat.",
-          "stats": {
-            "damage": { "value": 30, "max": 100, "unit": "" },
-            "accuracy": { "value": 75, "max": 100, "unit": "%" },
-            "firerate": { "value": 400, "max": 1000, "unit": "rpm" },
-            "magazine": { "value": 15, "max": 50, "unit": "" },
-            "range": { "value": 50, "max": 800, "unit": "m" }
-          },
-          "crafting": {
-            "direct": [
-              {
-                "name": "Pistol Frame",
-                "amount": 1,
-                "components": [{ "name": "Steel Parts", "amount": 8 }, { "name": "Polymer Material", "amount": 5 }]
-              },
-              { "name": "Short Barrel", "amount": 1, "components": [{ "name": "Steel Parts", "amount": 6 }] },
-              {
-                "name": "Trigger Assembly",
-                "amount": 1,
-                "components": [{ "name": "Precision Spring", "amount": 2 }, { "name": "Steel Pin", "amount": 4 }]
-              }
-            ]
-          }
-        },
-        {
-          "id": "shotgun",
-          "name": "Tactical Shotgun",
-          "description": "A devastating close-range weapon with high stopping power.",
-          "stats": {
-            "damage": { "value": 80, "max": 100, "unit": "" },
-            "accuracy": { "value": 60, "max": 100, "unit": "%" },
-            "firerate": { "value": 120, "max": 1000, "unit": "rpm" },
-            "magazine": { "value": 8, "max": 50, "unit": "" },
-            "range": { "value": 30, "max": 800, "unit": "m" }
-          },
-          "crafting": {
-            "direct": [
-              {
-                "name": "Shotgun Frame",
-                "amount": 1,
-                "components": [{ "name": "Steel Parts", "amount": 14 }, { "name": "Wood Material", "amount": 6 }]
-              },
-              { "name": "Wide Barrel", "amount": 1, "components": [{ "name": "Steel Parts", "amount": 10 }] },
-              {
-                "name": "Pump Mechanism",
-                "amount": 1,
-                "components": [{ "name": "Steel Parts", "amount": 8 }, { "name": "Precision Spring", "amount": 3 }]
-              }
-            ]
-          }
-        }
-      ]
+      "items": []
     },
     {
       "id": "cloth",
       "name": "Cloth",
-      "items": [
-        {
-          "id": "tactical-vest",
-          "name": "Tactical Combat Vest",
-          "description": "A protective vest with multiple pockets for carrying equipment.",
-          "stats": {
-            "armor": { "value": 85, "max": 100, "unit": "" },
-            "storage": { "value": 40, "max": 50, "unit": "" },
-            "mobility": { "value": 70, "max": 100, "unit": "%" },
-            "durability": { "value": 90, "max": 100, "unit": "%" }
-          },
-          "crafting": {
-            "direct": [
-              {
-                "name": "Kevlar Fabric",
-                "amount": 12,
-                "components": [
-                  { "name": "Synthetic Fiber", "amount": 30 },
-                  { "name": "Chemical Treatment", "amount": 8 }
-                ]
-              },
-              {
-                "name": "Ceramic Plates",
-                "amount": 4,
-                "components": [{ "name": "Ceramic Material", "amount": 20 }, { "name": "Resin", "amount": 6 }]
-              },
-              {
-                "name": "Tactical Pouches",
-                "amount": 6,
-                "components": [{ "name": "Nylon Fabric", "amount": 15 }, { "name": "Plastic Buckle", "amount": 12 }]
-              }
-            ]
-          }
-        },
-        {
-          "id": "helmet",
-          "name": "Combat Helmet",
-          "description": "A ballistic helmet providing head protection in combat.",
-          "stats": {
-            "armor": { "value": 75, "max": 100, "unit": "" },
-            "durability": { "value": 85, "max": 100, "unit": "%" },
-            "weight": { "value": 1.5, "max": 3, "unit": "kg" }
-          },
-          "crafting": {
-            "direct": [
-              {
-                "name": "Kevlar Shell",
-                "amount": 1,
-                "components": [
-                  { "name": "Synthetic Fiber", "amount": 25 },
-                  { "name": "Chemical Treatment", "amount": 6 }
-                ]
-              },
-              { "name": "Foam Padding", "amount": 3, "components": [{ "name": "Foam Material", "amount": 10 }] },
-              {
-                "name": "Chinstrap",
-                "amount": 1,
-                "components": [{ "name": "Nylon Fabric", "amount": 5 }, { "name": "Plastic Buckle", "amount": 2 }]
-              }
-            ]
-          }
-        },
-        {
-          "id": "boots",
-          "name": "Military Boots",
-          "description": "Durable boots designed for tough terrain and extended use.",
-          "stats": {
-            "durability": { "value": 88, "max": 100, "unit": "%" },
-            "comfort": { "value": 75, "max": 100, "unit": "%" },
-            "waterproof": { "value": 90, "max": 100, "unit": "%" }
-          },
-          "crafting": {
-            "direct": [
-              {
-                "name": "Leather Material",
-                "amount": 8,
-                "components": [{ "name": "Animal Hide", "amount": 15 }, { "name": "Tanning Agent", "amount": 5 }]
-              },
-              { "name": "Rubber Sole", "amount": 2, "components": [{ "name": "Rubber", "amount": 12 }] },
-              { "name": "Steel Toe Cap", "amount": 2, "components": [{ "name": "Steel Parts", "amount": 6 }] }
-            ]
-          }
-        }
-      ]
+      "items": []
     }
   ]
 }
