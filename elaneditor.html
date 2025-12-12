@@ -487,6 +487,29 @@
             color: #aaa;
             margin-bottom: 0.5rem;
         }
+
+        /* Added image preview styling */
+        .image-preview {
+            margin-top: 0.5rem;
+            max-width: 200px;
+            max-height: 200px;
+            border-radius: 8px;
+            overflow: hidden;
+            background: rgba(40, 40, 40, 0.8);
+            display: none;
+            padding: 0.5rem;
+        }
+
+        .image-preview.show {
+            display: block;
+        }
+
+        .image-preview img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            border-radius: 4px;
+        }
     </style>
 </head>
 <body>
@@ -632,12 +655,30 @@
 
                 <div class="form-group">
                     <label>Name</label>
-                    <input type="text" value="${item.name}" onchange="updateField('name', this.value)">
+                    <input type="text" id="item-name" placeholder="Item name" required value="${item.name}" onchange="updateField('name', this.value)">
+                </div>
+                            
+                <!-- Added icon URL input field -->
+                <div class="form-group">
+                    <label>Icon URL (optional)</label>
+                    <input type="text" id="item-icon" placeholder="https://example.com/icon.png or /placeholder.svg?height=60&width=60&query=icon" value="${item.icon || ''}">
+                    <div class="image-preview" id="icon-preview">
+                        <img src="${item.icon || '/placeholder.svg'}" alt="Icon Preview">
+                    </div>
+                </div>
+                            
+                <!-- Added image URL input field -->
+                <div class="form-group">
+                    <label>Image URL (optional)</label>
+                    <input type="text" id="item-image" placeholder="https://example.com/image.png or /placeholder.svg?height=300&width=400&query=image" value="${item.image || ''}">
+                    <div class="image-preview" id="image-preview">
+                        <img src="${item.image || '/placeholder.svg'}" alt="Image Preview">
+                    </div>
                 </div>
 
                 <div class="form-group">
                     <label>Description</label>
-                    <textarea onchange="updateField('description', this.value)">${item.description}</textarea>
+                    <textarea id="item-description" onchange="updateField('description', this.value)">${item.description}</textarea>
                 </div>
 
                 <div class="form-group">
@@ -654,6 +695,7 @@
                     </div>
                 </div>
             `;
+            setupImagePreviews();
         }
 
         function renderCraftingEditor(materials, level = 0, path = '') {
@@ -913,6 +955,37 @@
 
         function downloadJSON() {
             saveData();
+        }
+
+        function setupImagePreviews() {
+            const iconInput = document.getElementById('item-icon');
+            const imageInput = document.getElementById('item-image');
+            const iconPreview = document.getElementById('icon-preview');
+            const imagePreview = document.getElementById('image-preview');
+
+            if (iconInput) {
+                iconInput.addEventListener('input', (e) => {
+                    const url = e.target.value.trim();
+                    if (url) {
+                        iconPreview.querySelector('img').src = url;
+                        iconPreview.classList.add('show');
+                    } else {
+                        iconPreview.classList.remove('show');
+                    }
+                });
+            }
+
+            if (imageInput) {
+                imageInput.addEventListener('input', (e) => {
+                    const url = e.target.value.trim();
+                    if (url) {
+                        imagePreview.querySelector('img').src = url;
+                        imagePreview.classList.add('show');
+                    } else {
+                        imagePreview.classList.remove('show');
+                    }
+                });
+            }
         }
 
         loadData();
