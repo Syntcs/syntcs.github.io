@@ -19,6 +19,26 @@
             padding: 2rem;
         }
 
+        /* Custom scrollbars for consistency */
+        ::-webkit-scrollbar {
+            width: 10px;
+            height: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(20, 20, 20, 0.5);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: rgba(100, 200, 255, 0.3);
+            border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(100, 200, 255, 0.5);
+        }
+
         .container {
             max-width: 900px;
             margin: 0 auto;
@@ -36,6 +56,33 @@
             font-size: 2.5rem;
         }
 
+        /* Added search bar */
+        .search-container {
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            background: rgba(30, 30, 30, 0.9);
+            border: 2px solid rgba(100, 200, 255, 0.3);
+            border-radius: 8px;
+            color: #e0e0e0;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: rgba(100, 200, 255, 0.6);
+            box-shadow: 0 0 20px rgba(100, 200, 255, 0.2);
+        }
+
+        .search-input::placeholder {
+            color: #888;
+        }
+
         /* Changed to vertical layout for categories */
         .categories {
             display: flex;
@@ -49,6 +96,11 @@
             border: 2px solid rgba(255, 255, 255, 0.1);
             box-shadow: 0 0 15px rgba(255, 255, 255, 0.1);
             overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .category-section.hidden {
+            display: none;
         }
 
         .category-header {
@@ -108,6 +160,12 @@
             background: rgba(40, 40, 40, 0.9);
             padding-left: 2rem;
             box-shadow: inset 0 0 20px rgba(255, 255, 255, 0.05);
+        }
+
+        /* Added highlight for search results */
+        .item-link.highlight {
+            background: rgba(100, 200, 255, 0.1);
+            border-left: 3px solid rgba(100, 200, 255, 0.6);
         }
 
         .section {
@@ -259,11 +317,79 @@
             border: 2px solid rgba(255, 255, 255, 0.1);
         }
 
+        /* Added crafting header with progress and actions */
+        .crafting-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
         .crafting-calculator h3 {
             color: #ffffff;
             margin-bottom: 1.5rem;
             text-shadow: 0 0 15px rgba(255, 255, 255, 0.25);
             font-size: 1.5rem;
+            margin: 0;
+        }
+
+        /* Added progress indicator */
+        .crafting-progress {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            font-size: 0.9rem;
+            color: #aaa;
+        }
+
+        .progress-bar-small {
+            width: 100px;
+            height: 8px;
+            background: rgba(20, 20, 20, 0.8);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #2ecc71 0%, #27ae60 100%);
+            transition: width 0.3s ease;
+            box-shadow: 0 0 10px rgba(46, 204, 113, 0.6);
+        }
+
+        /* Added action buttons for crafting */
+        .crafting-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .action-button {
+            padding: 0.5rem 1rem;
+            background: rgba(40, 40, 40, 0.9);
+            border: 2px solid rgba(100, 200, 255, 0.3);
+            border-radius: 6px;
+            color: #64c8ff;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .action-button:hover {
+            background: rgba(50, 50, 50, 0.9);
+            border-color: rgba(100, 200, 255, 0.6);
+            box-shadow: 0 0 15px rgba(100, 200, 255, 0.3);
+        }
+
+        .action-button.reset {
+            border-color: rgba(231, 76, 60, 0.3);
+            color: #e74c3c;
+        }
+
+        .action-button.reset:hover {
+            border-color: rgba(231, 76, 60, 0.6);
+            box-shadow: 0 0 15px rgba(231, 76, 60, 0.3);
         }
 
         .crafting-list {
@@ -272,7 +398,6 @@
             gap: 1rem;
         }
 
-        /* Changed checkbox to editable number input with green glow when 0 */
         .crafting-item {
             background: rgba(40, 40, 40, 0.8);
             border-radius: 6px;
@@ -313,7 +438,42 @@
             box-shadow: 0 0 25px rgba(46, 204, 113, 0.5);
         }
 
-        /* Added styling for number input */
+        /* Added amount controls container */
+        .amount-controls {
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+            flex-shrink: 0;
+        }
+
+        /* Added increment/decrement buttons */
+        .amount-btn {
+            width: 28px;
+            height: 28px;
+            background: rgba(30, 30, 30, 0.8);
+            border: 2px solid rgba(100, 200, 255, 0.4);
+            border-radius: 4px;
+            color: #64c8ff;
+            font-weight: bold;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            user-select: none;
+        }
+
+        .amount-btn:hover {
+            background: rgba(100, 200, 255, 0.2);
+            border-color: rgba(100, 200, 255, 0.8);
+            box-shadow: 0 0 10px rgba(100, 200, 255, 0.3);
+        }
+
+        .amount-btn:active {
+            transform: scale(0.95);
+        }
+
         .crafting-amount-input {
             width: 60px;
             padding: 0.4rem;
@@ -334,14 +494,12 @@
             box-shadow: 0 0 10px rgba(100, 200, 255, 0.3);
         }
 
-        /* Removed checkbox styling as it's no longer used */
-        /* .crafting-checkbox {
-            width: 20px;
-            height: 20px;
-            cursor: pointer;
-            accent-color: #64c8ff;
-            flex-shrink: 0;
-        } */
+        /* Green glow when amount is 0 */
+        .crafting-amount-input.zero {
+            border-color: rgba(46, 204, 113, 0.8);
+            color: #2ecc71;
+            box-shadow: 0 0 15px rgba(46, 204, 113, 0.5);
+        }
 
         .crafting-content {
             flex: 1;
@@ -385,6 +543,12 @@
             background: rgba(50, 50, 50, 0.6);
             border-radius: 4px;
             margin-bottom: 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .total-item.completed {
+            background: rgba(46, 204, 113, 0.15);
+            box-shadow: 0 0 10px rgba(46, 204, 113, 0.2);
         }
 
         .total-item span:first-child {
@@ -395,6 +559,71 @@
             color: #64c8ff;
             font-weight: bold;
             text-shadow: 0 0 8px rgba(100, 200, 255, 0.4);
+        }
+
+        .total-item.completed span:last-child {
+            color: #2ecc71;
+            text-shadow: 0 0 8px rgba(46, 204, 113, 0.4);
+        }
+
+        /* Added scroll to top button */
+        .scroll-top-btn {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 50px;
+            height: 50px;
+            background: rgba(100, 200, 255, 0.2);
+            border: 2px solid rgba(100, 200, 255, 0.6);
+            border-radius: 50%;
+            color: #64c8ff;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 20px rgba(100, 200, 255, 0.3);
+            z-index: 1000;
+        }
+
+        .scroll-top-btn.visible {
+            display: flex;
+        }
+
+        .scroll-top-btn:hover {
+            background: rgba(100, 200, 255, 0.3);
+            box-shadow: 0 0 30px rgba(100, 200, 255, 0.5);
+            transform: translateY(-3px);
+        }
+
+        /* Added notification system */
+        .notification {
+            position: fixed;
+            top: 2rem;
+            right: 2rem;
+            padding: 1rem 1.5rem;
+            background: rgba(30, 30, 30, 0.95);
+            border: 2px solid rgba(100, 200, 255, 0.6);
+            border-radius: 8px;
+            color: #64c8ff;
+            font-size: 0.9rem;
+            box-shadow: 0 0 30px rgba(100, 200, 255, 0.3);
+            z-index: 2000;
+            opacity: 0;
+            transform: translateX(400px);
+            transition: all 0.3s ease;
+        }
+
+        .notification.show {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .notification.success {
+            border-color: rgba(46, 204, 113, 0.6);
+            color: #2ecc71;
+            box-shadow: 0 0 30px rgba(46, 204, 113, 0.3);
         }
 
         @media (max-width: 768px) {
@@ -409,14 +638,42 @@
             h1 {
                 font-size: 1.8rem;
             }
+
+            .crafting-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .scroll-top-btn {
+                bottom: 1rem;
+                right: 1rem;
+            }
         }
     </style>
 </head>
 <body>
+    <!-- Added scroll to top button -->
+    <div class="scroll-top-btn" id="scrollTopBtn" onclick="scrollToTop()">↑</div>
+
+    <!-- Added notification container -->
+    <div class="notification" id="notification"></div>
+
     <div class="container">
         <!-- Home section now dynamically loaded from JSON -->
         <div class="section active" id="home-section">
             <h1>Equipment Wiki</h1>
+            
+            <!-- Added search functionality -->
+            <div class="search-container">
+                <input 
+                    type="text" 
+                    class="search-input" 
+                    id="searchInput" 
+                    placeholder="Search for items..."
+                    oninput="filterItems(this.value)"
+                >
+            </div>
+
             <div class="categories" id="categories-container"></div>
         </div>
 
@@ -2209,6 +2466,34 @@
     <script>
         let gameData = {};
         let materialStates = {};
+        let currentItemId = null;
+
+        window.addEventListener('scroll', () => {
+            const scrollTopBtn = document.getElementById('scrollTopBtn');
+            if (window.pageYOffset > 300) {
+                scrollTopBtn.classList.add('visible');
+            } else {
+                scrollTopBtn.classList.remove('visible');
+            }
+        });
+
+        function scrollToTop() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        }
+
+        function showNotification(message, type = 'info') {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.className = `notification ${type}`;
+            notification.classList.add('show');
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
 
         function loadStatesFromCookies() {
             const cookieValue = document.cookie
@@ -2239,7 +2524,49 @@
                 renderCategories();
             } catch (error) {
                 console.error('Error loading data:', error);
+                showNotification('Error loading data', 'error');
             }
+        }
+
+        function filterItems(searchTerm) {
+            const term = searchTerm.toLowerCase().trim();
+            const categories = document.querySelectorAll('.category-section');
+            
+            if (!term) {
+                categories.forEach(cat => {
+                    cat.classList.remove('hidden');
+                    const items = cat.querySelectorAll('.item-link');
+                    items.forEach(item => {
+                        item.classList.remove('highlight');
+                        item.style.display = 'block';
+                    });
+                });
+                return;
+            }
+
+            categories.forEach(cat => {
+                const items = cat.querySelectorAll('.item-link');
+                let hasVisibleItems = false;
+
+                items.forEach(item => {
+                    const itemName = item.textContent.toLowerCase();
+                    if (itemName.includes(term)) {
+                        item.style.display = 'block';
+                        item.classList.add('highlight');
+                        hasVisibleItems = true;
+                    } else {
+                        item.style.display = 'none';
+                        item.classList.remove('highlight');
+                    }
+                });
+
+                if (hasVisibleItems) {
+                    cat.classList.remove('hidden');
+                    cat.classList.add('open');
+                } else {
+                    cat.classList.add('hidden');
+                }
+            });
         }
 
         function renderCategories() {
@@ -2283,15 +2610,30 @@
         function showDetail(categoryIndex, itemIndex) {
             const category = gameData.categories[categoryIndex];
             const item = category.items[itemIndex];
+            currentItemId = item.id;
             
             document.getElementById('home-section').classList.remove('active');
             document.getElementById('detail-section').classList.add('active');
+            scrollToTop();
 
             let craftingHTML = '';
             if (item.crafting && item.crafting.direct) {
+                const progress = calculateProgress(item.crafting.direct, item.id);
                 craftingHTML = `
                     <div class="crafting-calculator">
-                        <h3>Crafting Rezept</h3>
+                        <div class="crafting-header">
+                            <h3>Crafting Rezept</h3>
+                            <div class="crafting-progress">
+                                <span>${progress.completed}/${progress.total} Materials</span>
+                                <div class="progress-bar-small">
+                                    <div class="progress-bar-fill" style="width: ${progress.percentage}%"></div>
+                                </div>
+                            </div>
+                            <div class="crafting-actions">
+                                <button class="action-button" onclick="completeAllMaterials()">Complete All</button>
+                                <button class="action-button reset" onclick="resetAllMaterials()">Reset All</button>
+                            </div>
+                        </div>
                         <div class="crafting-list">
                             ${generateCraftingItems(item.crafting.direct, item.id, '')}
                         </div>
@@ -2319,6 +2661,99 @@
                 </div>
                 ${craftingHTML}
             `;
+        }
+
+        function calculateProgress(materials, itemId, path = '') {
+            let total = 0;
+            let completed = 0;
+
+            function count(mats, currentPath) {
+                mats.forEach((material, index) => {
+                    const materialPath = currentPath ? `${currentPath}.${index}` : `${index}`;
+                    const stateKey = `${itemId}.${materialPath}`;
+                    total++;
+                    if (materialStates[stateKey] === 0) {
+                        completed++;
+                    }
+                    if (material.components) {
+                        count(material.components, `${materialPath}.components`);
+                    }
+                });
+            }
+
+            count(materials, path);
+
+            return {
+                total,
+                completed,
+                percentage: total > 0 ? (completed / total * 100).toFixed(0) : 0
+            };
+        }
+
+        function completeAllMaterials() {
+            if (!currentItemId) return;
+            
+            const item = findItemById(currentItemId);
+            if (!item || !item.crafting || !item.crafting.direct) return;
+
+            function completeAll(materials, path = '') {
+                materials.forEach((material, index) => {
+                    const materialPath = path ? `${path}.${index}` : `${index}`;
+                    const stateKey = `${currentItemId}.${materialPath}`;
+                    materialStates[stateKey] = 0;
+                    if (material.components) {
+                        completeAll(material.components, `${materialPath}.components`);
+                    }
+                });
+            }
+
+            completeAll(item.crafting.direct);
+            saveStatesToCookies();
+            showNotification('All materials completed!', 'success');
+            
+            // Re-render current detail
+            const categoryIndex = gameData.categories.findIndex(cat => 
+                cat.items.some(i => i.id === currentItemId)
+            );
+            const itemIndex = gameData.categories[categoryIndex].items.findIndex(i => i.id === currentItemId);
+            showDetail(categoryIndex, itemIndex);
+        }
+
+        function resetAllMaterials() {
+            if (!currentItemId) return;
+            
+            const item = findItemById(currentItemId);
+            if (!item || !item.crafting || !item.crafting.direct) return;
+
+            function resetAll(materials, path = '') {
+                materials.forEach((material, index) => {
+                    const materialPath = path ? `${path}.${index}` : `${index}`;
+                    const stateKey = `${currentItemId}.${materialPath}`;
+                    delete materialStates[stateKey];
+                    if (material.components) {
+                        resetAll(material.components, `${materialPath}.components`);
+                    }
+                });
+            }
+
+            resetAll(item.crafting.direct);
+            saveStatesToCookies();
+            showNotification('All materials reset!', 'info');
+            
+            // Re-render current detail
+            const categoryIndex = gameData.categories.findIndex(cat => 
+                cat.items.some(i => i.id === currentItemId)
+            );
+            const itemIndex = gameData.categories[categoryIndex].items.findIndex(i => i.id === currentItemId);
+            showDetail(categoryIndex, itemIndex);
+        }
+
+        function findItemById(itemId) {
+            for (const category of gameData.categories) {
+                const item = category.items.find(i => i.id === itemId);
+                if (item) return item;
+            }
+            return null;
         }
 
         function renderStats(stats) {
@@ -2355,17 +2790,24 @@
                 const currentAmount = materialStates[stateKey] !== undefined ? materialStates[stateKey] : material.amount;
                 const isCompleted = currentAmount === 0;
                 const nestClass = level === 0 ? '' : level === 1 ? 'nested' : 'nested-2';
+                const zeroClass = currentAmount === 0 ? 'zero' : '';
                 
                 html += `
                     <div class="crafting-item ${nestClass} ${isCompleted ? 'completed' : ''}" id="item-${stateKey}">
-                        <input 
-                            type="number" 
-                            class="crafting-amount-input" 
-                            value="${currentAmount}" 
-                            min="0"
-                            onchange="updateMaterialAmount('${stateKey}', this.value)"
-                            data-max="${material.amount}"
-                        >
+                        <div class="amount-controls">
+                            <div class="amount-btn" onclick="decrementAmount('${stateKey}', ${material.amount})">−</div>
+                            <input 
+                                type="number" 
+                                class="crafting-amount-input ${zeroClass}" 
+                                value="${currentAmount}" 
+                                min="0"
+                                max="${material.amount}"
+                                onchange="updateMaterialAmount('${stateKey}', this.value, ${material.amount})"
+                                data-max="${material.amount}"
+                                id="input-${stateKey}"
+                            >
+                            <div class="amount-btn" onclick="incrementAmount('${stateKey}', ${material.amount})">+</div>
+                        </div>
                         <div class="crafting-content">
                             <div class="material-name">${material.name}</div>
                             <div class="material-amount">× ${material.amount}</div>
@@ -2382,10 +2824,36 @@
             return html;
         }
 
-        function updateMaterialAmount(stateKey, value) {
-            const numValue = parseInt(value) || 0;
-            materialStates[stateKey] = Math.max(0, numValue);
+        function incrementAmount(stateKey, maxAmount) {
+            const input = document.getElementById(`input-${stateKey}`);
+            const currentValue = parseInt(input.value) || 0;
+            if (currentValue < maxAmount) {
+                updateMaterialAmount(stateKey, currentValue + 1, maxAmount);
+            }
+        }
+
+        function decrementAmount(stateKey, maxAmount) {
+            const input = document.getElementById(`input-${stateKey}`);
+            const currentValue = parseInt(input.value) || 0;
+            if (currentValue > 0) {
+                updateMaterialAmount(stateKey, currentValue - 1, maxAmount);
+            }
+        }
+
+        function updateMaterialAmount(stateKey, value, maxAmount) {
+            const numValue = Math.max(0, Math.min(parseInt(value) || 0, maxAmount));
+            materialStates[stateKey] = numValue;
             saveStatesToCookies();
+            
+            const input = document.getElementById(`input-${stateKey}`);
+            input.value = numValue;
+            
+            // Update zero class
+            if (numValue === 0) {
+                input.classList.add('zero');
+            } else {
+                input.classList.remove('zero');
+            }
             
             // Update UI
             const itemElement = document.getElementById(`item-${stateKey}`);
@@ -2397,11 +2865,32 @@
                 }
             }
 
-            // Update totals
-            updateCraftingTotals(document.getElementById('detail-section').querySelector('.crafting-calculator'));
+            updateCraftingDisplay();
         }
 
-        // Function to calculate and render total base materials
+        function updateCraftingDisplay() {
+            const item = findItemById(currentItemId);
+            if (!item || !item.crafting || !item.crafting.direct) return;
+
+            // Update progress
+            const progress = calculateProgress(item.crafting.direct, currentItemId);
+            const progressElement = document.querySelector('.crafting-progress');
+            if (progressElement) {
+                progressElement.innerHTML = `
+                    <span>${progress.completed}/${progress.total} Materials</span>
+                    <div class="progress-bar-small">
+                        <div class="progress-bar-fill" style="width: ${progress.percentage}%"></div>
+                    </div>
+                `;
+            }
+
+            // Update totals
+            const totalsElement = document.querySelector('.total-materials');
+            if (totalsElement) {
+                totalsElement.outerHTML = renderCraftingTotals(item.crafting.direct, currentItemId);
+            }
+        }
+
         function renderCraftingTotals(materials, itemId) {
             const totals = {};
             
@@ -2425,40 +2914,18 @@
 
             let totalsHTML = '<div class="total-materials"><h4>Total Base Materials:</h4>';
             for (const [name, amount] of Object.entries(totals)) {
-                if (amount > 0) {
-                    totalsHTML += `<div class="total-item"><span>${name}</span><span>× ${amount}</span></div>`;
-                }
+                const completedClass = amount === 0 ? 'completed' : '';
+                totalsHTML += `<div class="total-item ${completedClass}"><span>${name}</span><span>× ${amount}</span></div>`;
             }
             totalsHTML += '</div>';
             return totalsHTML;
         }
 
-        // Function to update the displayed totals
-        function updateCraftingTotals(calculatorElement) {
-            const detailSection = document.getElementById('detail-section');
-            const itemId = detailSection.querySelector('.back-button').nextElementSibling.querySelector('.detail-info h2').textContent.replace(/\s+/g, '-').toLowerCase(); // A bit hacky to get item ID
-            
-            // Re-fetch materials to recalculate totals based on current states
-            // This assumes gameData is accessible and we can find the item again
-            let currentItem = null;
-            for (const category of gameData.categories) {
-                const item = category.items.find(i => i.name.toLowerCase().replace(/\s+/g, '-') === itemId);
-                if (item) {
-                    currentItem = item;
-                    break;
-                }
-            }
-
-            if (currentItem && currentItem.crafting && currentItem.crafting.direct) {
-                const totalsElement = calculatorElement.querySelector('.total-materials');
-                const newTotalsHTML = renderCraftingTotals(currentItem.crafting.direct, currentItem.id);
-                totalsElement.outerHTML = newTotalsHTML; // Replace the old totals section
-            }
-        }
-
         function showHome() {
             document.getElementById('detail-section').classList.remove('active');
             document.getElementById('home-section').classList.add('active');
+            currentItemId = null;
+            scrollToTop();
         }
 
         window.onload = loadData;
