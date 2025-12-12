@@ -193,6 +193,15 @@
             align-items: center;
             justify-content: center;
             min-height: 300px;
+            overflow: hidden;
+        }
+
+        /* Added actual image display styling */
+        .detail-image img {
+            max-width: 100%;
+            max-height: 400px;
+            border-radius: 4px;
+            object-fit: contain;
         }
 
         .placeholder-image {
@@ -206,6 +215,72 @@
             color: #888;
             font-size: 1.2rem;
             box-shadow: inset 0 0 30px rgba(255, 255, 255, 0.05);
+        }
+
+        .item-card {
+            background: rgba(30, 30, 30, 0.95);
+            border-radius: 8px;
+            padding: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(100, 200, 255, 0.2);
+            box-shadow: 0 0 15px rgba(100, 200, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .item-card:hover {
+            background: rgba(40, 40, 40, 0.95);
+            box-shadow: 0 0 25px rgba(100, 200, 255, 0.25);
+            transform: translateY(-3px);
+        }
+
+        .item-card-icon {
+            width: 60px;
+            height: 60px;
+            margin: 0 auto 1rem;
+            border-radius: 8px;
+            background: rgba(40, 40, 40, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .item-card-icon img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+
+        .item-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom, rgba(100, 200, 255, 0.1), transparent);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .item-card:hover::before {
+            opacity: 0.8;
+        }
+
+        .item-card h3 {
+            text-align: center;
+            margin-bottom: 0.8rem;
+            color: #ffffff;
+            font-size: 1.2rem;
+        }
+
+        .item-card p {
+            font-size: 0.9rem;
+            color: #bbb;
+            text-align: center;
+            line-height: 1.5;
         }
 
         .detail-info {
@@ -2585,19 +2660,19 @@
                     <span class="category-arrow">›</span>
                 `;
                 
-                const items = document.createElement('div');
-                items.className = 'category-items';
+                const itemsContainer = document.createElement('div');
+                itemsContainer.className = 'category-items';
                 
                 category.items.forEach((item, itemIndex) => {
                     const link = document.createElement('div');
                     link.className = 'item-link';
                     link.textContent = item.name;
-                    link.onclick = () => showDetail(categoryIndex, itemIndex);
-                    items.appendChild(link);
+                    link.onclick = () => showDetail(category.id, item.id); // Use category.id and item.id
+                    itemsContainer.appendChild(link);
                 });
                 
                 section.appendChild(header);
-                section.appendChild(items);
+                section.appendChild(itemsContainer);
                 container.appendChild(section);
             });
         }
@@ -2607,11 +2682,16 @@
             section.classList.toggle('open');
         }
 
-        function showDetail(categoryIndex, itemIndex) {
-            const category = gameData.categories[categoryIndex];
-            const item = category.items[itemIndex];
-            currentItemId = item.id;
+        function showDetail(categoryId, itemId) {
+            currentItemId = itemId; // Set the global currentItemId
+            const category = gameData.categories.find(cat => cat.id === categoryId);
+            const item = category.items.find(i => i.id === itemId);
             
+            if (!item) {
+                console.error(`Item with ID ${itemId} not found.`);
+                return;
+            }
+
             document.getElementById('home-section').classList.remove('active');
             document.getElementById('detail-section').classList.add('active');
             scrollToTop();
@@ -2630,12 +2710,12 @@
                                 </div>
                             </div>
                             <div class="crafting-actions">
-                                <button class="action-button" onclick="completeAllMaterials()">Complete All</button>
-                                <button class="action-button reset" onclick="resetAllMaterials()">Reset All</button>
+                                <button class="action-button" onclick="completeAllMaterials('${itemId}')">Complete All</button>
+                                <button class="action-button reset" onclick="resetAllMaterials('${itemId}')">Reset All</button>
                             </div>
                         </div>
                         <div class="crafting-list">
-                            ${generateCraftingItems(item.crafting.direct, item.id, '')}
+                            ${generateCraftingItems(item.crafting.direct, item.id, '', 0)}
                         </div>
                         ${renderCraftingTotals(item.crafting.direct, item.id)}
                     </div>
@@ -2647,7 +2727,7 @@
                 
                 <div class="detail-view">
                     <div class="detail-image">
-                        <div class="placeholder-image">${item.name}</div>
+                        ${item.image ? `<img src="${item.image}" alt="${item.name}">` : `<div class="placeholder-image">${item.name}</div>`}
                     </div>
 
                     <div class="detail-info">
@@ -2663,6 +2743,7 @@
             `;
         }
 
+
         function calculateProgress(materials, itemId, path = '') {
             let total = 0;
             let completed = 0;
@@ -2672,7 +2753,8 @@
                     const materialPath = currentPath ? `${currentPath}.${index}` : `${index}`;
                     const stateKey = `${itemId}.${materialPath}`;
                     total++;
-                    if (materialStates[stateKey] === 0) {
+                    // If the stateKey is NOT in materialStates or its value is 0, it's considered completed.
+                    if (!(stateKey in materialStates) || materialStates[stateKey] === 0) {
                         completed++;
                     }
                     if (material.components) {
@@ -2686,21 +2768,20 @@
             return {
                 total,
                 completed,
-                percentage: total > 0 ? (completed / total * 100).toFixed(0) : 0
+                percentage: total > 0 ? Math.round((completed / total) * 100) : 0
             };
         }
 
-        function completeAllMaterials() {
-            if (!currentItemId) return;
-            
-            const item = findItemById(currentItemId);
+
+        function completeAllMaterials(itemId) {
+            const item = findItemById(itemId);
             if (!item || !item.crafting || !item.crafting.direct) return;
 
             function completeAll(materials, path = '') {
                 materials.forEach((material, index) => {
                     const materialPath = path ? `${path}.${index}` : `${index}`;
-                    const stateKey = `${currentItemId}.${materialPath}`;
-                    materialStates[stateKey] = 0;
+                    const stateKey = `${itemId}.${materialPath}`;
+                    materialStates[stateKey] = 0; // Mark as completed
                     if (material.components) {
                         completeAll(material.components, `${materialPath}.components`);
                     }
@@ -2712,24 +2793,18 @@
             showNotification('All materials completed!', 'success');
             
             // Re-render current detail
-            const categoryIndex = gameData.categories.findIndex(cat => 
-                cat.items.some(i => i.id === currentItemId)
-            );
-            const itemIndex = gameData.categories[categoryIndex].items.findIndex(i => i.id === currentItemId);
-            showDetail(categoryIndex, itemIndex);
+            showDetail(gameData.categories.find(cat => cat.items.some(i => i.id === itemId)).id, itemId);
         }
 
-        function resetAllMaterials() {
-            if (!currentItemId) return;
-            
-            const item = findItemById(currentItemId);
+        function resetAllMaterials(itemId) {
+            const item = findItemById(itemId);
             if (!item || !item.crafting || !item.crafting.direct) return;
 
             function resetAll(materials, path = '') {
                 materials.forEach((material, index) => {
                     const materialPath = path ? `${path}.${index}` : `${index}`;
-                    const stateKey = `${currentItemId}.${materialPath}`;
-                    delete materialStates[stateKey];
+                    const stateKey = `${itemId}.${materialPath}`;
+                    delete materialStates[stateKey]; // Remove from states
                     if (material.components) {
                         resetAll(material.components, `${materialPath}.components`);
                     }
@@ -2741,11 +2816,7 @@
             showNotification('All materials reset!', 'info');
             
             // Re-render current detail
-            const categoryIndex = gameData.categories.findIndex(cat => 
-                cat.items.some(i => i.id === currentItemId)
-            );
-            const itemIndex = gameData.categories[categoryIndex].items.findIndex(i => i.id === currentItemId);
-            showDetail(categoryIndex, itemIndex);
+            showDetail(gameData.categories.find(cat => cat.items.some(i => i.id === itemId)).id, itemId);
         }
 
         function findItemById(itemId) {
@@ -2759,7 +2830,6 @@
         function renderStats(stats) {
             let html = '';
             for (const [key, stat] of Object.entries(stats)) {
-                // Ensure max value is not zero to avoid division by zero
                 const maxValue = stat.max || 1; // Use 1 as a fallback if max is 0 or undefined
                 const percentage = (stat.value / maxValue) * 100;
                 const barClass = percentage >= 80 ? '' : percentage >= 50 ? 'medium' : 'low';
@@ -2780,13 +2850,14 @@
             return html;
         }
 
-        function generateCraftingItems(materials, itemId, path, level = 0) {
+        function generateCraftingItems(materials, itemId, path, level) {
             if (!materials) return '';
             
             let html = '';
             materials.forEach((material, index) => {
                 const materialPath = path ? `${path}.${index}` : `${index}`;
                 const stateKey = `${itemId}.${materialPath}`;
+                // If state is not set, use the material's default amount. If it's 0, it's completed.
                 const currentAmount = materialStates[stateKey] !== undefined ? materialStates[stateKey] : material.amount;
                 const isCompleted = currentAmount === 0;
                 const nestClass = level === 0 ? '' : level === 1 ? 'nested' : 'nested-2';
@@ -2824,6 +2895,7 @@
             return html;
         }
 
+
         function incrementAmount(stateKey, maxAmount) {
             const input = document.getElementById(`input-${stateKey}`);
             const currentValue = parseInt(input.value) || 0;
@@ -2848,14 +2920,12 @@
             const input = document.getElementById(`input-${stateKey}`);
             input.value = numValue;
             
-            // Update zero class
             if (numValue === 0) {
                 input.classList.add('zero');
             } else {
                 input.classList.remove('zero');
             }
             
-            // Update UI
             const itemElement = document.getElementById(`item-${stateKey}`);
             if (itemElement) {
                 if (materialStates[stateKey] === 0) {
@@ -2872,7 +2942,6 @@
             const item = findItemById(currentItemId);
             if (!item || !item.crafting || !item.crafting.direct) return;
 
-            // Update progress
             const progress = calculateProgress(item.crafting.direct, currentItemId);
             const progressElement = document.querySelector('.crafting-progress');
             if (progressElement) {
@@ -2884,7 +2953,6 @@
                 `;
             }
 
-            // Update totals
             const totalsElement = document.querySelector('.total-materials');
             if (totalsElement) {
                 totalsElement.outerHTML = renderCraftingTotals(item.crafting.direct, currentItemId);
@@ -2913,10 +2981,11 @@
             calculateTotals(materials);
 
             let totalsHTML = '<div class="total-materials"><h4>Total Base Materials:</h4>';
-            for (const [name, amount] of Object.entries(totals)) {
+            const sortedTotals = Object.entries(totals).sort((a, b) => a[0].localeCompare(b[0])); // Sort alphabetically
+            sortedTotals.forEach(([name, amount]) => {
                 const completedClass = amount === 0 ? 'completed' : '';
                 totalsHTML += `<div class="total-item ${completedClass}"><span>${name}</span><span>× ${amount}</span></div>`;
-            }
+            });
             totalsHTML += '</div>';
             return totalsHTML;
         }
