@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Equipment Wiki Editor</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #0a0a0a;
+            color: #e0e0e0;
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(20, 20, 20, 0.8);
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 0 40px rgba(255, 255, 255, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 2rem;
+            color: #ffffff;
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+            font-size: 2.5rem;
+        }
+
+        .editor-controls {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 0.8rem 1.5rem;
+            background: rgba(100, 200, 255, 0.3);
+            color: #ffffff;
+            border: 2px solid rgba(100, 200, 255, 0.6);
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 15px rgba(100, 200, 255, 0.2);
+            font-size: 1rem;
+        }
+
+        .btn:hover {
+            background: rgba(100, 200, 255, 0.5);
+            box-shadow: 0 0 25px rgba(100, 200, 255, 0.4);
+        }
+
+        .btn-success {
+            background: rgba(46, 204, 113, 0.3);
+            border-color: rgba(46, 204, 113, 0.6);
+            box-shadow: 0 0 15px rgba(46, 204, 113, 0.2);
+        }
+
+        .btn-success:hover {
+            background: rgba(46, 204, 113, 0.5);
+            box-shadow: 0 0 25px rgba(46, 204, 113, 0.4);
+        }
+
+        .btn-danger {
+            background: rgba(231, 76, 60, 0.3);
+            border-color: rgba(231, 76, 60, 0.6);
+            box-shadow: 0 0 15px rgba(231, 76, 60, 0.2);
+        }
+
+        .btn-danger:hover {
+            background: rgba(231, 76, 60, 0.5);
+            box-shadow: 0 0 25px rgba(231, 76, 60, 0.4);
+        }
+
+        .editor-grid {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 2rem;
+        }
+
+        .sidebar {
+            background: rgba(30, 30, 30, 0.9);
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.08);
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .sidebar h3 {
+            color: #ffffff;
+            margin-bottom: 1rem;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+        }
+
+        .category-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .category-item {
+            padding: 0.8rem;
+            background: rgba(40, 40, 40, 0.8);
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .category-item:hover {
+            background: rgba(50, 50, 50, 0.9);
+            border-color: rgba(100, 200, 255, 0.3);
+        }
+
+        .category-item.selected {
+            border-color: rgba(100, 200, 255, 0.8);
+            box-shadow: 0 0 15px rgba(100, 200, 255, 0.3);
+        }
+
+        .item-list {
+            margin-left: 1rem;
+            margin-top: 0.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.3rem;
+        }
+
+        .item-entry {
+            padding: 0.5rem;
+            background: rgba(35, 35, 35, 0.8);
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .item-entry:hover {
+            background: rgba(45, 45, 45, 0.9);
+        }
+
+        .item-entry.selected {
+            background: rgba(100, 200, 255, 0.2);
+            border-left: 3px solid rgba(100, 200, 255, 0.8);
+        }
+
+        .editor-main {
+            background: rgba(30, 30, 30, 0.9);
+            border-radius: 8px;
+            padding: 2rem;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.08);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #ccc;
+            font-weight: 600;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 0.8rem;
+            background: rgba(40, 40, 40, 0.8);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            color: #e0e0e0;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: rgba(100, 200, 255, 0.6);
+            box-shadow: 0 0 15px rgba(100, 200, 255, 0.2);
+        }
+
+        .form-group textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .stat-input {
+            background: rgba(40, 40, 40, 0.6);
+            padding: 1rem;
+            border-radius: 4px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .stat-input label {
+            font-size: 0.9rem;
+            color: #aaa;
+            margin-bottom: 0.3rem;
+            display: block;
+        }
+
+        .stat-input input {
+            margin-bottom: 0.5rem;
+        }
+
+        .crafting-section {
+            background: rgba(40, 40, 40, 0.6);
+            padding: 1.5rem;
+            border-radius: 4px;
+            margin-top: 1rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .crafting-section h4 {
+            color: #ffffff;
+            margin-bottom: 1rem;
+        }
+
+        .material-entry {
+            background: rgba(50, 50, 50, 0.6);
+            padding: 1rem;
+            border-radius: 4px;
+            margin-bottom: 0.8rem;
+            border-left: 3px solid rgba(100, 200, 255, 0.6);
+        }
+
+        .material-entry.nested {
+            margin-left: 2rem;
+            border-left-color: rgba(255, 200, 100, 0.6);
+        }
+
+        .json-output {
+            background: rgba(15, 15, 15, 0.9);
+            padding: 1.5rem;
+            border-radius: 4px;
+            margin-top: 2rem;
+            border: 2px solid rgba(100, 200, 255, 0.3);
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .json-output pre {
+            color: #64c8ff;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        .add-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: rgba(46, 204, 113, 0.3);
+            border: 2px solid rgba(46, 204, 113, 0.6);
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+        }
+
+        .add-btn:hover {
+            background: rgba(46, 204, 113, 0.5);
+        }
+
+        .remove-btn {
+            padding: 0.3rem 0.8rem;
+            background: rgba(231, 76, 60, 0.3);
+            border: 1px solid rgba(231, 76, 60, 0.6);
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            float: right;
+        }
+
+        .remove-btn:hover {
+            background: rgba(231, 76, 60, 0.5);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Equipment Wiki Editor</h1>
+        
+        <div class="editor-controls">
+            <button class="btn btn-success" onclick="saveData()">💾 Save to JSON</button>
+            <button class="btn" onclick="downloadJSON()">⬇️ Download JSON</button>
+            <button class="btn" onclick="addNewItem()">➕ Add New Item</button>
+            <button class="btn btn-danger" onclick="deleteCurrentItem()">🗑️ Delete Current Item</button>
+        </div>
+
+        <div class="editor-grid">
+            <div class="sidebar">
+                <h3>Categories & Items</h3>
+                <div class="category-list" id="category-list"></div>
+            </div>
+
+            <div class="editor-main" id="editor-main">
+                <p style="color: #888; text-align: center; padding: 2rem;">Select an item to edit or create a new one</p>
+            </div>
+        </div>
+
+        <div class="json-output">
+            <h3 style="color: #ffffff; margin-bottom: 1rem;">JSON Preview</h3>
+            <pre id="json-preview">Loading...</pre>
+        </div>
+    </div>
+
+    <script>
+        let gameData = {};
+        let currentItem = null;
+        let currentCategory = null;
+
+        async function loadData() {
+            try {
+                const response = await fetch('data.json');
+                gameData = await response.json();
+                renderSidebar();
+                updateJSONPreview();
+            } catch (error) {
+                console.error('Error loading data:', error);
+                alert('Error loading data. Make sure data.json exists.');
+            }
+        }
+
+        function renderSidebar() {
+            const container = document.getElementById('category-list');
+            container.innerHTML = '';
+
+            gameData.categories.forEach((category, catIndex) => {
+                const catDiv = document.createElement('div');
+                catDiv.className = 'category-item';
+                catDiv.innerHTML = `<strong>${category.name}</strong>`;
+                
+                const itemList = document.createElement('div');
+                itemList.className = 'item-list';
+                
+                category.items.forEach((item, itemIndex) => {
+                    const itemDiv = document.createElement('div');
+                    itemDiv.className = 'item-entry';
+                    itemDiv.textContent = item.name;
+                    itemDiv.onclick = () => selectItem(catIndex, itemIndex);
+                    itemList.appendChild(itemDiv);
+                });
+                
+                catDiv.appendChild(itemList);
+                container.appendChild(catDiv);
+            });
+        }
+
+        function selectItem(catIndex, itemIndex) {
+            currentCategory = catIndex;
+            currentItem = itemIndex;
+            
+            // Update selection UI
+            document.querySelectorAll('.item-entry').forEach(el => el.classList.remove('selected'));
+            const items = document.querySelectorAll('.item-entry');
+            let totalIndex = 0;
+            for (let i = 0; i < catIndex; i++) {
+                totalIndex += gameData.categories[i].items.length;
+            }
+            totalIndex += itemIndex;
+            items[totalIndex]?.classList.add('selected');
+            
+            renderEditor();
+        }
+
+        function renderEditor() {
+            if (currentCategory === null || currentItem === null) return;
+
+            const item = gameData.categories[currentCategory].items[currentItem];
+            const editorMain = document.getElementById('editor-main');
+
+            let statsHTML = '';
+            for (const [key, stat] of Object.entries(item.stats)) {
+                statsHTML += `
+                    <div class="stat-input">
+                        <label>${key}</label>
+                        <input type="number" value="${stat.value}" onchange="updateStat('${key}', 'value', this.value)">
+                        <label>Max</label>
+                        <input type="number" value="${stat.max}" onchange="updateStat('${key}', 'max', this.value)">
+                        <label>Unit</label>
+                        <input type="text" value="${stat.unit || ''}" onchange="updateStat('${key}', 'unit', this.value)">
+                    </div>
+                `;
+            }
+
+            let craftingHTML = renderCraftingEditor(item.crafting.direct, 0);
+
+            editorMain.innerHTML = `
+                <h2 style="color: #ffffff; margin-bottom: 1.5rem;">Editing: ${item.name}</h2>
+                
+                <div class="form-group">
+                    <label>Item ID</label>
+                    <input type="text" value="${item.id}" onchange="updateField('id', this.value)">
+                </div>
+
+                <div class="form-group">
+                    <label>Name</label>
+                    <input type="text" value="${item.name}" onchange="updateField('name', this.value)">
+                </div>
+
+                <div class="form-group">
+                    <label>Description</label>
+                    <textarea onchange="updateField('description', this.value)">${item.description}</textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>Stats</label>
+                    <div class="stats-grid">${statsHTML}</div>
+                    <button class="add-btn" onclick="addStat()">➕ Add Stat</button>
+                </div>
+
+                <div class="form-group">
+                    <label>Crafting Recipe</label>
+                    <div class="crafting-section" id="crafting-container">
+                        ${craftingHTML}
+                        <button class="add-btn" onclick="addMaterial()">➕ Add Material</button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderCraftingEditor(materials, level = 0, path = '') {
+            if (!materials) return '';
+            
+            let html = '';
+            materials.forEach((material, index) => {
+                const currentPath = path ? `${path}.${index}` : `${index}`;
+                const nestClass = level === 0 ? '' : level === 1 ? 'nested' : '';
+                
+                html += `
+                    <div class="material-entry ${nestClass}">
+                        <button class="remove-btn" onclick="removeMaterial('${currentPath}')">Remove</button>
+                        <div class="form-group">
+                            <label>Material Name</label>
+                            <input type="text" value="${material.name}" onchange="updateMaterial('${currentPath}', 'name', this.value)">
+                        </div>
+                        <div class="form-group">
+                            <label>Amount</label>
+                            <input type="number" value="${material.amount}" onchange="updateMaterial('${currentPath}', 'amount', this.value)">
+                        </div>
+                        ${material.description ? `
+                        <div class="form-group">
+                            <label>Description</label>
+                            <input type="text" value="${material.description}" onchange="updateMaterial('${currentPath}', 'description', this.value)">
+                        </div>` : ''}
+                        ${material.components ? `
+                            <div style="margin-top: 1rem;">
+                                <strong style="color: #ccc;">Components:</strong>
+                                ${renderCraftingEditor(material.components, level + 1, currentPath + '.components')}
+                                <button class="add-btn" onclick="addSubMaterial('${currentPath}')">➕ Add Component</button>
+                            </div>
+                        ` : `<button class="add-btn" onclick="addSubMaterial('${currentPath}')">➕ Add Components</button>`}
+                    </div>
+                `;
+            });
+            
+            return html;
+        }
+
+        function updateField(field, value) {
+            const item = gameData.categories[currentCategory].items[currentItem];
+            item[field] = value;
+            updateJSONPreview();
+        }
+
+        function updateStat(statKey, field, value) {
+            const item = gameData.categories[currentCategory].items[currentItem];
+            if (!item.stats[statKey]) item.stats[statKey] = {};
+            item.stats[statKey][field] = field === 'unit' ? value : Number(value);
+            updateJSONPreview();
+        }
+
+        function updateMaterial(path, field, value) {
+            const item = gameData.categories[currentCategory].items[currentItem];
+            const parts = path.split('.');
+            let target = item.crafting.direct;
+            
+            for (let i = 0; i < parts.length - 1; i++) {
+                if (parts[i] === 'components') {
+                    target = target.components;
+                } else {
+                    target = target[Number(parts[i])];
+                    if (parts[i + 1] === 'components') {
+                        i++;
+                    }
+                }
+            }
+            
+            const finalIndex = Number(parts[parts.length - 1]);
+            target[finalIndex][field] = field === 'amount' ? Number(value) : value;
+            updateJSONPreview();
+        }
+
+        function addStat() {
+            const statName = prompt('Enter stat name:');
+            if (!statName) return;
+            
+            const item = gameData.categories[currentCategory].items[currentItem];
+            item.stats[statName] = { value: 0, max: 100, unit: '' };
+            renderEditor();
+            updateJSONPreview();
+        }
+
+        function addMaterial() {
+            const item = gameData.categories[currentCategory].items[currentItem];
+            item.crafting.direct.push({ name: 'New Material', amount: 1 });
+            renderEditor();
+            updateJSONPreview();
+        }
+
+        function addSubMaterial(path) {
+            const item = gameData.categories[currentCategory].items[currentItem];
+            const parts = path.split('.');
+            let target = item.crafting.direct;
+            
+            for (let i = 0; i < parts.length; i++) {
+                if (parts[i] === 'components') {
+                    target = target.components;
+                } else {
+                    target = target[Number(parts[i])];
+                }
+            }
+            
+            if (!target.components) target.components = [];
+            target.components.push({ name: 'New Component', amount: 1 });
+            renderEditor();
+            updateJSONPreview();
+        }
+
+        function removeMaterial(path) {
+            if (!confirm('Delete this material?')) return;
+            
+            const item = gameData.categories[currentCategory].items[currentItem];
+            const parts = path.split('.');
+            let target = item.crafting.direct;
+            let parent = { direct: target };
+            let parentKey = 'direct';
+            
+            for (let i = 0; i < parts.length - 1; i++) {
+                parent = target;
+                if (parts[i] === 'components') {
+                    parentKey = 'components';
+                    target = target.components;
+                } else {
+                    parentKey = Number(parts[i]);
+                    target = target[Number(parts[i])];
+                }
+            }
+            
+            const finalIndex = Number(parts[parts.length - 1]);
+            if (Array.isArray(parent[parentKey])) {
+                parent[parentKey].splice(finalIndex, 1);
+            }
+            
+            renderEditor();
+            updateJSONPreview();
+        }
+
+        function addNewItem() {
+            const categoryIndex = Number(prompt('Enter category index (0-' + (gameData.categories.length - 1) + '):'));
+            if (isNaN(categoryIndex) || categoryIndex < 0 || categoryIndex >= gameData.categories.length) {
+                alert('Invalid category index');
+                return;
+            }
+
+            const newItem = {
+                id: 'new-item-' + Date.now(),
+                name: 'New Item',
+                description: 'Description here',
+                stats: { speed: { value: 100, max: 200, unit: 'km/h' } },
+                crafting: { direct: [{ name: 'Material', amount: 10 }] }
+            };
+
+            gameData.categories[categoryIndex].items.push(newItem);
+            renderSidebar();
+            selectItem(categoryIndex, gameData.categories[categoryIndex].items.length - 1);
+            updateJSONPreview();
+        }
+
+        function deleteCurrentItem() {
+            if (currentCategory === null || currentItem === null) return;
+            if (!confirm('Delete this item permanently?')) return;
+
+            gameData.categories[currentCategory].items.splice(currentItem, 1);
+            currentCategory = null;
+            currentItem = null;
+
+            document.getElementById('editor-main').innerHTML = '<p style="color: #888; text-align: center; padding: 2rem;">Item deleted. Select another item to edit.</p>';
+            renderSidebar();
+            updateJSONPreview();
+        }
+
+        function updateJSONPreview() {
+            document.getElementById('json-preview').textContent = JSON.stringify(gameData, null, 2);
+        }
+
+        function saveData() {
+            const dataStr = JSON.stringify(gameData, null, 2);
+            const blob = new Blob([dataStr], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'data.json';
+            a.click();
+            
+            alert('JSON file saved! Replace your data.json file with the downloaded file.');
+        }
+
+        function downloadJSON() {
+            saveData();
+        }
+
+        loadData();
+    </script>
+</body>
+</html>
