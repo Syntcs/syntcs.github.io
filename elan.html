@@ -122,6 +122,26 @@
             transform: translateY(-2px);
         }
 
+        /* Added reset button styling */
+        .reset-button {
+            padding: 0.6rem 1rem;
+            background: rgba(255, 100, 100, 0.15);
+            border: 2px solid rgba(255, 100, 100, 0.4);
+            border-radius: 6px;
+            color: #ff6464;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .reset-button:hover {
+            background: rgba(255, 100, 100, 0.25);
+            border-color: rgba(255, 100, 100, 0.6);
+            box-shadow: 0 0 20px rgba(255, 100, 100, 0.3);
+            transform: scale(1.05);
+        }
+
         /* Changed to vertical layout for categories */
         .categories {
             display: flex;
@@ -366,9 +386,17 @@
             border: 2px solid rgba(255, 255, 255, 0.1);
         }
 
+        /* Added flex layout for crafting header with reset button */
+        .crafting-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
         .crafting-calculator h3 {
             color: #ffffff;
-            margin-bottom: 1.5rem;
+            /* Removed margin-bottom since it's now in the header flex container */
             text-shadow: 0 0 15px rgba(255, 255, 255, 0.25);
             font-size: 1.5rem;
         }
@@ -2582,9 +2610,20 @@
             const craftingDiv = document.createElement('div');
             craftingDiv.className = 'crafting-calculator';
             
+            const headerDiv = document.createElement('div');
+            headerDiv.className = 'crafting-header';
+            
             const title = document.createElement('h3');
             title.textContent = 'Crafting Rezept';
-            craftingDiv.appendChild(title);
+            
+            const resetButton = document.createElement('button');
+            resetButton.className = 'reset-button';
+            resetButton.textContent = '↻ Reset';
+            resetButton.onclick = () => resetCrafting(item, craftingDiv);
+            
+            headerDiv.appendChild(title);
+            headerDiv.appendChild(resetButton);
+            craftingDiv.appendChild(headerDiv);
 
             const craftingList = document.createElement('div');
             craftingList.className = 'crafting-list';
@@ -2778,6 +2817,29 @@
             }
         }
 
+
+        function resetCrafting(item, craftingDiv) {
+            if (!item.crafting || !item.crafting.materials) return;
+
+            function resetMaterialsRecursive(materials) {
+                if (!materials || !Array.isArray(materials)) return;
+
+                materials.forEach(material => {
+                    const cookieKey = `${item.name}_${material.name}_amount`;
+                    setCookie(cookieKey, material.amount, 365);
+
+                    if (material.components && Array.isArray(material.components)) {
+                        resetMaterialsRecursive(material.components);
+                    }
+                });
+            }
+
+            resetMaterialsRecursive(item.crafting.materials);
+            
+            // Recreate the crafting calculator to reflect the reset
+            const newCraftingDiv = createCraftingCalculator(item);
+            craftingDiv.replaceWith(newCraftingDiv);
+        }
 
         function showHome() {
             document.getElementById('detail-section').classList.remove('active');
