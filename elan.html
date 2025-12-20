@@ -2753,8 +2753,10 @@
                     const materialPath = currentPath ? `${currentPath}.${index}` : `${index}`;
                     const stateKey = `${itemId}.${materialPath}`;
                     total++;
-                    // If the stateKey is NOT in materialStates or its value is 0, it's considered completed.
-                    if (!(stateKey in materialStates) || materialStates[stateKey] === 0) {
+                    // Get current amount - if not in state, use material's default amount
+                    const currentAmount = materialStates[stateKey] !== undefined ? materialStates[stateKey] : material.amount;
+                    // Only count as completed if explicitly set to 0
+                    if (currentAmount === 0) {
                         completed++;
                     }
                     if (material.components) {
@@ -2804,7 +2806,7 @@
                 materials.forEach((material, index) => {
                     const materialPath = path ? `${path}.${index}` : `${index}`;
                     const stateKey = `${itemId}.${materialPath}`;
-                    delete materialStates[stateKey]; // Remove from states
+                    materialStates[stateKey] = material.amount; // Reset to default amount
                     if (material.components) {
                         resetAll(material.components, `${materialPath}.components`);
                     }
