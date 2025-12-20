@@ -50,10 +50,138 @@
 
         h1 {
             text-align: center;
-            margin-bottom: 2rem;
+            margin-bottom: 1rem;
             color: #ffffff;
             text-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
             font-size: 2.5rem;
+        }
+
+        /* Added header toolbar styles for download button and other actions */
+        .header-toolbar {
+            display: flex;
+            justify-content: center;
+            gap: 0.8rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .toolbar-button {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.7rem 1.2rem;
+            background: rgba(30, 30, 30, 0.9);
+            border: 2px solid rgba(100, 200, 255, 0.3);
+            border-radius: 8px;
+            color: #64c8ff;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .toolbar-button:hover {
+            background: rgba(40, 40, 40, 0.9);
+            border-color: rgba(100, 200, 255, 0.6);
+            box-shadow: 0 0 20px rgba(100, 200, 255, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .toolbar-button.download {
+            border-color: rgba(46, 204, 113, 0.4);
+            color: #2ecc71;
+        }
+
+        .toolbar-button.download:hover {
+            border-color: rgba(46, 204, 113, 0.7);
+            box-shadow: 0 0 25px rgba(46, 204, 113, 0.4);
+        }
+
+        .toolbar-button.editor {
+            border-color: rgba(241, 196, 15, 0.4);
+            color: #f1c40f;
+        }
+
+        .toolbar-button.editor:hover {
+            border-color: rgba(241, 196, 15, 0.7);
+            box-shadow: 0 0 25px rgba(241, 196, 15, 0.4);
+        }
+
+        .toolbar-button svg {
+            width: 18px;
+            height: 18px;
+            fill: currentColor;
+        }
+
+        /* Screenshot mode styling - hide interactive elements */
+        .screenshot-mode .toolbar-button,
+        .screenshot-mode .scroll-top-btn,
+        .screenshot-mode .search-container,
+        .screenshot-mode .action-button,
+        .screenshot-mode .material-controls,
+        .screenshot-mode .back-button {
+            display: none !important;
+        }
+
+        .screenshot-mode .container {
+            box-shadow: 0 0 60px rgba(100, 200, 255, 0.2);
+        }
+
+        /* Screenshot watermark */
+        .screenshot-watermark {
+            display: none;
+            text-align: center;
+            padding: 1rem;
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 0.85rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            margin-top: 1.5rem;
+        }
+
+        .screenshot-mode .screenshot-watermark {
+            display: block;
+        }
+
+        /* Loading overlay for screenshot */
+        .screenshot-loading {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .screenshot-loading.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .screenshot-loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid rgba(100, 200, 255, 0.2);
+            border-top-color: #64c8ff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 1rem;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .screenshot-loading-text {
+            color: #64c8ff;
+            font-size: 1.1rem;
         }
 
         /* Added search bar */
@@ -733,10 +861,36 @@
     <!-- Added notification container -->
     <div class="notification" id="notification"></div>
 
+    <!-- Added screenshot loading overlay -->
+    <div class="screenshot-loading" id="screenshotLoading">
+        <div class="screenshot-loading-spinner"></div>
+        <div class="screenshot-loading-text">Generating Screenshot...</div>
+    </div>
+
     <div class="container">
         <!-- Home section now dynamically loaded from JSON -->
         <div class="section active" id="home-section">
             <h1>Equipment Wiki</h1>
+
+            <!-- Added header toolbar with download and editor buttons -->
+            <div class="header-toolbar">
+                <button class="toolbar-button download" onclick="downloadScreenshot()">
+                    <svg viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
+                    Screenshot
+                </button>
+                <a href="editor.html" class="toolbar-button editor">
+                    <svg viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
+                    Editor
+                </a>
+                <button class="toolbar-button" onclick="expandAllCategories()">
+                    <svg viewBox="0 0 24 24"><path d="M12 8l-6 6 1.41 1.41L12 10.83l4.59 4.58L18 14z" transform="rotate(180 12 12)"/></svg>
+                    Expand All
+                </button>
+                <button class="toolbar-button" onclick="collapseAllCategories()">
+                    <svg viewBox="0 0 24 24"><path d="M12 8l-6 6 1.41 1.41L12 10.83l4.59 4.58L18 14z"/></svg>
+                    Collapse All
+                </button>
+            </div>
             
             <!-- Added search functionality -->
             <div class="search-container">
@@ -750,6 +904,11 @@
             </div>
 
             <div class="categories" id="categories-container"></div>
+
+            <!-- Added screenshot watermark -->
+            <div class="screenshot-watermark">
+                Equipment Wiki • Generated Screenshot
+            </div>
         </div>
 
         <!-- Detail section now dynamically generated -->
@@ -2752,13 +2911,13 @@
                 mats.forEach((material, index) => {
                     const materialPath = currentPath ? `${currentPath}.${index}` : `${index}`;
                     const stateKey = `${itemId}.${materialPath}`;
-                    total++;
-                    // Get current amount - if not in state, use material's default amount
                     const currentAmount = materialStates[stateKey] !== undefined ? materialStates[stateKey] : material.amount;
-                    // Only count as completed if explicitly set to 0
-                    if (currentAmount === 0) {
+                    
+                    total++;
+                    if (currentAmount === 0) { // Only count as completed if amount is 0
                         completed++;
                     }
+
                     if (material.components) {
                         count(material.components, `${materialPath}.components`);
                     }
@@ -2783,7 +2942,7 @@
                 materials.forEach((material, index) => {
                     const materialPath = path ? `${path}.${index}` : `${index}`;
                     const stateKey = `${itemId}.${materialPath}`;
-                    materialStates[stateKey] = 0; // Mark as completed
+                    materialStates[stateKey] = 0; // Mark as completed by setting amount to 0
                     if (material.components) {
                         completeAll(material.components, `${materialPath}.components`);
                     }
@@ -2795,7 +2954,10 @@
             showNotification('All materials completed!', 'success');
             
             // Re-render current detail
-            showDetail(gameData.categories.find(cat => cat.items.some(i => i.id === itemId)).id, itemId);
+            const categoryId = gameData.categories.find(cat => cat.items.some(i => i.id === itemId))?.id;
+            if (categoryId) {
+                showDetail(categoryId, itemId);
+            }
         }
 
         function resetAllMaterials(itemId) {
@@ -2806,7 +2968,11 @@
                 materials.forEach((material, index) => {
                     const materialPath = path ? `${path}.${index}` : `${index}`;
                     const stateKey = `${itemId}.${materialPath}`;
-                    materialStates[stateKey] = material.amount; // Reset to default amount
+                    // Reset to the material's default amount
+                    // We don't need to store defaults in materialStates for reset, only override if changed
+                    // So, if a key exists, remove it to revert to default.
+                    delete materialStates[stateKey]; 
+                    
                     if (material.components) {
                         resetAll(material.components, `${materialPath}.components`);
                     }
@@ -2818,7 +2984,10 @@
             showNotification('All materials reset!', 'info');
             
             // Re-render current detail
-            showDetail(gameData.categories.find(cat => cat.items.some(i => i.id === itemId)).id, itemId);
+            const categoryId = gameData.categories.find(cat => cat.items.some(i => i.id === itemId))?.id;
+            if (categoryId) {
+                showDetail(categoryId, itemId);
+            }
         }
 
         function findItemById(itemId) {
@@ -2832,10 +3001,15 @@
         function renderStats(stats) {
             let html = '';
             for (const [key, stat] of Object.entries(stats)) {
-                const maxValue = stat.max || 1; // Use 1 as a fallback if max is 0 or undefined
-                const percentage = (stat.value / maxValue) * 100;
+                // Ensure stat.value and stat.max are numbers
+                const value = Number(stat.value) || 0;
+                const max = Number(stat.max) || 1; // Use 1 as a fallback if max is 0 or undefined
+
+                // Prevent division by zero and handle cases where max might be 0
+                const percentage = max > 0 ? Math.round((value / max) * 100) : 0;
+                
                 const barClass = percentage >= 80 ? '' : percentage >= 50 ? 'medium' : 'low';
-                const displayValue = stat.unit ? `${stat.value}${stat.unit}` : stat.value;
+                const displayValue = stat.unit ? `${value}${stat.unit}` : value;
                 
                 html += `
                     <div class="stat">
@@ -2859,31 +3033,35 @@
             materials.forEach((material, index) => {
                 const materialPath = path ? `${path}.${index}` : `${index}`;
                 const stateKey = `${itemId}.${materialPath}`;
-                // If state is not set, use the material's default amount. If it's 0, it's completed.
-                const currentAmount = materialStates[stateKey] !== undefined ? materialStates[stateKey] : material.amount;
+                
+                // Get current amount. If not in materialStates, it means it's at its default amount.
+                // If the material's default amount is 0, it's considered completed.
+                const defaultAmount = material.amount;
+                const currentAmount = materialStates[stateKey] !== undefined ? materialStates[stateKey] : defaultAmount;
                 const isCompleted = currentAmount === 0;
+                
                 const nestClass = level === 0 ? '' : level === 1 ? 'nested' : 'nested-2';
                 const zeroClass = currentAmount === 0 ? 'zero' : '';
                 
                 html += `
                     <div class="crafting-item ${nestClass} ${isCompleted ? 'completed' : ''}" id="item-${stateKey}">
                         <div class="amount-controls">
-                            <div class="amount-btn" onclick="decrementAmount('${stateKey}', ${material.amount})">−</div>
+                            <div class="amount-btn" onclick="decrementAmount('${stateKey}', ${defaultAmount})">−</div>
                             <input 
                                 type="number" 
                                 class="crafting-amount-input ${zeroClass}" 
                                 value="${currentAmount}" 
                                 min="0"
-                                max="${material.amount}"
-                                onchange="updateMaterialAmount('${stateKey}', this.value, ${material.amount})"
-                                data-max="${material.amount}"
+                                max="${defaultAmount}"
+                                onchange="updateMaterialAmount('${stateKey}', this.value, ${defaultAmount})"
+                                data-max="${defaultAmount}"
                                 id="input-${stateKey}"
                             >
-                            <div class="amount-btn" onclick="incrementAmount('${stateKey}', ${material.amount})">+</div>
+                            <div class="amount-btn" onclick="incrementAmount('${stateKey}', ${defaultAmount})">+</div>
                         </div>
                         <div class="crafting-content">
                             <div class="material-name">${material.name}</div>
-                            <div class="material-amount">× ${material.amount}</div>
+                            <div class="material-amount">× ${defaultAmount}</div>
                             ${material.description ? `<div class="material-description">${material.description}</div>` : ''}
                         </div>
                     </div>
@@ -2896,7 +3074,6 @@
             
             return html;
         }
-
 
         function incrementAmount(stateKey, maxAmount) {
             const input = document.getElementById(`input-${stateKey}`);
@@ -2915,8 +3092,18 @@
         }
 
         function updateMaterialAmount(stateKey, value, maxAmount) {
+            // Ensure value is a valid number between 0 and maxAmount
             const numValue = Math.max(0, Math.min(parseInt(value) || 0, maxAmount));
-            materialStates[stateKey] = numValue;
+            
+            // Update materialStates only if the value has changed from its default or previously saved value
+            const defaultValue = findDefaultAmount(stateKey); // Helper to get default amount
+            if (numValue !== defaultValue) {
+                materialStates[stateKey] = numValue;
+            } else {
+                // If it's back to default, remove from materialStates to properly reflect default
+                delete materialStates[stateKey];
+            }
+
             saveStatesToCookies();
             
             const input = document.getElementById(`input-${stateKey}`);
@@ -2930,7 +3117,7 @@
             
             const itemElement = document.getElementById(`item-${stateKey}`);
             if (itemElement) {
-                if (materialStates[stateKey] === 0) {
+                if (numValue === 0) {
                     itemElement.classList.add('completed');
                 } else {
                     itemElement.classList.remove('completed');
@@ -2938,6 +3125,27 @@
             }
 
             updateCraftingDisplay();
+        }
+
+        // Helper to find the default amount for a given stateKey
+        function findDefaultAmount(stateKey) {
+            const parts = stateKey.split('.');
+            const itemId = parts[0];
+            const item = findItemById(itemId);
+            if (!item || !item.crafting || !item.crafting.direct) return 0;
+
+            let currentMaterials = item.crafting.direct;
+            for (let i = 1; i < parts.length; i++) {
+                if (parts[i] === 'components') {
+                    const componentIndex = parseInt(parts[++i]);
+                    currentMaterials = currentMaterials.components.find((_, idx) => idx === componentIndex);
+                } else {
+                    const index = parseInt(parts[i]);
+                    currentMaterials = currentMaterials.find((_, idx) => idx === index);
+                }
+                if (!currentMaterials) return 0; // Should not happen if stateKey is valid
+            }
+            return currentMaterials ? currentMaterials.amount : 0;
         }
 
         function updateCraftingDisplay() {
@@ -2970,12 +3178,17 @@
                 currentMaterials.forEach((material, index) => {
                     const materialPath = currentPath ? `${currentPath}.${index}` : `${index}`;
                     const stateKey = `${itemId}.${materialPath}`;
+                    
+                    // Get amount needed. If it's not in materialStates, it means it's at its default.
                     const amountNeeded = materialStates[stateKey] !== undefined ? materialStates[stateKey] : material.amount;
 
                     if (material.components) {
                         calculateTotals(material.components, `${materialPath}.components`);
                     } else {
-                        totals[material.name] = (totals[material.name] || 0) + amountNeeded;
+                        // Only add to totals if amountNeeded is greater than 0
+                        if (amountNeeded > 0) {
+                            totals[material.name] = (totals[material.name] || 0) + amountNeeded;
+                        }
                     }
                 });
             }
@@ -2984,10 +3197,14 @@
 
             let totalsHTML = '<div class="total-materials"><h4>Total Base Materials:</h4>';
             const sortedTotals = Object.entries(totals).sort((a, b) => a[0].localeCompare(b[0])); // Sort alphabetically
-            sortedTotals.forEach(([name, amount]) => {
-                const completedClass = amount === 0 ? 'completed' : '';
-                totalsHTML += `<div class="total-item ${completedClass}"><span>${name}</span><span>× ${amount}</span></div>`;
-            });
+            if (sortedTotals.length === 0) {
+                totalsHTML += '<div class="total-item"><span>All materials are crafted or not needed.</span></div>';
+            } else {
+                sortedTotals.forEach(([name, amount]) => {
+                    const completedClass = amount === 0 ? 'completed' : ''; // This shouldn't happen if we only add >0 amounts
+                    totalsHTML += `<div class="total-item ${completedClass}"><span>${name}</span><span>× ${amount}</span></div>`;
+                });
+            }
             totalsHTML += '</div>';
             return totalsHTML;
         }
@@ -2999,7 +3216,72 @@
             scrollToTop();
         }
 
-        window.onload = loadData;
+        // Screenshot functionality
+        async function downloadScreenshot() {
+            const screenshotLoading = document.getElementById('screenshotLoading');
+            const body = document.body;
+            const container = document.querySelector('.container');
+
+            body.classList.add('screenshot-mode');
+            screenshotLoading.classList.add('active');
+
+            // Allow time for DOM changes to render
+            await new Promise(resolve => setTimeout(resolve, 100));
+
+            try {
+                const canvas = await html2canvas(container, {
+                    useCORS: true,
+                    backgroundColor: null, // Transparent background
+                    scale: 2 // Increase scale for better resolution
+                });
+
+                const imgDataUrl = canvas.toDataURL('image/png');
+                const link = document.createElement('a');
+                link.download = 'equipment-wiki-screenshot.png';
+                link.href = imgDataUrl;
+                link.click();
+                showNotification('Screenshot saved!', 'success');
+
+            } catch (error) {
+                console.error('Error generating screenshot:', error);
+                showNotification('Failed to generate screenshot.', 'error');
+            } finally {
+                body.classList.remove('screenshot-mode');
+                screenshotLoading.classList.remove('active');
+            }
+        }
+
+        // Category expand/collapse functions
+        function expandAllCategories() {
+            document.querySelectorAll('.category-section').forEach(section => {
+                section.classList.add('open');
+            });
+        }
+
+        function collapseAllCategories() {
+            document.querySelectorAll('.category-section').forEach(section => {
+                section.classList.remove('open');
+            });
+        }
+
+        window.onload = () => {
+            // Dynamically load html2canvas if not already present
+            if (typeof html2canvas === 'undefined') {
+                const script = document.createElement('script');
+                script.src = 'https://html2canvas.hertzen.com/dist/html2canvas.min.js';
+                script.onload = () => {
+                    loadData();
+                };
+                script.onerror = () => {
+                    console.error('Failed to load html2canvas.');
+                    showNotification('Could not load screenshot functionality.', 'error');
+                    loadData(); // Proceed without screenshot functionality
+                };
+                document.head.appendChild(script);
+            } else {
+                loadData();
+            }
+        };
     </script>
 </body>
 </html>
