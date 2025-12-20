@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Equipment Wiki Editor</title>
+    <!-- Added Sortable.js for drag & drop -->
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
     <style>
         * {
             margin: 0;
@@ -34,6 +36,28 @@
             color: #ffffff;
             text-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
             font-size: 2.5rem;
+        }
+
+        /* Added search bar for editor */
+        .search-bar {
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+
+        .search-bar input {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            background: rgba(30, 30, 30, 0.9);
+            border: 2px solid rgba(100, 200, 255, 0.3);
+            border-radius: 8px;
+            color: #e0e0e0;
+            font-size: 1rem;
+        }
+
+        .search-bar input:focus {
+            outline: none;
+            border-color: rgba(100, 200, 255, 0.6);
+            box-shadow: 0 0 20px rgba(100, 200, 255, 0.2);
         }
 
         .editor-controls {
@@ -84,7 +108,6 @@
             box-shadow: 0 0 25px rgba(231, 76, 60, 0.4);
         }
 
-        /* Added warning button style */
         .btn-warning {
             background: rgba(255, 193, 7, 0.3);
             border-color: rgba(255, 193, 7, 0.6);
@@ -96,9 +119,21 @@
             box-shadow: 0 0 25px rgba(255, 193, 7, 0.4);
         }
 
+        /* Added secondary button style */
+        .btn-secondary {
+            background: rgba(150, 150, 150, 0.3);
+            border-color: rgba(150, 150, 150, 0.6);
+            box-shadow: 0 0 15px rgba(150, 150, 150, 0.2);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(150, 150, 150, 0.5);
+            box-shadow: 0 0 25px rgba(150, 150, 150, 0.4);
+        }
+
         .editor-grid {
             display: grid;
-            grid-template-columns: 320px 1fr;
+            grid-template-columns: 350px 1fr;
             gap: 2rem;
         }
 
@@ -106,28 +141,8 @@
             background: rgba(30, 30, 30, 0.9);
             border-radius: 8px;
             padding: 1.5rem;
-            box-shadow: 0 0 20px rgba(255, 255, 255, 0.08);
-            max-height: 80vh;
+            max-height: 70vh;
             overflow-y: auto;
-        }
-
-        /* Added custom scrollbar styling */
-        .sidebar::-webkit-scrollbar {
-            width: 8px;
-        }
-
-        .sidebar::-webkit-scrollbar-track {
-            background: rgba(40, 40, 40, 0.5);
-            border-radius: 4px;
-        }
-
-        .sidebar::-webkit-scrollbar-thumb {
-            background: rgba(100, 200, 255, 0.4);
-            border-radius: 4px;
-        }
-
-        .sidebar::-webkit-scrollbar-thumb:hover {
-            background: rgba(100, 200, 255, 0.6);
         }
 
         .sidebar h3 {
@@ -161,13 +176,50 @@
             box-shadow: 0 0 15px rgba(100, 200, 255, 0.3);
         }
 
-        /* Improved category header styling */
+        /* Updated category header with action buttons */
         .category-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             font-weight: 600;
             color: #ffffff;
+            margin-bottom: 0.5rem;
+        }
+
+        .category-header-left {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .category-actions {
+            display: flex;
+            gap: 0.3rem;
+        }
+
+        .category-action-btn {
+            width: 24px;
+            height: 24px;
+            background: rgba(60, 60, 60, 0.8);
+            border: 1px solid rgba(100, 100, 100, 0.5);
+            border-radius: 4px;
+            color: #aaa;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .category-action-btn:hover {
+            background: rgba(80, 80, 80, 0.9);
+            color: #fff;
+        }
+
+        .category-action-btn.danger:hover {
+            background: rgba(231, 76, 60, 0.5);
+            border-color: rgba(231, 76, 60, 0.8);
         }
 
         .category-count {
@@ -186,6 +238,7 @@
             gap: 0.3rem;
         }
 
+        /* Updated item entry with drag handle */
         .item-entry {
             padding: 0.6rem 0.8rem;
             background: rgba(35, 35, 35, 0.8);
@@ -194,12 +247,14 @@
             font-size: 0.9rem;
             transition: all 0.3s ease;
             border-left: 2px solid transparent;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
         }
 
         .item-entry:hover {
             background: rgba(45, 45, 45, 0.9);
             border-left-color: rgba(100, 200, 255, 0.5);
-            transform: translateX(2px);
         }
 
         .item-entry.selected {
@@ -207,32 +262,45 @@
             border-left: 3px solid rgba(100, 200, 255, 0.8);
         }
 
+        .item-entry.hidden {
+            display: none;
+        }
+
+        .drag-handle {
+            cursor: grab;
+            color: #666;
+            font-size: 1rem;
+        }
+
+        .drag-handle:active {
+            cursor: grabbing;
+        }
+
+        .item-entry-name {
+            flex: 1;
+        }
+
+        /* Validation error styling */
+        .validation-error {
+            background: rgba(231, 76, 60, 0.2);
+            border: 1px solid rgba(231, 76, 60, 0.5);
+            color: #e74c3c;
+            padding: 0.8rem 1rem;
+            border-radius: 6px;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+        }
+
+        .validation-error ul {
+            margin: 0.5rem 0 0 1.5rem;
+        }
+
         .editor-main {
             background: rgba(30, 30, 30, 0.9);
             border-radius: 8px;
             padding: 2rem;
-            box-shadow: 0 0 20px rgba(255, 255, 255, 0.08);
-            max-height: 80vh;
+            max-height: 70vh;
             overflow-y: auto;
-        }
-
-        /* Added scrollbar styling for editor main */
-        .editor-main::-webkit-scrollbar {
-            width: 8px;
-        }
-
-        .editor-main::-webkit-scrollbar-track {
-            background: rgba(40, 40, 40, 0.5);
-            border-radius: 4px;
-        }
-
-        .editor-main::-webkit-scrollbar-thumb {
-            background: rgba(100, 200, 255, 0.4);
-            border-radius: 4px;
-        }
-
-        .editor-main::-webkit-scrollbar-thumb:hover {
-            background: rgba(100, 200, 255, 0.6);
         }
 
         .form-group {
@@ -242,40 +310,51 @@
         .form-group label {
             display: block;
             margin-bottom: 0.5rem;
-            color: #ccc;
-            font-weight: 600;
+            color: #aaa;
+            font-size: 0.9rem;
         }
 
         .form-group input,
-        .form-group textarea,
-        .form-group select {
+        .form-group textarea {
             width: 100%;
             padding: 0.8rem;
             background: rgba(40, 40, 40, 0.8);
-            border: 2px solid rgba(255, 255, 255, 0.1);
-            border-radius: 4px;
+            border: 2px solid rgba(100, 200, 255, 0.3);
+            border-radius: 6px;
             color: #e0e0e0;
             font-size: 1rem;
             transition: all 0.3s ease;
         }
 
         .form-group input:focus,
-        .form-group textarea:focus,
-        .form-group select:focus {
+        .form-group textarea:focus {
             outline: none;
-            border-color: rgba(100, 200, 255, 0.6);
+            border-color: rgba(100, 200, 255, 0.8);
             box-shadow: 0 0 15px rgba(100, 200, 255, 0.2);
+        }
+
+        .form-group input.error,
+        .form-group textarea.error {
+            border-color: rgba(231, 76, 60, 0.8);
         }
 
         .form-group textarea {
             min-height: 100px;
             resize: vertical;
-            font-family: inherit;
+        }
+
+        .section-title {
+            color: #ffffff;
+            font-size: 1.3rem;
+            margin: 2rem 0 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid rgba(100, 200, 255, 0.3);
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
         }
 
         .stats-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
             gap: 1rem;
         }
 
@@ -287,7 +366,6 @@
             transition: all 0.3s ease;
         }
 
-        /* Added hover effect for stat inputs */
         .stat-input:hover {
             border-color: rgba(100, 200, 255, 0.3);
             box-shadow: 0 0 10px rgba(100, 200, 255, 0.1);
@@ -304,12 +382,11 @@
             margin-bottom: 0.5rem;
         }
 
-        /* Added stat header with delete button */
         .stat-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.8rem;
         }
 
         .stat-name {
@@ -318,210 +395,230 @@
         }
 
         .delete-stat-btn {
-            background: rgba(231, 76, 60, 0.2);
-            border: 1px solid rgba(231, 76, 60, 0.4);
+            background: rgba(231, 76, 60, 0.3);
+            border: 1px solid rgba(231, 76, 60, 0.5);
             color: #e74c3c;
             padding: 0.2rem 0.5rem;
-            border-radius: 3px;
+            border-radius: 4px;
             cursor: pointer;
-            font-size: 0.75rem;
-            transition: all 0.3s ease;
+            font-size: 0.8rem;
+            transition: all 0.2s ease;
         }
 
         .delete-stat-btn:hover {
-            background: rgba(231, 76, 60, 0.4);
-        }
-
-        .crafting-section {
-            background: rgba(40, 40, 40, 0.6);
-            padding: 1.5rem;
-            border-radius: 4px;
-            margin-top: 1rem;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .crafting-section h4 {
-            color: #ffffff;
-            margin-bottom: 1rem;
-        }
-
-        .material-entry {
-            background: rgba(50, 50, 50, 0.6);
-            padding: 1rem;
-            border-radius: 4px;
-            margin-bottom: 0.8rem;
-            border-left: 3px solid rgba(100, 200, 255, 0.6);
-            transition: all 0.3s ease;
-        }
-
-        /* Added hover effect for material entries */
-        .material-entry:hover {
-            background: rgba(55, 55, 55, 0.7);
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-        }
-
-        .material-entry.nested {
-            margin-left: 2rem;
-            border-left-color: rgba(255, 200, 100, 0.6);
-        }
-
-        .material-entry.nested-2 {
-            margin-left: 4rem;
-            border-left-color: rgba(255, 150, 50, 0.6);
-        }
-
-        .json-output {
-            background: rgba(15, 15, 15, 0.9);
-            padding: 1.5rem;
-            border-radius: 4px;
-            margin-top: 2rem;
-            border: 2px solid rgba(100, 200, 255, 0.3);
-            max-height: 400px;
-            overflow-y: auto;
-        }
-
-        /* Added scrollbar styling for JSON output */
-        .json-output::-webkit-scrollbar {
-            width: 8px;
-        }
-
-        .json-output::-webkit-scrollbar-track {
-            background: rgba(40, 40, 40, 0.5);
-            border-radius: 4px;
-        }
-
-        .json-output::-webkit-scrollbar-thumb {
-            background: rgba(100, 200, 255, 0.4);
-            border-radius: 4px;
-        }
-
-        .json-output::-webkit-scrollbar-thumb:hover {
-            background: rgba(100, 200, 255, 0.6);
-        }
-
-        .json-output pre {
-            color: #64c8ff;
-            font-family: 'Courier New', monospace;
-            font-size: 0.9rem;
-            white-space: pre-wrap;
-            word-wrap: break-word;
+            background: rgba(231, 76, 60, 0.5);
         }
 
         .add-btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.5rem 1rem;
-            background: rgba(46, 204, 113, 0.3);
-            border: 2px solid rgba(46, 204, 113, 0.6);
-            border-radius: 4px;
+            background: rgba(100, 200, 255, 0.2);
+            border: 2px dashed rgba(100, 200, 255, 0.5);
+            color: #64c8ff;
+            padding: 0.8rem;
+            border-radius: 6px;
             cursor: pointer;
+            width: 100%;
+            margin-top: 1rem;
             transition: all 0.3s ease;
-            font-size: 0.9rem;
-            margin-top: 0.5rem;
-            color: #ffffff;
+            font-size: 0.95rem;
         }
 
         .add-btn:hover {
-            background: rgba(46, 204, 113, 0.5);
-            transform: translateY(-1px);
+            background: rgba(100, 200, 255, 0.3);
+            border-color: rgba(100, 200, 255, 0.8);
+        }
+
+        .material-entry {
+            background: rgba(45, 45, 45, 0.8);
+            border: 1px solid rgba(100, 200, 255, 0.2);
+            border-radius: 6px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .material-entry:hover {
+            border-color: rgba(100, 200, 255, 0.4);
+            box-shadow: 0 0 15px rgba(100, 200, 255, 0.1);
+        }
+
+        .material-entry.nested {
+            margin-left: 1.5rem;
+            border-left: 3px solid rgba(255, 200, 100, 0.5);
+        }
+
+        .material-entry.nested-2 {
+            margin-left: 3rem;
+            border-left: 3px solid rgba(200, 100, 255, 0.5);
+        }
+
+        /* Material header with drag handle */
+        .material-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .material-drag-handle {
+            cursor: grab;
+            color: #666;
+            font-size: 1.2rem;
+            padding: 0.2rem 0.5rem;
+        }
+
+        .material-drag-handle:active {
+            cursor: grabbing;
         }
 
         .remove-btn {
-            padding: 0.3rem 0.8rem;
             background: rgba(231, 76, 60, 0.3);
-            border: 1px solid rgba(231, 76, 60, 0.6);
+            border: 1px solid rgba(231, 76, 60, 0.5);
+            color: #e74c3c;
+            padding: 0.4rem 0.8rem;
             border-radius: 4px;
             cursor: pointer;
             font-size: 0.85rem;
-            float: right;
-            color: #ffffff;
-            transition: all 0.3s ease;
+            transition: all 0.2s ease;
         }
 
         .remove-btn:hover {
             background: rgba(231, 76, 60, 0.5);
-            transform: translateY(-1px);
         }
 
-        /* Added notification/toast styling */
-        .notification {
-            position: fixed;
-            bottom: 2rem;
-            right: 2rem;
-            background: rgba(46, 204, 113, 0.9);
-            color: white;
-            padding: 1rem 1.5rem;
-            border-radius: 6px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-            z-index: 1000;
-            animation: slideIn 0.3s ease;
-        }
-
-        @keyframes slideIn {
-            from {
-                transform: translateX(400px);
-                opacity: 0;
-            }
-            to {
-                transform: translateX(0);
-                opacity: 1;
-            }
-        }
-
-        .notification.error {
-            background: rgba(231, 76, 60, 0.9);
-        }
-
-        /* Added empty state styling */
-        .empty-state {
-            color: #888;
-            text-align: center;
-            padding: 3rem 2rem;
-            background: rgba(40, 40, 40, 0.3);
+        .json-output {
+            margin-top: 2rem;
+            background: rgba(20, 20, 20, 0.9);
             border-radius: 8px;
-            border: 2px dashed rgba(255, 255, 255, 0.1);
+            padding: 1.5rem;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .json-output pre {
+            color: #64c8ff;
+            font-family: 'Consolas', monospace;
+            font-size: 0.85rem;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: #888;
         }
 
         .empty-state h3 {
             color: #aaa;
-            margin-bottom: 0.5rem;
+            margin-bottom: 1rem;
         }
 
-        /* Added image preview styling */
-        .image-preview {
-            margin-top: 0.5rem;
-            max-width: 200px;
-            max-height: 200px;
+        .notification {
+            position: fixed;
+            top: 2rem;
+            right: 2rem;
+            padding: 1rem 1.5rem;
+            background: rgba(30, 30, 30, 0.95);
+            border: 2px solid rgba(100, 200, 255, 0.6);
             border-radius: 8px;
-            overflow: hidden;
-            background: rgba(40, 40, 40, 0.8);
-            display: none;
-            padding: 0.5rem;
+            color: #64c8ff;
+            font-size: 0.9rem;
+            box-shadow: 0 0 30px rgba(100, 200, 255, 0.3);
+            z-index: 2000;
+            transform: translateX(400px);
+            transition: all 0.3s ease;
         }
 
-        .image-preview.show {
-            display: block;
+        .notification.show {
+            transform: translateX(0);
         }
 
-        .image-preview img {
-            max-width: 100%;
-            max-height: 100%;
-            object-fit: contain;
+        .notification.success {
+            border-color: rgba(46, 204, 113, 0.6);
+            color: #2ecc71;
+        }
+
+        .notification.error {
+            border-color: rgba(231, 76, 60, 0.6);
+            color: #e74c3c;
+        }
+
+        /* Custom scrollbars */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(20, 20, 20, 0.5);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: rgba(100, 200, 255, 0.3);
+            border-radius: 5px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(100, 200, 255, 0.5);
+        }
+
+        /* Added undo/redo indicator */
+        .undo-redo-controls {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+        }
+
+        .undo-redo-btn {
+            padding: 0.5rem 0.8rem;
+            background: rgba(80, 80, 80, 0.5);
+            border: 1px solid rgba(100, 100, 100, 0.5);
             border-radius: 4px;
+            color: #aaa;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 1rem;
+        }
+
+        .undo-redo-btn:hover:not(:disabled) {
+            background: rgba(100, 100, 100, 0.6);
+            color: #fff;
+        }
+
+        .undo-redo-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        .history-info {
+            font-size: 0.8rem;
+            color: #666;
         }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>Equipment Wiki Editor</h1>
-        
+
+        <!-- Added search bar -->
+        <div class="search-bar">
+            <input type="text" placeholder="Suche nach Items oder Kategorien..." oninput="searchEditor(this.value)">
+        </div>
+
         <div class="editor-controls">
             <button class="btn btn-success" onclick="saveData()">💾 Save to JSON</button>
             <button class="btn" onclick="downloadJSON()">⬇️ Download JSON</button>
             <button class="btn" onclick="addNewItem()">➕ Add New Item</button>
             <button class="btn btn-warning" onclick="addNewCategory()">📁 Add New Category</button>
+            <button class="btn btn-secondary" onclick="duplicateCurrentItem()">📋 Duplicate Item</button>
             <button class="btn btn-danger" onclick="deleteCurrentItem()">🗑️ Delete Current Item</button>
+            
+            <!-- Added undo/redo controls -->
+            <div class="undo-redo-controls">
+                <button class="undo-redo-btn" onclick="undo()" id="undo-btn" disabled title="Undo (Ctrl+Z)">↶</button>
+                <button class="undo-redo-btn" onclick="redo()" id="redo-btn" disabled title="Redo (Ctrl+Y)">↷</button>
+                <span class="history-info" id="history-info"></span>
+            </div>
         </div>
 
         <div class="editor-grid">
@@ -548,28 +645,148 @@
         let gameData = {};
         let currentItem = null;
         let currentCategory = null;
+        
+        let history = [];
+        let historyIndex = -1;
+        const MAX_HISTORY = 50;
 
         async function loadData() {
             try {
                 const response = await fetch('data.json');
                 gameData = await response.json();
+                saveToHistory();
                 renderSidebar();
                 updateJSONPreview();
+                initSortable();
             } catch (error) {
                 console.error('Error loading data:', error);
                 showNotification('Error loading data. Make sure data.json exists.', 'error');
             }
         }
 
+        function saveToHistory() {
+            // Remove any future states if we're not at the end
+            history = history.slice(0, historyIndex + 1);
+            
+            // Add current state
+            history.push(JSON.stringify(gameData));
+            
+            // Limit history size
+            if (history.length > MAX_HISTORY) {
+                history.shift();
+            } else {
+                historyIndex++;
+            }
+            
+            updateHistoryButtons();
+        }
+
+        function updateHistoryButtons() {
+            const undoBtn = document.getElementById('undo-btn');
+            const redoBtn = document.getElementById('redo-btn');
+            const info = document.getElementById('history-info');
+            
+            undoBtn.disabled = historyIndex <= 0;
+            redoBtn.disabled = historyIndex >= history.length - 1;
+            info.textContent = `${historyIndex + 1}/${history.length}`;
+        }
+
+        function undo() {
+            if (historyIndex > 0) {
+                historyIndex--;
+                gameData = JSON.parse(history[historyIndex]);
+                renderSidebar();
+                renderEditor();
+                updateJSONPreview();
+                updateHistoryButtons();
+                showNotification('Undo', 'success');
+            }
+        }
+
+        function redo() {
+            if (historyIndex < history.length - 1) {
+                historyIndex++;
+                gameData = JSON.parse(history[historyIndex]);
+                renderSidebar();
+                renderEditor();
+                updateJSONPreview();
+                updateHistoryButtons();
+                showNotification('Redo', 'success');
+            }
+        }
+
+        // Keyboard shortcuts for undo/redo
+        document.addEventListener('keydown', (e) => {
+            if (e.ctrlKey || e.metaKey) {
+                if (e.key === 'z' && !e.shiftKey) {
+                    e.preventDefault();
+                    undo();
+                } else if (e.key === 'y' || (e.key === 'z' && e.shiftKey)) {
+                    e.preventDefault();
+                    redo();
+                }
+            }
+        });
+
+        function searchEditor(query) {
+            query = query.toLowerCase().trim();
+            const items = document.querySelectorAll('.item-entry');
+            const categories = document.querySelectorAll('.category-item');
+            
+            items.forEach(item => {
+                const name = item.querySelector('.item-entry-name').textContent.toLowerCase();
+                const matches = query === '' || name.includes(query);
+                item.classList.toggle('hidden', !matches);
+            });
+            
+            // Hide categories with no visible items
+            categories.forEach(cat => {
+                const catName = cat.querySelector('.category-header-left strong').textContent.toLowerCase();
+                const visibleItems = cat.querySelectorAll('.item-entry:not(.hidden)');
+                const catMatches = query === '' || catName.includes(query);
+                cat.style.display = (catMatches || visibleItems.length > 0) ? 'block' : 'none';
+            });
+        }
+
+        function initSortable() {
+            // Make item lists sortable
+            document.querySelectorAll('.item-list').forEach((list, catIndex) => {
+                new Sortable(list, {
+                    animation: 150,
+                    handle: '.drag-handle',
+                    ghostClass: 'sortable-ghost',
+                    onEnd: (evt) => {
+                        const fromIndex = evt.oldIndex;
+                        const toIndex = evt.newIndex;
+                        
+                        if (fromIndex !== toIndex) {
+                            const items = gameData.categories[catIndex].items;
+                            const [moved] = items.splice(fromIndex, 1);
+                            items.splice(toIndex, 0, moved);
+                            
+                            saveToHistory();
+                            updateJSONPreview();
+                            showNotification('Item neu sortiert', 'success');
+                        }
+                    }
+                });
+            });
+        }
+
         function showNotification(message, type = 'success') {
+            const existing = document.querySelector('.notification');
+            if (existing) existing.remove();
+            
             const notification = document.createElement('div');
             notification.className = `notification ${type}`;
             notification.textContent = message;
             document.body.appendChild(notification);
             
+            setTimeout(() => notification.classList.add('show'), 10);
             setTimeout(() => {
-                notification.remove();
-            }, 3000);
+                notification.classList.remove('show');
+                setTimeout(() => notification.remove(), 300);
+            }, 2500);
         }
 
         function renderSidebar() {
@@ -581,18 +798,31 @@
                 catDiv.className = 'category-item';
                 catDiv.innerHTML = `
                     <div class="category-header">
-                        <strong>${category.name}</strong>
-                        <span class="category-count">${category.items.length} items</span>
+                        <div class="category-header-left">
+                            <strong>${category.name}</strong>
+                            <span class="category-count">${category.items.length} items</span>
+                        </div>
+                        <div class="category-actions">
+                            <button class="category-action-btn" onclick="renameCategory(${catIndex}, event)" title="Umbenennen">✏️</button>
+                            <button class="category-action-btn danger" onclick="deleteCategory(${catIndex}, event)" title="Löschen">🗑️</button>
+                        </div>
                     </div>
                 `;
                 
                 const itemList = document.createElement('div');
                 itemList.className = 'item-list';
+                itemList.setAttribute('data-category', catIndex);
                 
                 category.items.forEach((item, itemIndex) => {
                     const itemDiv = document.createElement('div');
                     itemDiv.className = 'item-entry';
-                    itemDiv.textContent = item.name;
+                    if (currentCategory === catIndex && currentItem === itemIndex) {
+                        itemDiv.classList.add('selected');
+                    }
+                    itemDiv.innerHTML = `
+                        <span class="drag-handle">⋮⋮</span>
+                        <span class="item-entry-name">${item.name}</span>
+                    `;
                     itemDiv.onclick = () => selectItem(catIndex, itemIndex);
                     itemList.appendChild(itemDiv);
                 });
@@ -600,23 +830,85 @@
                 catDiv.appendChild(itemList);
                 container.appendChild(catDiv);
             });
+            
+            // Re-initialize sortable after re-rendering
+            setTimeout(initSortable, 100);
+        }
+
+        function renameCategory(catIndex, event) {
+            event.stopPropagation();
+            const category = gameData.categories[catIndex];
+            const newName = prompt('Neuer Kategorie-Name:', category.name);
+            
+            if (newName && newName.trim()) {
+                category.name = newName.trim();
+                saveToHistory();
+                renderSidebar();
+                updateJSONPreview();
+                showNotification(`Kategorie umbenannt zu "${newName}"`, 'success');
+            }
+        }
+
+        function deleteCategory(catIndex, event) {
+            event.stopPropagation();
+            const category = gameData.categories[catIndex];
+            
+            if (category.items.length > 0) {
+                if (!confirm(`Kategorie "${category.name}" hat ${category.items.length} Items. Trotzdem löschen?`)) {
+                    return;
+                }
+            } else if (!confirm(`Kategorie "${category.name}" wirklich löschen?`)) {
+                return;
+            }
+            
+            gameData.categories.splice(catIndex, 1);
+            
+            // Reset selection if deleted category was selected
+            if (currentCategory === catIndex) {
+                currentCategory = null;
+                currentItem = null;
+                document.getElementById('editor-main').innerHTML = '<div class="empty-state"><h3>Kategorie gelöscht</h3><p>Wähle ein anderes Item zum Bearbeiten</p></div>';
+            } else if (currentCategory > catIndex) {
+                currentCategory--;
+            }
+            
+            saveToHistory();
+            renderSidebar();
+            updateJSONPreview();
+            showNotification(`Kategorie "${category.name}" gelöscht`, 'success');
         }
 
         function selectItem(catIndex, itemIndex) {
             currentCategory = catIndex;
             currentItem = itemIndex;
             
-            // Update selection UI
-            document.querySelectorAll('.item-entry').forEach(el => el.classList.remove('selected'));
-            const items = document.querySelectorAll('.item-entry');
-            let totalIndex = 0;
-            for (let i = 0; i < catIndex; i++) {
-                totalIndex += gameData.categories[i].items.length;
-            }
-            totalIndex += itemIndex;
-            items[totalIndex]?.classList.add('selected');
-            
+            renderSidebar();
             renderEditor();
+        }
+
+        function validateItem(item) {
+            const errors = [];
+            
+            if (!item.name || item.name.trim() === '') {
+                errors.push('Name ist erforderlich');
+            }
+            
+            if (!item.id || item.id.trim() === '') {
+                errors.push('ID ist erforderlich');
+            }
+            
+            // Check for duplicate ID
+            let idCount = 0;
+            gameData.categories.forEach(cat => {
+                cat.items.forEach(i => {
+                    if (i.id === item.id) idCount++;
+                });
+            });
+            if (idCount > 1) {
+                errors.push('ID ist bereits vergeben');
+            }
+            
+            return errors;
         }
 
         function renderEditor() {
@@ -624,6 +916,15 @@
 
             const item = gameData.categories[currentCategory].items[currentItem];
             const editorMain = document.getElementById('editor-main');
+            
+            // Validate and show errors
+            const errors = validateItem(item);
+            const errorHTML = errors.length > 0 ? `
+                <div class="validation-error">
+                    <strong>Validierungsfehler:</strong>
+                    <ul>${errors.map(e => `<li>${e}</li>`).join('')}</ul>
+                </div>
+            ` : '';
 
             let statsHTML = '';
             for (const [key, stat] of Object.entries(item.stats)) {
@@ -643,59 +944,64 @@
                 `;
             }
 
-            let craftingHTML = renderCraftingEditor(item.crafting.direct, 0, '');
-
             editorMain.innerHTML = `
-                <h2 style="color: #ffffff; margin-bottom: 1.5rem;">Editing: ${item.name}</h2>
-                
+                ${errorHTML}
                 <div class="form-group">
                     <label>Item ID</label>
-                    <input type="text" value="${item.id}" onchange="updateField('id', this.value)">
+                    <input type="text" value="${item.id}" onchange="updateField('id', this.value)" class="${errors.some(e => e.includes('ID')) ? 'error' : ''}">
                 </div>
-
                 <div class="form-group">
                     <label>Name</label>
-                    <input type="text" id="item-name" placeholder="Item name" required value="${item.name}" onchange="updateField('name', this.value)">
+                    <input type="text" value="${item.name}" onchange="updateField('name', this.value)" class="${errors.some(e => e.includes('Name')) ? 'error' : ''}">
                 </div>
-                            
-                <!-- Added icon URL input field -->
-                <div class="form-group">
-                    <label>Icon URL (optional)</label>
-                    <input type="text" id="item-icon" placeholder="https://example.com/icon.png or /placeholder.svg?height=60&width=60&query=icon" value="${item.icon || ''}">
-                    <div class="image-preview" id="icon-preview">
-                        <img src="${item.icon || '/placeholder.svg'}" alt="Icon Preview">
-                    </div>
-                </div>
-                            
-                <!-- Added image URL input field -->
-                <div class="form-group">
-                    <label>Image URL (optional)</label>
-                    <input type="text" id="item-image" placeholder="https://example.com/image.png or /placeholder.svg?height=300&width=400&query=image" value="${item.image || ''}">
-                    <div class="image-preview" id="image-preview">
-                        <img src="${item.image || '/placeholder.svg'}" alt="Image Preview">
-                    </div>
-                </div>
-
                 <div class="form-group">
                     <label>Description</label>
-                    <textarea id="item-description" onchange="updateField('description', this.value)">${item.description}</textarea>
+                    <textarea onchange="updateField('description', this.value)">${item.description || ''}</textarea>
+                </div>
+                <div class="form-group">
+                    <label>Icon URL</label>
+                    <input type="text" value="${item.icon || ''}" onchange="updateField('icon', this.value)" placeholder="https://example.com/icon.png">
+                    ${item.icon ? `<img src="${item.icon}" style="max-width: 50px; margin-top: 0.5rem; border-radius: 4px;">` : ''}
+                </div>
+                <div class="form-group">
+                    <label>Image URL</label>
+                    <input type="text" value="${item.image || ''}" onchange="updateField('image', this.value)" placeholder="https://example.com/image.png">
+                    ${item.image ? `<img src="${item.image}" style="max-width: 150px; margin-top: 0.5rem; border-radius: 4px;">` : ''}
                 </div>
 
-                <div class="form-group">
-                    <label>Stats</label>
-                    <div class="stats-grid">${statsHTML}</div>
-                    <button class="add-btn" onclick="addStat()">➕ Add Stat</button>
-                </div>
+                <h4 class="section-title">Stats</h4>
+                <div class="stats-grid">${statsHTML}</div>
+                <button class="add-btn" onclick="addStat()">➕ Add Stat</button>
 
-                <div class="form-group">
-                    <label>Crafting Recipe</label>
-                    <div class="crafting-section" id="crafting-container">
-                        ${craftingHTML}
-                        <button class="add-btn" onclick="addMaterial()">➕ Add Material</button>
-                    </div>
+                <h4 class="section-title">Crafting Materials</h4>
+                <div id="materials-container">
+                    ${renderCraftingEditor(item.crafting?.direct || [], 0, '')}
                 </div>
+                <button class="add-btn" onclick="addMaterial()">➕ Add Material</button>
             `;
-            setupImagePreviews();
+            
+            initMaterialsSortable();
+        }
+
+        function initMaterialsSortable() {
+            const container = document.getElementById('materials-container');
+            if (container) {
+                new Sortable(container, {
+                    animation: 150,
+                    handle: '.material-drag-handle',
+                    ghostClass: 'sortable-ghost',
+                    onEnd: (evt) => {
+                        const item = gameData.categories[currentCategory].items[currentItem];
+                        const materials = item.crafting.direct;
+                        const [moved] = materials.splice(evt.oldIndex, 1);
+                        materials.splice(evt.newIndex, 0, moved);
+                        
+                        saveToHistory();
+                        renderEditor();
+                        updateJSONPreview();
+                    }
+                });
+            }
         }
 
         function renderCraftingEditor(materials, level = 0, path = '') {
@@ -708,7 +1014,10 @@
                 
                 html += `
                     <div class="material-entry ${nestClass}">
-                        <button class="remove-btn" onclick="removeMaterial('${currentPath}')">✕ Remove</button>
+                        <div class="material-header">
+                            <span class="material-drag-handle">⋮⋮</span>
+                            <button class="remove-btn" onclick="removeMaterial('${currentPath}')">✕ Remove</button>
+                        </div>
                         <div class="form-group">
                             <label>Material Name</label>
                             <input type="text" value="${material.name}" onchange="updateMaterial('${currentPath}', 'name', this.value)">
@@ -717,10 +1026,10 @@
                             <label>Amount</label>
                             <input type="number" value="${material.amount}" onchange="updateMaterial('${currentPath}', 'amount', this.value)">
                         </div>
-                        ${material.description ? `
+                        ${material.description !== undefined ? `
                         <div class="form-group">
                             <label>Description</label>
-                            <input type="text" value="${material.description}" onchange="updateMaterial('${currentPath}', 'description', this.value)">
+                            <input type="text" value="${material.description || ''}" onchange="updateMaterial('${currentPath}', 'description', this.value)">
                         </div>` : ''}
                 `;
                 
@@ -745,24 +1054,27 @@
         function updateField(field, value) {
             const item = gameData.categories[currentCategory].items[currentItem];
             item[field] = value;
+            saveToHistory();
             updateJSONPreview();
-            renderSidebar(); // Refresh sidebar to show updated names
+            renderSidebar();
         }
 
         function updateStat(statKey, field, value) {
             const item = gameData.categories[currentCategory].items[currentItem];
             if (!item.stats[statKey]) item.stats[statKey] = {};
             item.stats[statKey][field] = field === 'unit' ? value : Number(value);
+            saveToHistory();
             updateJSONPreview();
         }
 
         function deleteStat(statKey) {
-            if (!confirm(`Delete stat "${statKey}"?`)) return;
+            if (!confirm(`Stat "${statKey}" löschen?`)) return;
             const item = gameData.categories[currentCategory].items[currentItem];
             delete item.stats[statKey];
+            saveToHistory();
             renderEditor();
             updateJSONPreview();
-            showNotification(`Stat "${statKey}" deleted`);
+            showNotification(`Stat "${statKey}" gelöscht`);
         }
 
         function updateMaterial(path, field, value) {
@@ -785,32 +1097,36 @@
             
             const finalIndex = Number(parts[parts.length - 1]);
             target[finalIndex][field] = field === 'amount' ? Number(value) : value;
+            saveToHistory();
             updateJSONPreview();
         }
 
         function addStat() {
-            const statName = prompt('Enter stat name:');
+            const statName = prompt('Stat-Name eingeben:');
             if (!statName) return;
             
             const item = gameData.categories[currentCategory].items[currentItem];
             if (item.stats[statName]) {
-                showNotification('Stat already exists', 'error');
+                showNotification('Stat existiert bereits', 'error');
                 return;
             }
             
             item.stats[statName] = { value: 0, max: 100, unit: '' };
+            saveToHistory();
             renderEditor();
             updateJSONPreview();
-            showNotification(`Stat "${statName}" added`);
+            showNotification(`Stat "${statName}" hinzugefügt`);
         }
 
         function addMaterial() {
             const item = gameData.categories[currentCategory].items[currentItem];
+            if (!item.crafting) item.crafting = {};
             if (!item.crafting.direct) item.crafting.direct = [];
             item.crafting.direct.push({ name: 'New Material', amount: 1 });
+            saveToHistory();
             renderEditor();
             updateJSONPreview();
-            showNotification('Material added');
+            showNotification('Material hinzugefügt');
         }
 
         function addSubMaterial(path) {
@@ -833,19 +1149,19 @@
             
             if (!target.components) target.components = [];
             target.components.push({ name: 'New Component', amount: 1 });
+            saveToHistory();
             renderEditor();
             updateJSONPreview();
-            showNotification('Component added');
+            showNotification('Component hinzugefügt');
         }
 
         function removeMaterial(path) {
-            if (!confirm('Delete this material?')) return;
+            if (!confirm('Material löschen?')) return;
             
             const item = gameData.categories[currentCategory].items[currentItem];
             const parts = path.split('.');
             
             if (parts.length === 1) {
-                // Top level material
                 item.crafting.direct.splice(Number(parts[0]), 1);
             } else {
                 let target = item.crafting.direct;
@@ -870,16 +1186,17 @@
                 }
             }
             
+            saveToHistory();
             renderEditor();
             updateJSONPreview();
-            showNotification('Material deleted');
+            showNotification('Material gelöscht');
         }
 
         function addNewItem() {
             const categoryNames = gameData.categories.map((cat, i) => `${i}: ${cat.name}`).join('\n');
-            const categoryIndex = Number(prompt(`Enter category index:\n${categoryNames}`));
+            const categoryIndex = Number(prompt(`Kategorie-Index eingeben:\n${categoryNames}`));
             if (isNaN(categoryIndex) || categoryIndex < 0 || categoryIndex >= gameData.categories.length) {
-                showNotification('Invalid category index', 'error');
+                showNotification('Ungültiger Kategorie-Index', 'error');
                 return;
             }
 
@@ -901,39 +1218,69 @@
             currentCategory = categoryIndex;
             currentItem = gameData.categories[categoryIndex].items.length - 1;
             
+            saveToHistory();
             renderSidebar();
             renderEditor();
             updateJSONPreview();
-            showNotification('New item created');
+            showNotification('Neues Item erstellt');
+        }
+
+        function duplicateCurrentItem() {
+            if (currentCategory === null || currentItem === null) {
+                showNotification('Kein Item ausgewählt', 'error');
+                return;
+            }
+            
+            const original = gameData.categories[currentCategory].items[currentItem];
+            const duplicate = JSON.parse(JSON.stringify(original));
+            duplicate.id = `${original.id}-copy-${Date.now()}`;
+            duplicate.name = `${original.name} (Kopie)`;
+            
+            gameData.categories[currentCategory].items.push(duplicate);
+            currentItem = gameData.categories[currentCategory].items.length - 1;
+            
+            saveToHistory();
+            renderSidebar();
+            renderEditor();
+            updateJSONPreview();
+            showNotification(`"${original.name}" dupliziert`);
         }
 
         function addNewCategory() {
-            const categoryName = prompt('Enter new category name:');
+            const categoryName = prompt('Neuen Kategorie-Namen eingeben:');
             if (!categoryName) return;
             
+            const categoryId = categoryName.toLowerCase().replace(/\s+/g, '-');
+            
             gameData.categories.push({
+                id: categoryId,
                 name: categoryName,
                 items: []
             });
             
+            saveToHistory();
             renderSidebar();
             updateJSONPreview();
-            showNotification(`Category "${categoryName}" created`);
+            showNotification(`Kategorie "${categoryName}" erstellt`);
         }
 
         function deleteCurrentItem() {
-            if (currentCategory === null || currentItem === null) return;
-            if (!confirm('Delete this item permanently?')) return;
+            if (currentCategory === null || currentItem === null) {
+                showNotification('Kein Item ausgewählt', 'error');
+                return;
+            }
+            if (!confirm('Item wirklich löschen?')) return;
 
             const itemName = gameData.categories[currentCategory].items[currentItem].name;
             gameData.categories[currentCategory].items.splice(currentItem, 1);
             currentCategory = null;
             currentItem = null;
 
-            document.getElementById('editor-main').innerHTML = '<div class="empty-state"><h3>Item Deleted</h3><p>Select another item to edit</p></div>';
+            document.getElementById('editor-main').innerHTML = '<div class="empty-state"><h3>Item gelöscht</h3><p>Wähle ein anderes Item zum Bearbeiten</p></div>';
+            saveToHistory();
             renderSidebar();
             updateJSONPreview();
-            showNotification(`"${itemName}" deleted`);
+            showNotification(`"${itemName}" gelöscht`);
         }
 
         function updateJSONPreview() {
@@ -941,51 +1288,21 @@
         }
 
         function saveData() {
-            const dataStr = JSON.stringify(gameData, null, 2);
-            const blob = new Blob([dataStr], { type: 'application/json' });
+            const jsonStr = JSON.stringify(gameData, null, 2);
+            showNotification('JSON in Konsole ausgegeben. Kopiere es manuell in data.json', 'success');
+            console.log(jsonStr);
+        }
+
+        function downloadJSON() {
+            const jsonStr = JSON.stringify(gameData, null, 2);
+            const blob = new Blob([jsonStr], { type: 'application/json' });
             const url = URL.createObjectURL(blob);
-            
             const a = document.createElement('a');
             a.href = url;
             a.download = 'data.json';
             a.click();
-            
-            showNotification('JSON file downloaded successfully!');
-        }
-
-        function downloadJSON() {
-            saveData();
-        }
-
-        function setupImagePreviews() {
-            const iconInput = document.getElementById('item-icon');
-            const imageInput = document.getElementById('item-image');
-            const iconPreview = document.getElementById('icon-preview');
-            const imagePreview = document.getElementById('image-preview');
-
-            if (iconInput) {
-                iconInput.addEventListener('input', (e) => {
-                    const url = e.target.value.trim();
-                    if (url) {
-                        iconPreview.querySelector('img').src = url;
-                        iconPreview.classList.add('show');
-                    } else {
-                        iconPreview.classList.remove('show');
-                    }
-                });
-            }
-
-            if (imageInput) {
-                imageInput.addEventListener('input', (e) => {
-                    const url = e.target.value.trim();
-                    if (url) {
-                        imagePreview.querySelector('img').src = url;
-                        imagePreview.classList.add('show');
-                    } else {
-                        imagePreview.classList.remove('show');
-                    }
-                });
-            }
+            URL.revokeObjectURL(url);
+            showNotification('JSON heruntergeladen');
         }
 
         loadData();
