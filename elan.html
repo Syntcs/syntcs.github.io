@@ -893,6 +893,51 @@
             display: none;
         }
 
+        /* Updated item-link to show favorite star to the right */
+        .item-link {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 1.5rem;
+            background: var(--bg-card);
+            border-top: 1px solid var(--border);
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .item-link:hover {
+            background: var(--bg-tertiary);
+            padding-left: 2rem;
+            box-shadow: inset 0 0 20px var(--accent-glow);
+        }
+
+        .item-link.highlight {
+            background: var(--accent-light);
+            border-left: 3px solid var(--accent);
+        }
+
+        .item-link-content {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            flex: 1; /* Added to make it take available space */
+        }
+
+        /* Added favorite star indicator (read-only in list) */
+        .favorite-star {
+            font-size: 1.2rem;
+            color: #ffc107;
+            text-shadow: 0 0 10px rgba(255, 193, 7, 0.5);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .favorite-star.active {
+            opacity: 1;
+        }
+
         /* Improved mobile responsiveness */
         @media (max-width: 768px) {
             body {
@@ -1011,35 +1056,36 @@
 </head>
 <body>
     <div class="container">
-        <!-- New page header with controls -->
+        <!-- Updated header text to English -->
         <div class="page-header">
             <h1>Equipment Wiki</h1>
             <div class="header-controls">
-                <button class="favorites-toggle" onclick="toggleFavoritesFilter()">⭐ Favoriten</button>
-                <div class="theme-toggle" onclick="toggleTheme()" title="Dark/Light Mode"></div>
+                <button class="favorites-toggle" onclick="toggleFavoritesFilter()">
+                    ⭐ Favorites
+                </button>
+                <div class="theme-toggle" onclick="toggleTheme()"></div>
             </div>
         </div>
 
-        <div id="list-section" class="section active">
-            <div class="search-container">
-                <input type="text" class="search-input" placeholder="Suchen..." oninput="searchItems(this.value)">
-            </div>
-            <div class="categories" id="categories-container"></div>
+        <!-- Updated search placeholder to English -->
+        <div class="search-container">
+            <input 
+                type="text" 
+                class="search-input" 
+                placeholder="Search items or categories..." 
+                oninput="handleSearch(this.value)"
+            >
         </div>
 
-        <div id="detail-section" class="section">
-            <div id="capture-container">
-                <div class="detail-header">
-                    <button class="back-button" onclick="showList()">← Zurück</button>
-                    <button class="download-button" onclick="downloadAsImage()">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-                        </svg>
-                        Als Bild speichern
-                    </button>
-                </div>
-                <div id="detail-content"></div>
+        <div class="categories" id="categories"></div>
+
+        <div class="section" id="detail-section">
+            <button class="back-button" onclick="showList()">← Back to List</button>
+            <div class="detail-view">
+                <div class="detail-image" id="detail-image"></div>
+                <div class="detail-info" id="detail-info"></div>
             </div>
+            <div class="crafting-calculator" id="crafting-calculator"></div>
         </div>
     </div>
 
@@ -1047,45 +1093,27 @@
 
     <script>
         let gameData = {};
-        let materialStates = {};
-        let favorites = {};
+        let favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
         let showOnlyFavorites = false;
-        let currentItemId = null; // Global variable to store current item ID
+        let currentTheme = localStorage.getItem('theme') || 'dark';
+        let craftingProgress = JSON.parse(localStorage.getItem('craftingProgress') || '{}');
 
-        // Load theme from localStorage
-        function loadTheme() {
-            const theme = localStorage.getItem('theme') || 'dark';
-            document.documentElement.setAttribute('data-theme', theme);
-        }
+        document.documentElement.setAttribute('data-theme', currentTheme);
 
-        function toggleTheme() {
-            const current = document.documentElement.getAttribute('data-theme') || 'dark';
-            const newTheme = current === 'dark' ? 'light' : 'dark';
-            document.documentElement.setAttribute('data-theme', newTheme);
-            localStorage.setItem('theme', newTheme);
-        }
-
-        function loadFavorites() {
-            const saved = getCookie('favorites');
-            if (saved) {
-                try {
-                    favorites = JSON.parse(saved);
-                } catch (e) {
-                    favorites = {};
-                }
+        async function loadData() {
+            try {
+                const response = await fetch('data.json');
+                gameData = await response.json();
+                renderCategories();
+            } catch (error) {
+                console.error('Error loading data:', error);
             }
         }
 
-        function saveFavorites() {
-            setCookie('favorites', JSON.stringify(favorites), 365);
-        }
-
-        function toggleFavorite(itemId, event) {
-            event.stopPropagation();
-            favorites[itemId] = !favorites[itemId];
-            saveFavorites();
-            renderCategories();
-            showNotification(favorites[itemId] ? 'Zu Favoriten hinzugefügt' : 'Von Favoriten entfernt', 'success');
+        function toggleTheme() {
+            currentTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', currentTheme);
+            localStorage.setItem('theme', currentTheme);
         }
 
         function toggleFavoritesFilter() {
@@ -1095,443 +1123,333 @@
             renderCategories();
         }
 
-        async function loadData() {
-            try {
-                const response = await fetch('data.json');
-                gameData = await response.json();
-                loadTheme();
-                loadFavorites();
-                loadStatesFromCookies();
-                renderCategories();
-            } catch (error) {
-                console.error('Error loading data:', error);
+        function isFavorite(itemId) {
+            return favorites.includes(itemId);
+        }
+
+        function toggleFavorite(itemId) {
+            const index = favorites.indexOf(itemId);
+            if (index > -1) {
+                favorites.splice(index, 1);
+            } else {
+                favorites.push(itemId);
+            }
+            localStorage.setItem('favorites', JSON.stringify(favorites));
+            renderCategories();
+            
+            // Update detail view if currently viewing this item
+            const currentItem = getCurrentItem(itemId);
+            if (currentItem) {
+                showDetail(itemId);
             }
         }
 
-        function loadStatesFromCookies() {
-            const savedStates = getCookie('materialStates');
-            if (savedStates) {
-                try {
-                    materialStates = JSON.parse(savedStates);
-                } catch (e) {
-                    materialStates = {};
-                }
-            }
-        }
-
-        function saveStatesToCookies() {
-            setCookie('materialStates', JSON.stringify(materialStates), 365);
-        }
-
-        function setCookie(name, value, days) {
-            const expires = new Date();
-            expires.setTime(expires.getTime() + days * 24 * 60 * 60 * 1000);
-            document.cookie = `${name}=${encodeURIComponent(value)};expires=${expires.toUTCString()};path=/`;
-        }
-
-        function getCookie(name) {
-            const nameEQ = name + "=";
-            const ca = document.cookie.split(';');
-            for (let c of ca) {
-                c = c.trim();
-                if (c.indexOf(nameEQ) === 0) return decodeURIComponent(c.substring(nameEQ.length));
+        function getCurrentItem(itemId) {
+            for (const category of gameData.categories) {
+                const item = category.items.find(i => i.id === itemId);
+                if (item) return item;
             }
             return null;
         }
 
-        function calculateItemProgress(item) {
-            if (!item.crafting || !item.crafting.direct) return { completed: 0, total: 0 };
-            
-            let completed = 0;
-            let total = 0;
-
-            function countMaterials(materials, path = '') {
-                materials.forEach((material, index) => {
-                    const materialPath = path ? `${path}.${index}` : `${index}`;
-                    const stateKey = `${item.id}.${materialPath}`;
-                    const currentAmount = materialStates[stateKey] !== undefined ? materialStates[stateKey] : material.amount;
-                    
-                    total++;
-                    if (currentAmount === 0) completed++;
-
-                    if (material.components) {
-                        countMaterials(material.components, `${materialPath}.components`);
-                    }
-                });
-            }
-
-            countMaterials(item.crafting.direct);
-            return { completed, total };
-        }
-
         function renderCategories() {
-            const container = document.getElementById('categories-container');
+            const container = document.getElementById('categories');
             container.innerHTML = '';
 
             gameData.categories.forEach(category => {
-                const section = document.createElement('div');
-                section.className = 'category-section';
-                section.setAttribute('data-category', category.id);
+                let visibleItems = category.items;
 
-                const header = document.createElement('div');
-                header.className = 'category-header';
-                header.onclick = () => toggleCategory(header);
-                header.innerHTML = `
-                    <h2>${category.name}</h2>
-                    <span class="category-arrow">▶</span>
-                `;
-                
-                const itemsContainer = document.createElement('div');
-                itemsContainer.className = 'category-items';
-
-                let hasVisibleItems = false;
-
-                category.items.forEach(item => {
-                    // Filter by favorites if active
-                    if (showOnlyFavorites && !favorites[item.id]) return;
-
-                    hasVisibleItems = true;
-                    const progress = calculateItemProgress(item);
-                    const progressPercent = progress.total > 0 ? Math.round((progress.completed / progress.total) * 100) : 0;
-
-                    const link = document.createElement('div');
-                    link.className = 'item-link';
-                    link.innerHTML = `
-                        <div class="item-link-content">
-                            <span class="favorite-btn ${favorites[item.id] ? 'active' : ''}" onclick="toggleFavorite('${item.id}', event)">⭐</span>
-                            <span>${item.name}</span>
-                        </div>
-                        <div class="item-progress-mini">
-                            <div class="progress-mini-bar">
-                                <div class="progress-mini-fill" style="width: ${progressPercent}%"></div>
-                            </div>
-                            <span>${progress.completed}/${progress.total}</span>
-                        </div>
-                    `;
-                    link.onclick = () => showDetail(category.id, item.id);
-                    itemsContainer.appendChild(link);
-                });
-
-                if (!hasVisibleItems && showOnlyFavorites) {
-                    section.classList.add('hidden');
+                // Filter by favorites if active
+                if (showOnlyFavorites) {
+                    visibleItems = visibleItems.filter(item => isFavorite(item.id));
                 }
 
-                section.appendChild(header);
-                section.appendChild(itemsContainer);
-                container.appendChild(section);
+                // Hide category if no visible items
+                if (visibleItems.length === 0) return;
+
+                const categoryDiv = document.createElement('div');
+                categoryDiv.className = 'category-section open';
+                
+                categoryDiv.innerHTML = `
+                    <div class="category-header" onclick="toggleCategory(this)">
+                        <h2>${category.name}</h2>
+                        <span class="category-arrow">›</span>
+                    </div>
+                    <div class="category-items">
+                        ${visibleItems.map(item => {
+                            const progress = calculateProgress(item);
+                            const isFav = isFavorite(item.id);
+                            
+                            return `
+                                <div class="item-link" onclick="showDetail('${item.id}')">
+                                    <div class="item-link-content">
+                                        <span>${item.name}</span>
+                                    </div>
+                                    <div style="display: flex; align-items: center; gap: 1rem;">
+                                        <div class="item-progress-mini">
+                                            <div class="progress-mini-bar">
+                                                <div class="progress-mini-fill" style="width: ${progress}%"></div>
+                                            </div>
+                                            <span>${progress}%</span>
+                                        </div>
+                                        <span class="favorite-star ${isFav ? 'active' : ''}">⭐</span>
+                                    </div>
+                                </div>
+                            `;
+                        }).join('')}
+                    </div>
+                `;
+                
+                container.appendChild(categoryDiv);
             });
         }
 
         function toggleCategory(header) {
-            const section = header.parentElement;
-            section.classList.toggle('open');
+            header.parentElement.classList.toggle('open');
         }
 
-        function searchItems(query) {
-            query = query.toLowerCase().trim();
-            const categories = document.querySelectorAll('.category-section');
+        function calculateProgress(item) {
+            if (!item.crafting || !item.crafting.direct) return 0;
             
-            categories.forEach(category => {
-                const items = category.querySelectorAll('.item-link');
+            const allMaterials = [];
+            const extractMaterials = (materials, level = 0) => {
+                materials.forEach(mat => {
+                    allMaterials.push({ name: mat.name, amount: mat.amount, level });
+                    if (mat.components) {
+                        extractMaterials(mat.components, level + 1);
+                    }
+                });
+            };
+            extractMaterials(item.crafting.direct);
+
+            let completed = 0;
+            allMaterials.forEach(mat => {
+                const key = `${item.id}_${mat.name}_${mat.level}`;
+                const remaining = craftingProgress[key] || mat.amount;
+                if (remaining === 0) completed++;
+            });
+
+            return allMaterials.length > 0 ? Math.round((completed / allMaterials.length) * 100) : 0;
+        }
+
+        function handleSearch(query) {
+            const lowerQuery = query.toLowerCase();
+            
+            document.querySelectorAll('.category-section').forEach(categorySection => {
                 let hasVisibleItems = false;
                 
-                items.forEach(item => {
-                    const text = item.textContent.toLowerCase();
-                    const matches = query === '' || text.includes(query);
-                    item.style.display = matches ? 'flex' : 'none';
-                    item.classList.toggle('highlight', query !== '' && matches);
+                categorySection.querySelectorAll('.item-link').forEach(itemLink => {
+                    const itemName = itemLink.querySelector('.item-link-content span').textContent.toLowerCase();
+                    const matches = itemName.includes(lowerQuery);
+                    
+                    itemLink.classList.toggle('hidden', !matches);
                     if (matches) hasVisibleItems = true;
+                    
+                    if (matches && query) {
+                        itemLink.classList.add('highlight');
+                    } else {
+                        itemLink.classList.remove('highlight');
+                    }
                 });
                 
-                category.style.display = hasVisibleItems ? 'block' : 'none';
-                if (query !== '' && hasVisibleItems) {
-                    category.classList.add('open');
-                }
+                categorySection.classList.toggle('hidden', !hasVisibleItems);
             });
         }
 
-        function showDetail(categoryId, itemId) {
-            const category = gameData.categories.find(c => c.id === categoryId);
-            if (!category) return;
-            
-            const item = category.items.find(i => i.id === itemId);
+        function showDetail(itemId) {
+            const item = getCurrentItem(itemId);
             if (!item) return;
 
-            document.getElementById('list-section').classList.remove('active');
+            document.getElementById('categories').style.display = 'none';
+            document.querySelector('.search-container').style.display = 'none';
+            document.querySelector('.page-header').style.display = 'none';
             document.getElementById('detail-section').classList.add('active');
 
-            let statsHTML = '';
-            for (const [key, stat] of Object.entries(item.stats)) {
-                const percent = (stat.value / stat.max) * 100;
-                statsHTML += `
-                    <div class="stat-item">
-                        <div class="stat-name">${key}</div>
-                        <div class="stat-value">${stat.value}/${stat.max}${stat.unit ? ' ' + stat.unit : ''}</div>
-                        <div class="stat-bar">
-                            <div class="stat-fill" style="width: ${percent}%"></div>
-                        </div>
-                    </div>
-                `;
+            // Render image
+            const imageContainer = document.getElementById('detail-image');
+            if (item.image) {
+                imageContainer.innerHTML = `<img src="${item.image}" alt="${item.name}">`;
+            } else {
+                imageContainer.innerHTML = `<div class="placeholder-image">No Image Available</div>`;
             }
 
-            const craftingHTML = generateCraftingItems(item.crafting?.direct, item.id, '', 0);
-            const progress = calculateProgress(item.crafting?.direct, item.id);
+            const infoContainer = document.getElementById('detail-info');
+            const isFav = isFavorite(item.id);
+            
+            infoContainer.innerHTML = `
+                <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem;">
+                    <h2>${item.name}</h2>
+                    <button class="favorite-btn ${isFav ? 'active' : ''}" 
+                            onclick="toggleFavorite('${item.id}')" 
+                            style="background: transparent; border: none; font-size: 2rem; cursor: pointer;">
+                        ${isFav ? '⭐' : '☆'}
+                    </button>
+                </div>
+                <p class="description">${item.description || 'No description available'}</p>
+                ${renderStats(item.stats)}
+            `;
 
-            document.getElementById('detail-content').innerHTML = `
-                <div class="detail-view">
-                    <div class="detail-image">
-                        ${item.image 
-                            ? `<img src="${item.image}" alt="${item.name}">`
-                            : `<div class="placeholder-image">${item.name}</div>`
-                        }
+            // Render crafting
+            renderCrafting(item);
+        }
+
+        function renderStats(stats) {
+            if (!stats) return '';
+            
+            return `
+                <div class="stats-grid">
+                    ${Object.entries(stats).map(([key, stat]) => `
+                        <div class="stat-item">
+                            <div class="stat-name">${key.charAt(0).toUpperCase() + key.slice(1)}</div>
+                            <div class="stat-value">${stat.value}${stat.unit || ''}</div>
+                            ${stat.max ? `
+                                <div class="stat-bar">
+                                    <div class="stat-fill" style="width: ${(stat.value / stat.max) * 100}%"></div>
+                                </div>
+                            ` : ''}
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+        }
+
+        function renderCrafting(item) {
+            const container = document.getElementById('crafting-calculator');
+            
+            if (!item.crafting || !item.crafting.direct || item.crafting.direct.length === 0) {
+                container.innerHTML = '<h3>No Crafting Recipe</h3>';
+                return;
+            }
+
+            const materials = [];
+            const extractMaterials = (mats, level = 0) => {
+                mats.forEach(mat => {
+                    materials.push({ ...mat, level, itemId: item.id });
+                    if (mat.components) {
+                        extractMaterials(mat.components, level + 1);
+                    }
+                });
+            };
+            extractMaterials(item.crafting.direct);
+
+            const progress = calculateProgress(item);
+
+            container.innerHTML = `
+                <div class="crafting-header">
+                    <h3>Crafting Recipe</h3>
+                    <div class="crafting-progress">
+                        <div class="progress-bar-small">
+                            <div class="progress-bar-fill" style="width: ${progress}%"></div>
+                        </div>
+                        <span>${progress}%</span>
                     </div>
-                    <div class="detail-info">
-                        <h2>${item.name}</h2>
-                        <p class="description">${item.description}</p>
-                        <div class="stats-grid">${statsHTML}</div>
+                    <div class="crafting-actions">
+                        <button class="action-button" onclick="exportCrafting('${item.id}')">📸 Export</button>
+                        <button class="action-button reset" onclick="resetProgress('${item.id}')">🔄 Reset</button>
                     </div>
                 </div>
-                <div class="crafting-calculator">
-                    <div class="crafting-header">
-                        <h3>Crafting Materials</h3>
-                        <div class="crafting-progress">
-                            <div class="progress-bar-small">
-                                <div class="progress-bar-fill" style="width: ${progress.percent}%" id="progress-fill"></div>
-                            </div>
-                            <span id="progress-text">${progress.completed}/${progress.total} Materials</span>
-                        </div>
-                        <div class="crafting-actions">
-                            <button class="action-button" onclick="completeAllMaterials('${item.id}')">✓ Complete All</button>
-                            <button class="action-button reset" onclick="resetAllMaterials('${item.id}')">↺ Reset All</button>
-                        </div>
+                <div class="crafting-list">
+                    ${materials.map(mat => renderMaterialInput(mat)).join('')}
+                </div>
+            `;
+        }
+
+        function renderMaterialInput(material) {
+            const key = `${material.itemId}_${material.name}_${material.level}`;
+            const remaining = craftingProgress[key] !== undefined ? craftingProgress[key] : material.amount;
+            const isCompleted = remaining === 0;
+
+            let className = 'crafting-item';
+            if (isCompleted) className += ' completed';
+            if (material.level === 1) className += ' nested';
+            if (material.level === 2) className += ' nested-2';
+
+            return `
+                <div class="${className}">
+                    <div class="amount-controls">
+                        <button class="amount-btn" onclick="adjustAmount('${key}', -10, ${material.amount})">--</button>
+                        <button class="amount-btn" onclick="adjustAmount('${key}', -1, ${material.amount})">-</button>
+                        <input 
+                            type="number" 
+                            class="crafting-amount-input ${isCompleted ? 'zero' : ''}" 
+                            value="${remaining}" 
+                            onchange="updateAmount('${key}', this.value, ${material.amount})"
+                            min="0"
+                            max="${material.amount}"
+                        >
+                        <button class="amount-btn" onclick="adjustAmount('${key}', 1, ${material.amount})">+</button>
+                        <button class="amount-btn" onclick="adjustAmount('${key}', 10, ${material.amount})">++</button>
                     </div>
-                    <div class="crafting-list" id="crafting-list">
-                        ${craftingHTML}
+                    <div class="crafting-content">
+                        <div class="material-name">${material.name}</div>
+                        <div class="material-amount">Required: ${material.amount}</div>
                     </div>
                 </div>
             `;
-
-            window.currentItemId = item.id;
-            window.currentItem = item;
         }
 
-        function generateCraftingItems(materials, itemId, path, level) {
-            if (!materials) return '';
-            
-            let html = '';
-            materials.forEach((material, index) => {
-                const materialPath = path ? `${path}.${index}` : `${index}`;
-                const stateKey = `${itemId}.${materialPath}`;
-                const currentAmount = materialStates[stateKey] !== undefined ? materialStates[stateKey] : material.amount;
-                const isCompleted = currentAmount === 0;
-                const nestClass = level === 0 ? '' : level === 1 ? 'nested' : 'nested-2';
-                const zeroClass = currentAmount === 0 ? 'zero' : '';
-                
-                html += `
-                    <div class="crafting-item ${nestClass} ${isCompleted ? 'completed' : ''}" id="item-${stateKey}">
-                        <div class="amount-controls">
-                            <div class="amount-btn" onclick="decrementAmount('${stateKey}', ${material.amount})">−</div>
-                            <input 
-                                type="number" 
-                                class="crafting-amount-input ${zeroClass}" 
-                                value="${currentAmount}" 
-                                min="0"
-                                max="${material.amount}"
-                                onchange="updateMaterialAmount('${stateKey}', this.value, ${material.amount})"
-                                data-max="${material.amount}"
-                                id="input-${stateKey}"
-                            >
-                            <div class="amount-btn" onclick="incrementAmount('${stateKey}', ${material.amount})">+</div>
-                        </div>
-                        <div class="crafting-content">
-                            <div class="material-name">${material.name}</div>
-                            <div class="material-amount">× ${material.amount}</div>
-                            ${material.description ? `<div class="material-description">${material.description}</div>` : ''}
-                        </div>
-                    </div>
-                `;
-                
-                if (material.components) {
-                    html += generateCraftingItems(material.components, itemId, `${materialPath}.components`, level + 1);
-                }
-            });
-            return html;
+        function adjustAmount(key, delta, max) {
+            const current = craftingProgress[key] !== undefined ? craftingProgress[key] : max;
+            const newValue = Math.max(0, Math.min(max, current + delta));
+            updateAmount(key, newValue, max);
         }
 
-        function updateMaterialAmount(stateKey, value, maxAmount) {
-            let amount = parseInt(value) || 0;
-            amount = Math.max(0, Math.min(amount, maxAmount));
+        function updateAmount(key, value, max) {
+            const numValue = Math.max(0, Math.min(max, parseInt(value) || 0));
+            craftingProgress[key] = numValue;
+            localStorage.setItem('craftingProgress', JSON.stringify(craftingProgress));
             
-            materialStates[stateKey] = amount;
-            saveStatesToCookies();
-            
-            const input = document.getElementById(`input-${stateKey}`);
-            const item = document.getElementById(`item-${stateKey}`);
-            
-            if (input) {
-                input.value = amount;
-                input.classList.toggle('zero', amount === 0);
-            }
+            const itemId = key.split('_')[0];
+            const item = getCurrentItem(itemId);
             if (item) {
-                item.classList.toggle('completed', amount === 0);
+                renderCrafting(item);
+                renderCategories(); // Update progress in list
             }
-            
-            updateProgress();
-            renderCategories();
         }
 
-        function decrementAmount(stateKey, maxAmount) {
-            const input = document.getElementById(`input-${stateKey}`);
-            let current = materialStates[stateKey] !== undefined ? materialStates[stateKey] : maxAmount;
-            updateMaterialAmount(stateKey, current - 1, maxAmount);
-        }
-
-        function incrementAmount(stateKey, maxAmount) {
-            const input = document.getElementById(`input-${stateKey}`);
-            let current = materialStates[stateKey] !== undefined ? materialStates[stateKey] : maxAmount;
-            updateMaterialAmount(stateKey, current + 1, maxAmount);
-        }
-
-        function calculateProgress(materials, itemId, path = '') {
-            if (!materials) return { completed: 0, total: 0, percent: 0 };
-            
-            let completed = 0;
-            let total = 0;
-
-            materials.forEach((material, index) => {
-                const materialPath = path ? `${path}.${index}` : `${index}`;
-                const stateKey = `${itemId}.${materialPath}`;
-                const currentAmount = materialStates[stateKey] !== undefined ? materialStates[stateKey] : material.amount;
-                
-                total++;
-                if (currentAmount === 0) completed++;
-
-                if (material.components) {
-                    const subProgress = calculateProgress(material.components, itemId, `${materialPath}.components`);
-                    completed += subProgress.completed;
-                    total += subProgress.total;
+        function resetProgress(itemId) {
+            Object.keys(craftingProgress).forEach(key => {
+                if (key.startsWith(itemId + '_')) {
+                    delete craftingProgress[key];
                 }
             });
-
-            return { completed, total, percent: total > 0 ? (completed / total) * 100 : 0 };
-        }
-
-        function updateProgress() {
-            if (!window.currentItem) return;
-            const progress = calculateProgress(window.currentItem.crafting?.direct, window.currentItemId);
+            localStorage.setItem('craftingProgress', JSON.stringify(craftingProgress));
             
-            const fill = document.getElementById('progress-fill');
-            const text = document.getElementById('progress-text');
+            const item = getCurrentItem(itemId);
+            if (item) {
+                renderCrafting(item);
+                renderCategories();
+            }
+        }
+
+        async function exportCrafting(itemId) {
+            const item = getCurrentItem(itemId);
+            if (!item) return;
+
+            const calculator = document.getElementById('crafting-calculator');
             
-            if (fill) fill.style.width = `${progress.percent}%`;
-            if (text) text.textContent = `${progress.completed}/${progress.total} Materials`;
-        }
-
-        function completeAllMaterials(itemId) {
-            const item = window.currentItem;
-            if (!item?.crafting?.direct) return;
-
-            function setAllToZero(materials, path = '') {
-                materials.forEach((material, index) => {
-                    const materialPath = path ? `${path}.${index}` : `${index}`;
-                    const stateKey = `${itemId}.${materialPath}`;
-                    materialStates[stateKey] = 0;
-                    
-                    if (material.components) {
-                        setAllToZero(material.components, `${materialPath}.components`);
-                    }
+            try {
+                const canvas = await html2canvas(calculator, {
+                    backgroundColor: '#1a1a1a',
+                    scale: 2
                 });
+                
+                const link = document.createElement('a');
+                link.download = `${item.name.replace(/\s+/g, '_')}_crafting.png`;
+                link.href = canvas.toDataURL();
+                link.click();
+            } catch (error) {
+                console.error('Export failed:', error);
             }
-
-            setAllToZero(item.crafting.direct);
-            saveStatesToCookies();
-            showDetail(gameData.categories.find(c => c.items.find(i => i.id === itemId))?.id, itemId);
-            showNotification('Alle Materials als fertig markiert', 'success');
-            renderCategories();
-        }
-
-        function resetAllMaterials(itemId) {
-            const item = window.currentItem;
-            if (!item?.crafting?.direct) return;
-
-            function resetToDefault(materials, path = '') {
-                materials.forEach((material, index) => {
-                    const materialPath = path ? `${path}.${index}` : `${index}`;
-                    const stateKey = `${itemId}.${materialPath}`;
-                    materialStates[stateKey] = material.amount;
-                    
-                    if (material.components) {
-                        resetToDefault(material.components, `${materialPath}.components`);
-                    }
-                });
-            }
-
-            resetToDefault(item.crafting.direct);
-            saveStatesToCookies();
-            showDetail(gameData.categories.find(c => c.items.find(i => i.id === itemId))?.id, itemId);
-            showNotification('Alle Materials zurückgesetzt', 'success');
-            renderCategories();
         }
 
         function showList() {
             document.getElementById('detail-section').classList.remove('active');
-            document.getElementById('list-section').classList.add('active');
-            renderCategories();
+            document.getElementById('categories').style.display = '';
+            document.querySelector('.search-container').style.display = '';
+            document.querySelector('.page-header').style.display = '';
         }
-
-        function showNotification(message, type = 'info') {
-            const notification = document.createElement('div');
-            notification.className = `notification ${type}`;
-            notification.textContent = message;
-            document.body.appendChild(notification);
-            
-            setTimeout(() => notification.classList.add('show'), 10);
-            setTimeout(() => {
-                notification.classList.remove('show');
-                setTimeout(() => notification.remove(), 300);
-            }, 2500);
-        }
-
-        async function downloadAsImage() {
-            const button = document.querySelector('.download-button');
-            button.classList.add('downloading');
-            button.innerHTML = `
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="animate-spin">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-                </svg>
-                Erstelle Bild...
-            `;
-            
-            try {
-                const captureElement = document.getElementById('capture-container');
-                const canvas = await html2canvas(captureElement, {
-                    backgroundColor: getComputedStyle(document.documentElement).getPropertyValue('--bg-primary').trim() || '#121212',
-                    scale: 2,
-                    useCORS: true,
-                    allowTaint: true
-                });
-                
-                const link = document.createElement('a');
-                const itemName = window.currentItem?.name || 'item';
-                link.download = `${itemName.replace(/\s+/g, '-').toLowerCase()}-recipe.png`;
-                link.href = canvas.toDataURL('image/png');
-                link.click();
-                
-                showNotification('Bild wurde heruntergeladen!', 'success');
-            } catch (error) {
-                console.error('Screenshot error:', error);
-                showNotification('Fehler beim Erstellen des Bildes', 'error');
-            }
-            
-            button.classList.remove('downloading');
-            button.innerHTML = `
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-                </svg>
-                Als Bild speichern
-            `;
-        }
-
+        
         function scrollToTop() {
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
