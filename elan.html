@@ -4,9 +4,26 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Equipment Wiki</title>
-    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <!-- Added html2canvas library for screenshot functionality -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
-        /* Custom scrollbars with glow effect */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #0a0a0a;
+            color: #e0e0e0;
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        /* Custom scrollbars for consistency */
         ::-webkit-scrollbar {
             width: 10px;
             height: 10px;
@@ -26,20 +43,6 @@
             background: rgba(100, 200, 255, 0.5);
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: #0a0a0a;
-            color: #e0e0e0;
-            min-height: 100vh;
-            padding: 2rem;
-        }
-
         .container {
             max-width: 900px;
             margin: 0 auto;
@@ -57,7 +60,7 @@
             font-size: 2.5rem;
         }
 
-        /* Search bar styling */
+        /* Added search bar */
         .search-container {
             margin-bottom: 1.5rem;
             position: relative;
@@ -84,7 +87,7 @@
             color: #888;
         }
 
-        /* Vertical categories */
+        /* Changed to vertical layout for categories */
         .categories {
             display: flex;
             flex-direction: column;
@@ -143,14 +146,11 @@
         }
 
         .category-section.open .category-items {
-            max-height: 2000px;
+            max-height: 1000px;
         }
 
-        /* Item link with favorite star on the right */
         .item-link {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            display: block;
             padding: 1rem 1.5rem;
             background: rgba(25, 25, 25, 0.9);
             border-top: 1px solid rgba(255, 255, 255, 0.05);
@@ -166,28 +166,10 @@
             box-shadow: inset 0 0 20px rgba(255, 255, 255, 0.05);
         }
 
+        /* Added highlight for search results */
         .item-link.highlight {
             background: rgba(100, 200, 255, 0.1);
             border-left: 3px solid rgba(100, 200, 255, 0.6);
-        }
-
-        .item-link-content {
-            display: flex;
-            align-items: center;
-            gap: 0.8rem;
-        }
-
-        /* Favorite star indicator (read-only in list) */
-        .favorite-star {
-            font-size: 1.2rem;
-            color: #ffc107;
-            text-shadow: 0 0 10px rgba(255, 193, 7, 0.5);
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-
-        .favorite-star.active {
-            opacity: 1;
         }
 
         .section {
@@ -218,6 +200,7 @@
             overflow: hidden;
         }
 
+        /* Added actual image display styling */
         .detail-image img {
             max-width: 100%;
             max-height: 400px;
@@ -238,14 +221,99 @@
             box-shadow: inset 0 0 30px rgba(255, 255, 255, 0.05);
         }
 
-        /* Stats with bars and glow */
-        .stats-grid {
+        .item-card {
+            background: rgba(30, 30, 30, 0.95);
+            border-radius: 8px;
+            padding: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(100, 200, 255, 0.2);
+            box-shadow: 0 0 15px rgba(100, 200, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .item-card:hover {
+            background: rgba(40, 40, 40, 0.95);
+            box-shadow: 0 0 25px rgba(100, 200, 255, 0.25);
+            transform: translateY(-3px);
+        }
+
+        .item-card-icon {
+            width: 60px;
+            height: 60px;
+            margin: 0 auto 1rem;
+            border-radius: 8px;
+            background: rgba(40, 40, 40, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .item-card-icon img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+
+        .item-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom, rgba(100, 200, 255, 0.1), transparent);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .item-card:hover::before {
+            opacity: 0.8;
+        }
+
+        .item-card h3 {
+            text-align: center;
+            margin-bottom: 0.8rem;
+            color: #ffffff;
+            font-size: 1.2rem;
+        }
+
+        .item-card p {
+            font-size: 0.9rem;
+            color: #bbb;
+            text-align: center;
+            line-height: 1.5;
+        }
+
+        .detail-info {
+            background: rgba(30, 30, 30, 0.9);
+            border-radius: 8px;
+            padding: 2rem;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.08);
+        }
+
+        .detail-info h2 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: #ffffff;
+            text-shadow: 0 0 15px rgba(255, 255, 255, 0.25);
+        }
+
+        .detail-info p {
+            color: #bbb;
+            line-height: 1.6;
+            margin-bottom: 2rem;
+        }
+
+        .stats {
             display: flex;
             flex-direction: column;
             gap: 1.5rem;
         }
 
-        .stat-item {
+        .stat {
             display: flex;
             flex-direction: column;
             gap: 0.5rem;
@@ -318,7 +386,7 @@
             transform: translateX(-3px);
         }
 
-        /* Crafting calculator with glow effects */
+        /* Added crafting calculator styles with checkboxes */
         .crafting-calculator {
             margin-top: 2rem;
             background: rgba(30, 30, 30, 0.9);
@@ -328,6 +396,7 @@
             border: 2px solid rgba(255, 255, 255, 0.1);
         }
 
+        /* Added crafting header with progress and actions */
         .crafting-header {
             display: flex;
             justify-content: space-between;
@@ -339,11 +408,13 @@
 
         .crafting-calculator h3 {
             color: #ffffff;
+            margin-bottom: 1.5rem;
             text-shadow: 0 0 15px rgba(255, 255, 255, 0.25);
             font-size: 1.5rem;
             margin: 0;
         }
 
+        /* Added progress indicator */
         .crafting-progress {
             display: flex;
             align-items: center;
@@ -367,6 +438,7 @@
             box-shadow: 0 0 10px rgba(46, 204, 113, 0.6);
         }
 
+        /* Added action buttons for crafting */
         .crafting-actions {
             display: flex;
             gap: 0.5rem;
@@ -445,6 +517,7 @@
             box-shadow: 0 0 25px rgba(46, 204, 113, 0.5);
         }
 
+        /* Added amount controls container */
         .amount-controls {
             display: flex;
             align-items: center;
@@ -452,6 +525,7 @@
             flex-shrink: 0;
         }
 
+        /* Added increment/decrement buttons */
         .amount-btn {
             width: 28px;
             height: 28px;
@@ -499,6 +573,7 @@
             box-shadow: 0 0 10px rgba(100, 200, 255, 0.3);
         }
 
+        /* Green glow when amount is 0 */
         .crafting-amount-input.zero {
             border-color: rgba(46, 204, 113, 0.8);
             color: #2ecc71;
@@ -522,27 +597,55 @@
             text-shadow: 0 0 10px rgba(100, 200, 255, 0.5);
         }
 
-        /* Favorite button in detail view */
-        .favorite-btn {
-            background: transparent;
-            border: none;
-            font-size: 2rem;
-            cursor: pointer;
+        .material-description {
+            color: #aaa;
+            font-size: 0.9rem;
+            margin-top: 0.3rem;
+        }
+
+        .total-materials {
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 2px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .total-materials h4 {
+            color: #ffffff;
+            margin-bottom: 1rem;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+        }
+
+        .total-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem;
+            background: rgba(50, 50, 50, 0.6);
+            border-radius: 4px;
+            margin-bottom: 0.5rem;
             transition: all 0.3s ease;
-            opacity: 0.5;
         }
 
-        .favorite-btn:hover {
-            transform: scale(1.2);
-            opacity: 1;
+        .total-item.completed {
+            background: rgba(46, 204, 113, 0.15);
+            box-shadow: 0 0 10px rgba(46, 204, 113, 0.2);
         }
 
-        .favorite-btn.active {
-            opacity: 1;
-            filter: drop-shadow(0 0 10px rgba(255, 193, 7, 0.8));
+        .total-item span:first-child {
+            color: #ccc;
         }
 
-        /* Scroll to top button */
+        .total-item span:last-child {
+            color: #64c8ff;
+            font-weight: bold;
+            text-shadow: 0 0 8px rgba(100, 200, 255, 0.4);
+        }
+
+        .total-item.completed span:last-child {
+            color: #2ecc71;
+            text-shadow: 0 0 8px rgba(46, 204, 113, 0.4);
+        }
+
+        /* Added scroll to top button */
         .scroll-top-btn {
             position: fixed;
             bottom: 2rem;
@@ -573,6 +676,91 @@
             transform: translateY(-3px);
         }
 
+        /* Added notification system */
+        .notification {
+            position: fixed;
+            top: 2rem;
+            right: 2rem;
+            padding: 1rem 1.5rem;
+            background: rgba(30, 30, 30, 0.95);
+            border: 2px solid rgba(100, 200, 255, 0.6);
+            border-radius: 8px;
+            color: #64c8ff;
+            font-size: 0.9rem;
+            box-shadow: 0 0 30px rgba(100, 200, 255, 0.3);
+            z-index: 2000;
+            opacity: 0;
+            transform: translateX(400px);
+            transition: all 0.3s ease;
+        }
+
+        .notification.show {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .notification.success {
+            border-color: rgba(46, 204, 113, 0.6);
+            color: #2ecc71;
+            box-shadow: 0 0 30px rgba(46, 204, 113, 0.3);
+        }
+
+        /* Download button styling */
+        .download-button {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: linear-gradient(135deg, #4a90a4 0%, #357a8c 100%);
+            color: white;
+            border: none;
+            padding: 0.6rem 1.2rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(74, 144, 164, 0.3);
+        }
+
+        .download-button:hover {
+            background: linear-gradient(135deg, #5aa0b4 0%, #458a9c 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(74, 144, 164, 0.5);
+        }
+
+        .download-button:active {
+            transform: translateY(0);
+        }
+
+        .download-button svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        .download-button.downloading {
+            opacity: 0.7;
+            pointer-events: none;
+        }
+
+        /* Header actions container for back button and download */
+        .detail-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        /* Capture container styling for clean screenshot */
+        #capture-container {
+            background: #121212;
+            padding: 1.5rem;
+            border-radius: 12px;
+        }
+
+        #capture-container .detail-header {
+            display: none;
+        }
+
         @media (max-width: 768px) {
             .detail-view {
                 grid-template-columns: 1fr;
@@ -599,74 +787,2240 @@
     </style>
 </head>
 <body>
+    <!-- Added scroll to top button -->
     <div class="scroll-top-btn" id="scrollTopBtn" onclick="scrollToTop()">↑</div>
 
+    <!-- Added notification container -->
+    <div class="notification" id="notification"></div>
+
     <div class="container">
-        <div id="home-section">
+        <!-- Home section now dynamically loaded from JSON -->
+        <div class="section active" id="home-section">
             <h1>Equipment Wiki</h1>
             
-            <!-- Search bar -->
+            <!-- Added search functionality -->
             <div class="search-container">
                 <input 
                     type="text" 
                     class="search-input" 
                     id="searchInput" 
                     placeholder="Search for items..."
-                    oninput="handleSearch(this.value)"
+                    oninput="filterItems(this.value)"
                 >
             </div>
 
-            <div class="categories" id="categories"></div>
+            <div class="categories" id="categories-container"></div>
         </div>
 
-        <!-- Detail section -->
-        <div class="section" id="detail-section">
-            <button class="back-button" onclick="showList()">← Back to List</button>
-            <div class="detail-view">
-                <div class="detail-image" id="detail-image"></div>
-                <div class="detail-info" id="detail-info"></div>
+        <!-- Detail section now dynamically generated -->
+        <div class="section" id="detail-section"></div>
+
+        <!-- Existing detail sections (kept for reference, but will be replaced by dynamic generation) -->
+        <div class="section" id="ural-section">
+            <div class="detail-header">
+                <div class="back-button" onclick="showHome()">← Zurück zur Übersicht</div>
+                <!-- Added Download Button -->
+                <button class="download-button" onclick="downloadScreenshot()">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M5 20h14v-2H5v2zm14-9v6H5v-6h2v4h10v-4h2zM5 8l7-7 7 7h-3v6h-8v-6H5z"/></svg>
+                    Download
+                </button>
             </div>
-            <div class="crafting-calculator" id="crafting-calculator"></div>
+            
+            <div id="capture-container">
+                <div class="detail-view">
+                    <div class="detail-image">
+                        <div class="placeholder-image">Ural Device</div>
+                    </div>
+
+                    <div class="detail-info">
+                        <h2>Ural Device</h2>
+                        <p>Der Ural ist ein robuster Militär-LKW, der für schwere Lasten und raues Gelände konzipiert wurde. Mit seiner hohen Ladekapazität ist er ideal für den Transport von Erzen und anderen Materialien.</p>
+
+                        <div class="stats">
+                            <div class="stat">
+                                <div class="stat-label">
+                                    <span>Geschwindigkeit</span>
+                                    <span class="stat-value">85 km/h</span>
+                                </div>
+                                <div class="stat-bar-container">
+                                    <div class="stat-bar medium" style="width: 68%;">85</div>
+                                </div>
+                            </div>
+
+                            <div class="stat">
+                                <div class="stat-label">
+                                    <span>Ore Storage</span>
+                                    <span class="stat-value">125</span>
+                                </div>
+                                <div class="stat-bar-container">
+                                    <div class="stat-bar" style="width: 83%;">125</div>
+                                </div>
+                            </div>
+
+                            <div class="stat">
+                                <div class="stat-label">
+                                    <span>Fuel Capacity</span>
+                                    <span class="stat-value">200L</span>
+                                </div>
+                                <div class="stat-bar-container">
+                                    <div class="stat-bar" style="width: 80%;">200L</div>
+                                </div>
+                            </div>
+
+                            <div class="stat">
+                                <div class="stat-label">
+                                    <span>Durability</span>
+                                    <span class="stat-value">95%</span>
+                                </div>
+                                <div class="stat-bar-container">
+                                    <div class="stat-bar" style="width: 95%;">95%</div>
+                                </div>
+                            </div>
+
+                            <div class="stat">
+                                <div class="stat-label">
+                                    <span>Off-Road</span>
+                                    <span class="stat-value">110</span>
+                                </div>
+                                <div class="stat-bar-container">
+                                    <div class="stat-bar" style="width: 88%;">110</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Added crafting calculator for Ural -->
+                <div class="crafting-calculator">
+                    <h3>Crafting Rezept</h3>
+                    <div class="crafting-list">
+                        <div class="crafting-item">
+                            <div class="material-name">Steel Frame</div>
+                            <div class="material-amount">× 25</div>
+                            <div class="material-description">Benötigt für Chassis und Struktur</div>
+                        </div>
+                        <div class="crafting-item nested">
+                            <div class="material-name">↳ Iron Ore</div>
+                            <div class="material-amount">× 50</div>
+                            <div class="material-description">Grundmaterial für Stahlrahmen</div>
+                        </div>
+                        <div class="crafting-item nested">
+                            <div class="material-name">↳ Carbon Powder</div>
+                            <div class="material-amount">× 15</div>
+                        </div>
+
+                        <div class="crafting-item">
+                            <div class="material-name">Engine Components</div>
+                            <div class="material-amount">× 8</div>
+                            <div class="material-description">Motorteile für starke Leistung</div>
+                        </div>
+                        <div class="crafting-item nested">
+                            <div class="material-name">↳ Copper Wire</div>
+                            <div class="material-amount">× 30</div>
+                        </div>
+                        <div class="crafting-item nested">
+                            <div class="material-name">↳ Electronic Circuit</div>
+                            <div class="material-amount">× 12</div>
+                        </div>
+                        <div class="crafting-item nested-2">
+                            <div class="material-name">↳ Silicon Wafer</div>
+                            <div class="material-amount">× 24</div>
+                        </div>
+                        <div class="crafting-item nested-2">
+                            <div class="material-name">↳ Gold Wire</div>
+                            <div class="material-amount">× 6</div>
+                        </div>
+
+                        <div class="crafting-item">
+                            <div class="material-name">Rubber Tires</div>
+                            <div class="material-amount">× 6</div>
+                            <div class="material-description">Hochbelastbare Reifen</div>
+                        </div>
+                        <div class="crafting-item nested">
+                            <div class="material-name">↳ Rubber</div>
+                            <div class="material-amount">× 40</div>
+                        </div>
+                        <div class="crafting-item nested">
+                            <div class="material-name">↳ Steel Reinforcement</div>
+                            <div class="material-amount">× 12</div>
+                        </div>
+                    </div>
+
+                    <div class="total-materials">
+                        <h4>Gesamt-Basismaterialien:</h4>
+                        <div class="total-item">
+                            <span>Iron Ore</span>
+                            <span>× 50</span>
+                        </div>
+                        <div class="total-item">
+                            <span>Carbon Powder</span>
+                            <span>× 15</span>
+                        </div>
+                        <div class="total-item">
+                            <span>Copper Wire</span>
+                            <span>× 30</span>
+                        </div>
+                        <div class="total-item">
+                            <span>Silicon Wafer</span>
+                            <span>× 24</span>
+                        </div>
+                        <div class="total-item">
+                            <span>Gold Wire</span>
+                            <span>× 6</span>
+                        </div>
+                        <div class="total-item">
+                            <span>Rubber</span>
+                            <span>× 40</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section" id="kamaz-section">
+            <div class="detail-header">
+                <div class="back-button" onclick="showHome()">← Zurück zur Übersicht</div>
+                <!-- Added Download Button -->
+                <button class="download-button" onclick="downloadScreenshot()">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M5 20h14v-2H5v2zm14-9v6H5v-6h2v4h10v-4h2zM5 8l7-7 7 7h-3v6h-8v-6H5z"/></svg>
+                    Download
+                </button>
+            </div>
+            <div id="capture-container">
+                <div class="detail-view">
+                    <div class="detail-image">
+                        <div class="placeholder-image">Kamaz Transport</div>
+                    </div>
+
+                    <div class="detail-info">
+                        <h2>Kamaz Transport</h2>
+                        <p>Der Kamaz ist ein zuverlässiger Langstrecken-LKW mit ausgezeichneter Kraftstoffeffizienz und hoher Nutzlast. Ideal für lange Transportrouten.</p>
+
+                        <div class="stats">
+                            <div class="stat">
+                                <div class="stat-label">
+                                    <span>Geschwindigkeit</span>
+                                    <span class="stat-value">95 km/h</span>
+                                </div>
+                                <div class="stat-bar-container">
+                                    <div class="stat-bar medium" style="width: 76%;">95</div>
+                                </div>
+                            </div>
+
+                            <div class="stat">
+                                <div class="stat-label">
+                                    <span>Ore Storage</span>
+                                    <span class="stat-value">150</span>
+                                </div>
+                                <div class="stat-bar-container">
+                                    <div class="stat-bar" style="width: 100%;">150</div>
+                                </div>
+                            </div>
+
+                            <div class="stat">
+                                <div class="stat-label">
+                                    <span>Fuel Efficiency</span>
+                                    <span class="stat-value">105</span>
+                                </div>
+                                <div class="stat-bar-container">
+                                    <div class="stat-bar" style="width: 84%;">105</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Added crafting calculator for Kamaz -->
+                <div class="crafting-calculator">
+                    <h3>Crafting Rezept</h3>
+                    <div class="crafting-list">
+                        <div class="crafting-item">
+                            <div class="material-name">Advanced Chassis</div>
+                            <div class="material-amount">× 20</div>
+                        </div>
+                        <div class="crafting-item nested">
+                            <div class="material-name">↳ Titanium Alloy</div>
+                            <div class="material-amount">× 35</div>
+                        </div>
+                        <div class="crafting-item nested-2">
+                            <div class="material-name">↳ Titanium Ore</div>
+                            <div class="material-amount">× 70</div>
+                        </div>
+                        <div class="crafting-item nested-2">
+                            <div class="material-name">↳ Aluminum</div>
+                            <div class="material-amount">× 20</div>
+                        </div>
+
+                        <div class="crafting-item">
+                            <div class="material-name">Heavy Engine</div>
+                            <div class="material-amount">× 10</div>
+                        </div>
+                        <div class="crafting-item nested">
+                            <div class="material-name">↳ Steel Parts</div>
+                            <div class="material-amount">× 45</div>
+                        </div>
+                        <div class="crafting-item nested">
+                            <div class="material-name">↳ Oil Filter</div>
+                            <div class="material-amount">× 5</div>
+                        </div>
+
+                        <div class="crafting-item">
+                            <div class="material-name">Cargo Container</div>
+                            <div class="material-amount">× 15</div>
+                        </div>
+                        <div class="crafting-item nested">
+                            <div class="material-name">↳ Steel Plates</div>
+                            <div class="material-amount">× 60</div>
+                        </div>
+                    </div>
+
+                    <div class="total-materials">
+                        <h4>Gesamt-Basismaterialien:</h4>
+                        <div class="total-item">
+                            <span>Titanium Ore</span>
+                            <span>× 70</span>
+                        </div>
+                        <div class="total-item">
+                            <span>Aluminum</span>
+                            <span>× 20</span>
+                        </div>
+                        <div class="total-item">
+                            <span>Steel Parts</span>
+                            <span>× 45</span>
+                        </div>
+                        <div class="total-item">
+                            <span>Oil Filter</span>
+                            <span>× 5</span>
+                        </div>
+                        <div class="total-item">
+                            <span>Steel Plates</span>
+                            <span>× 60</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section" id="man-section">
+            <div class="detail-header">
+                <div class="back-button" onclick="showHome()">← Zurück zur Übersicht</div>
+                <!-- Added Download Button -->
+                <button class="download-button" onclick="downloadScreenshot()">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M5 20h14v-2H5v2zm14-9v6H5v-6h2v4h10v-4h2zM5 8l7-7 7 7h-3v6h-8v-6H5z"/></svg>
+                    Download
+                </button>
+            </div>
+            <div id="capture-container">
+                <div class="detail-view">
+                    <div class="detail-image">
+                        <div class="placeholder-image">MAN Truck</div>
+                    </div>
+
+                    <div class="detail-info">
+                        <h2>MAN Truck</h2>
+                        <p>Moderne europäische LKW-Technologie mit hoher Effizienz und Komfort. Perfekt für kommerzielle Transporte.</p>
+
+                        <div class="stats">
+                            <div class="stat">
+                                <div class="stat-label">
+                                    <span>Geschwindigkeit</span>
+                                    <span class="stat-value">100 km/h</span>
+                                </div>
+                                <div class="stat-bar-container">
+                                    <div class="stat-bar" style="width: 80%;">100</div>
+                                </div>
+                            </div>
+
+                            <div class="stat">
+                                <div class="stat-label">
+                                    <span>Cargo Space</span>
+                                    <span class="stat-value">130</span>
+                                </div>
+                                <div class="stat-bar-container">
+                                    <div class="stat-bar" style="width: 87%;">130</div>
+                                </div>
+                            </div>
+
+                            <div class="stat">
+                                <div class="stat-label">
+                                    <span>Comfort</span>
+                                    <span class="stat-value">115</span>
+                                </div>
+                                <div class="stat-bar-container">
+                                    <div class="stat-bar" style="width: 92%;">115</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Added crafting calculator for MAN Truck -->
+                <div class="crafting-calculator">
+                    <h3>Crafting Rezept</h3>
+                    <div class="crafting-list">
+                        <div class="crafting-item">
+                            <div class="material-name">Euro Frame</div>
+                            <div class="material-amount">× 18</div>
+                        </div>
+                        <div class="crafting-item nested">
+                            <div class="material-name">↳ Refined Steel</div>
+                            <div class="material-amount">× 40</div>
+                        </div>
+
+                        <div class="crafting-item">
+                            <div class="material-name">Efficient Engine</div>
+                            <div class="material-amount">× 6</div>
+                        </div>
+                        <div class="crafting-item nested">
+                            <div class="material-name">↳ Precision Parts</div>
+                            <div class="material-amount">× 25</div>
+                        </div>
+                        <div class="crafting-item nested-2">
+                            <div class="material-name">↳ Machine Oil</div>
+                            <div class="material-amount">× 15</div>
+                        </div>
+
+                        <div class="crafting-item">
+                            <div class="material-name">Comfort Package</div>
+                            <div class="material-amount">× 10</div>
+                        </div>
+                        <div class="crafting-item nested">
+                            <div class="material-name">↳ Fabric</div>
+                            <div class="material-amount">× 30</div>
+                        </div>
+                        <div class="crafting-item nested">
+                            <div class="material-name">↳ Foam Material</div>
+                            <div class="material-amount">× 20</div>
+                        </div>
+                    </div>
+
+                    <div class="total-materials">
+                        <h4>Gesamt-Basismaterialien:</h4>
+                        <div class="total-item">
+                            <span>Refined Steel</span>
+                            <span>× 40</span>
+                        </div>
+                        <div class="total-item">
+                            <span>Machine Oil</span>
+                            <span>× 15</span>
+                        </div>
+                        <div class="total-item">
+                            <span>Fabric</span>
+                            <span>× 30</span>
+                        </div>
+                        <div class="total-item">
+                            <span>Foam Material</span>
+                            <span>× 20</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section" id="sports-car-section">
+            <div class="detail-header">
+                <div class="back-button" onclick="showHome()">← Zurück zur Übersicht</div>
+                <!-- Added Download Button -->
+                <button class="download-button" onclick="downloadScreenshot()">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M5 20h14v-2H5v2zm14-9v6H5v-6h2v4h10v-4h2zM5 8l7-7 7 7h-3v6h-8v-6H5z"/></svg>
+                    Download
+                </button>
+            </div>
+            <div id="capture-container">
+                <div class="detail-view">
+                    <div class="detail-image">
+                        <div class="placeholder-image">Sports Car</div>
+                    </div>
+
+                    <div class="detail-info">
+                        <h2>Sports Car</h2>
+                        <p>Ein schnelles und wendiges Fahrzeug für urbane Umgebungen. Perfekt für schnelle Fahrten und Verfolgungsjagden.</p>
+
+                        <div class="stats">
+                            <div class="stat">
+                                <div class="stat-label">
+                                    <span>Geschwindigkeit</span>
+                                    <span class="stat-value">180 km/h</span>
+                                </div>
+                                <div class="stat-bar-container">
+                                    <div class="stat-bar" style="width: 95%;">180</div>
+                                </div>
+                            </div>
+
+                            <div class="stat">
+                                <div class="stat-label">
+                                    <span>Fuel Efficiency</span>
+                                    <span class="stat-value">45</span>
+                                </div>
+                                <div class="stat-bar-container">
+                                    <div class="stat-bar low" style="width: 45%;">45</div>
+                                </div>
+                            </div>
+
+                            <div class="stat">
+                                <div class="stat-label">
+                                    <span>Handling</span>
+                                    <span class="stat-value">120</span>
+                                </div>
+                                <div class="stat-bar-container">
+                                    <div class="stat-bar" style="width: 96%;">120</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Added crafting calculator for Sports Car -->
+                <div class="crafting-calculator">
+                    <h3>Crafting Rezept</h3>
+                    <div class="crafting-list">
+                        <div class="crafting-item">
+                            <div class="material-name">Carbon Body</div>
+                            <div class="material-amount">× 15</div>
+                        </div>
+                        <div class="crafting-item nested">
+                            <div class="material-name">↳ Carbon Fiber</div>
+                            <div class="material-amount">× 80</div>
+                        </div>
+                        <div class="crafting-item nested-2">
+                            <div class="material-name">↳ Carbon Thread</div>
+                            <div class="material-amount">× 160</div>
+                        </div>
+                        <div class="crafting-item nested-2">
+                            <div class="material-name">↳ Resin</div>
+                            <div class="material-amount">× 40</div>
+                        </div>
+
+                        <div class="crafting-item">
+                            <div class="material-name">Turbo Engine</div>
+                            <div class="material-amount">× 4</div>
+                        </div>
+                        <div class="crafting-item nested">
+                            <div class="material-name">↳ High-Grade Parts</div>
+                            <div class="material-amount">× 30</div>
+                        </div>
+                        <div class="crafting-item nested">
+                            <div class="material-name">↳ Turbocharger</div>
+                            <div class="material-amount">× 8</div>
+                        </div>
+
+                        <div class="crafting-item">
+                            <div class="material-name">Sport Tires</div>
+                            <div class="material-amount">× 4</div>
+                        </div>
+                        <div class="crafting-item nested">
+                            <div class="material-name">↳ Racing Rubber</div>
+                            <div class="material-amount">× 25</div>
+                        </div>
+                    </div>
+
+                    <div class="total-materials">
+                        <h4>Gesamt-Basismaterialien:</h4>
+                        <div class="total-item">
+                            <span>Carbon Thread</span>
+                            <span>× 160</span>
+                        </div>
+                        <div class="total-item">
+                            <span>Resin</span>
+                            <span>× 40</span>
+                        </div>
+                        <div class="total-item">
+                            <span>High-Grade Parts</span>
+                            <span>× 30</span>
+                        </div>
+                        <div class="total-item">
+                            <span>Turbocharger</span>
+                            <span>× 8</span>
+                        </div>
+                        <div class="total-item">
+                            <span>Racing Rubber</span>
+                            <span>× 25</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section" id="sedan-section">
+            <div class="detail-header">
+                <div class="back-button" onclick="showHome()">← Zurück zur Übersicht</div>
+                <!-- Added Download Button -->
+                <button class="download-button" onclick="downloadScreenshot()">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M5 20h14v-2H5v2zm14-9v6H5v-6h2v4h10v-4h2zM5 8l7-7 7 7h-3v6h-8v-6H5z"/></svg>
+                    Download
+                </button>
+            </div>
+            <div id="capture-container">
+                <div class="detail-view">
+                    <div class="detail-image">
+                        <div class="placeholder-image">Sedan</div>
+                    </div>
+
+                    <div class="detail-info">
+                        <h2>Sedan</h2>
+                        <p>Komfortabler Alltagswagen mit gutem Platzangebot und Effizienz. Ideal für tägliche Fahrten.</p>
+
+                        <div class="stats">
+                            <div class="stat">
+                                <div class="stat-label">
+                                    <span>Geschwindigkeit</span>
+                                    <span class="stat-value">140 km/h</span>
+                                </div>
+                                <div class="stat-bar-container">
+                                    <div class="stat-bar" style="width: 82%;">140</div>
+                                </div>
+                            </div>
+
+                            <div class="stat">
+                                <div class="stat-label">
+                                    <span>Fuel Efficiency</span>
+                                    <span class="stat-value">95</span>
+                                </div>
+                                <div class="stat-bar-container">
+                                    <div class="stat-bar" style="width: 95%;">95</div>
+                                </div>
+                            </div>
+
+                            <div class="stat">
+                                <div class="stat-label">
+                                    <span>Comfort</span>
+                                    <span class="stat-value">100</span>
+                                </div>
+                                <div class="stat-bar-container">
+                                    <div class="stat-bar" style="width: 80%;">100</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Added crafting calculator for Sedan -->
+                <div class="crafting-calculator">
+                    <h3>Crafting Rezept</h3>
+                    <div class="crafting-list">
+                        <div class="crafting-item">
+                            <div class="material-name">Standard Frame</div>
+                            <div class="material-amount">× 12</div>
+                        </div>
+                        <div class="crafting-item nested">
+                            <div class="material-name">↳ Steel Bars</div>
+                            <div class="material-amount">× 35</div>
+                        </div>
+
+                        <div class="crafting-item">
+                            <div class="material-name">Standard Engine</div>
+                            <div class="material-amount">× 5</div>
+                        </div>
+                        <div class="crafting-item nested">
+                            <div class="material-name">↳ Metal Parts</div>
+                            <div class="material-amount">× 20</div>
+                        </div>
+
+                        <div class="crafting-item">
+                            <div class="material-name">Interior Set</div>
+                            <div class="material-amount">× 8</div>
+                        </div>
+                        <div class="crafting-item nested">
+                            <div class="material-name">↳ Leather</div>
+                            <div class="material-amount">× 15</div>
+                        </div>
+                        <div class="crafting-item nested">
+                            <div class="material-name">↳ Plastic</div>
+                            <div class="material-amount">× 25</div>
+                        </div>
+                    </div>
+
+                    <div class="total-materials">
+                        <h4>Gesamt-Basismaterialien:</h4>
+                        <div class="total-item">
+                            <span>Steel Bars</span>
+                            <span>× 35</span>
+                        </div>
+                        <div class="total-item">
+                            <span>Metal Parts</span>
+                            <span>× 20</span>
+                        </div>
+                        <div class="total-item">
+                            <span>Leather</span>
+                            <span>× 15</span>
+                        </div>
+                        <div class="total-item">
+                            <span>Plastic</span>
+                            <span>× 25</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section" id="suv-section">
+            <div class="detail-header">
+                <div class="back-button" onclick="showHome()">← Zurück zur Übersicht</div>
+                <!-- Added Download Button -->
+                <button class="download-button" onclick="downloadScreenshot()">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M5 20h14v-2H5v2zm14-9v6H5v-6h2v4h10v-4h2zM5 8l7-7 7 7h-3v6h-8v-6H5z"/></svg>
+                    Download
+                </button>
+            </div>
+            <div id="capture-container">
+                <div class="detail-view">
+                    <div class="detail-image">
+                        <div class="placeholder-image">SUV</div>
+                    </div>
+
+                    <div class="detail-info">
+                        <h2>SUV</h2>
+                        <p>Robuster Geländewagen mit hoher Sitzposition und viel Stauraum. Vielseitig einsetzbar.</p>
+
+                        <div class="stats">
+                            <div class="stat">
+                                <div class="stat-label">
+                                    <span>Geschwindigkeit</span>
+                                    <span class="stat-value">130 km/h</span>
+                                </div>
+                                <div class="stat-bar-container">
+                                    <div class="stat-bar" style="width: 78%;">130</div>
+                                </div>
+                            </div>
+
+                            <div class="stat">
+                                <div class="stat-label">
+                                    <span>Off-Road</span>
+                                    <span class="stat-value">105</span>
+                                </div>
+                                <div class="stat-bar-container">
+                                    <div class="stat-bar" style="width: 84%;">105</div>
+                                </div>
+                            </div>
+
+                            <div class="stat">
+                                <div class="stat-label">
+                                    <span>Storage</span>
+                                    <span class="stat-value">110</span>
+                                </div>
+                                <div class="stat-bar-container">
+                                    <div class="stat-bar" style="width: 88%;">110</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Added crafting calculator for SUV -->
+                <div class="crafting-calculator">
+                    <h3>Crafting Rezept</h3>
+                    <div class="crafting-list">
+                        <div class="crafting-item">
+                            <div class="material-name">Reinforced Frame</div>
+                            <div class="material-amount">× 18</div>
+                        </div>
+                        <div class="crafting-item nested">
+                            <div class="material-name">↳ Heavy Steel</div>
+                            <div class="material-amount">× 50</div>
+                        </div>
+
+                        <div class="crafting-item">
+                            <div class="material-name">AWD System</div>
+                            <div class="material-amount">× 6</div>
+                        </div>
+                        <div class="crafting-item nested">
+                            <div class="material-name">↳ Gear Set</div>
+                            <div class="material-amount">× 24</div>
+                        </div>
+                        <div class="crafting-item nested-2">
+                            <div class="material-name">↳ Steel Gears</div>
+                            <div class="material-amount">× 48</div>
+                        </div>
+
+                        <div class="crafting-item">
+                            <div class="material-name">Off-Road Tires</div>
+                            <div class="material-amount">× 4</div>
+                        </div>
+                        <div class="crafting-item nested">
+                            <div class="material-name">↳ Reinforced Rubber</div>
+                            <div class="material-amount">× 35</div>
+                        </div>
+                    </div>
+
+                    <div class="total-materials">
+                        <h4>Gesamt-Basismaterialien:</h4>
+                        <div class="total-item">
+                            <span>Heavy Steel</span>
+                            <span>× 50</span>
+                        </div>
+                        <div class="total-item">
+                            <span>Steel Gears</span>
+                            <span>× 48</span>
+                        </div>
+                        <div class="total-item">
+                            <span>Reinforced Rubber</span>
+                            <span>× 35</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section" id="transport-heli-section">
+            <div class="detail-header">
+                <div class="back-button" onclick="showHome()">← Zurück zur Übersicht</div>
+                <!-- Added Download Button -->
+                <button class="download-button" onclick="downloadScreenshot()">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M5 20h14v-2H5v2zm14-9v6H5v-6h2v4h10v-4h2zM5 8l7-7 7 7h-3v6h-8v-6H5z"/></svg>
+                    Download
+                </button>
+            </div>
+            <div id="capture-container">
+                <div class="detail-view">
+                    <div class="detail-image">
+                        <div class="placeholder-image">Transport Helicopter</div>
+                    </div>
+
+                    <div class="detail-info">
+                        <h2>Transport Helicopter</h2>
+                        <p>Ein vielseitiger Transporthubschrauber für Luftoperationen. Ermöglicht schnelle Truppenbewegungen und Materiallieferungen.</p>
+
+                        <div class="stats">
+                            <div class="stat">
+                                <div class="stat-label">
+                                    <span>Max Speed</span>
+                                    <span class="stat-value">240 km/h</span>
+                                </div>
+                                <div class="stat-bar-container">
+                                    <div class="stat-bar" style="width: 85%;">240</div>
+                                </div>
+                            </div>
+
+                            <div class="stat">
+                                <div class="stat-label">
+                                    <span>Passenger Capacity</span>
+                                    <span class="stat-value">8</span>
+                                </div>
+                                <div class="stat-bar-container">
+                                    <div class="stat-bar medium" style="width: 64%;">8</div>
+                                </div>
+                            </div>
+
+                            <div class="stat">
+                                <div class="stat-label">
+                                    <span>Armor</span>
+                                    <span class="stat-value">65</span>
+                                </div>
+                                <div class="stat-bar-container">
+                                    <div class="stat-bar medium" style="width: 65%;">65</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Added crafting calculator for Transport Helicopter -->
+                <div class="crafting-calculator">
+                    <h3>Crafting Rezept</h3>
+                    <div class="crafting-list">
+                        <div class="crafting-item">
+                            <div class="material-name">Aircraft Frame</div>
+                            <div class="material-amount">× 30</div>
+                        </div>
+                        <div class="crafting-item nested">
+                            <div class="material-name">↳ Aluminum Alloy</div>
+                            <div class="material-amount">× 100</div>
+                        </div>
+                        <div class="crafting-item nested-2">
+                            <div class="material-name">↳ Bauxite Ore</div>
+                            <div class="material-amount">× 200</div>
+                        </div>
+
+                        <div class="crafting-item">
+                            <div class="material-name">Rotor System</div>
+                            <div class="material-amount">× 12</div>
+                        </div>
+                        <div class="crafting-item nested">
+                            <div class="material-name">↳ Composite Blades</div>
+                            <div class="material-amount">× 48</div>
+                        </div>
+                        <div class="crafting-item nested-2">
+                            <div class="material-name">↳ Carbon Composite</div>
+                            <div class="material-amount">× 96</div>
+                        </div>
+
+                        <div class="crafting-item">
+                            <div class="material-name">Aviation Engine</div>
+                            <div class="material-amount">× 15</div>
+                        </div>
+                        <div class="crafting-item nested">
+                            <div class="material-name">↳ Turbine Parts</div>
+                            <div class="material-amount">× 60</div>
+                        </div>
+                        <div class="crafting-item nested">
+                            <div class="material-name">↳ Fuel Injector</div>
+                            <div class="material-amount">× 30</div>
+                        </div>
+                    </div>
+
+                    <div class="total-materials">
+                        <h4>Gesamt-Basismaterialien:</h4>
+                        <div class="total-item">
+                            <span>Bauxite Ore</span>
+                            <span>× 200</span>
+                        </div>
+                        <div class="total-item">
+                            <span>Carbon Composite</span>
+                            <span>× 96</span>
+                        </div>
+                        <div class="total-item">
+                            <span>Turbine Parts</span>
+                            <span>× 60</span>
+                        </div>
+                        <div class="total-item">
+                            <span>Fuel Injector</span>
+                            <span>× 30</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section" id="attack-heli-section">
+            <div class="detail-header">
+                <div class="back-button" onclick="showHome()">← Zurück zur Übersicht</div>
+                <!-- Added Download Button -->
+                <button class="download-button" onclick="downloadScreenshot()">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M5 20h14v-2H5v2zm14-9v6H5v-6h2v4h10v-4h2zM5 8l7-7 7 7h-3v6h-8v-6H5z"/></svg>
+                    Download
+                </button>
+            </div>
+            <div id="capture-container">
+                <div class="detail-view">
+                    <div class="detail-image">
+                        <div class="placeholder-image">Attack Helicopter</div>
+                    </div>
+
+                    <div class="detail-info">
+                        <h2>Attack Helicopter</h2>
+                        <p>Schwer bewaffneter Kampfhubschrauber mit modernster Avionik. Hervorragend für Luftnahunterstützung.</p>
+
+                        <div class="stats">
+                            <div class="stat">
+                                <div class="stat-label">
+                                    <span>Max Speed</span>
+                                    <span class="stat-value">280 km/h</span>
+                                </div>
+                                <div class="stat-bar-container">
+                                    <div class="stat-bar" style="width: 93%;">280</div>
+                                </div>
+                            </div>
+
+                            <div class="stat">
+                                <div class="stat-label">
+                                    <span>Firepower</span>
+                                    <span class="stat-value">140</span>
+                                </div>
+                                <div class="stat-bar-container">
+                                    <div class="stat-bar" style="width: 100%;">140</div>
+                                </div>
+                            </div>
+
+                            <div class="stat">
+                                <div class="stat-label">
+                                    <span>Armor</span>
+                                    <span class="stat-value">110</span>
+                                </div>
+                                <div class="stat-bar-container">
+                                    <div class="stat-bar" style="width: 88%;">110</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Added crafting calculator for Attack Helicopter -->
+                <div class="crafting-calculator">
+                    <h3>Crafting Rezept</h3>
+                    <div class="crafting-list">
+                        <div class="crafting-item">
+                            <div class="material-name">Armored Frame</div>
+                            <div class="material-amount">× 40</div>
+                        </div>
+                        <div class="crafting-item nested">
+                            <div class="material-name">↳ Titanium Plates</div>
+                            <div class="material-amount">× 120</div>
+                        </div>
+
+                        <div class="crafting-item">
+                            <div class="material-name">Weapon System</div>
+                            <div class="material-amount">× 20</div>
+                        </div>
+                        <div class="crafting-item nested">
+                            <div class="material-name">↳ Gun Mount</div>
+                            <div class="material-amount">× 40</div>
+                        </div>
+                        <div class="crafting-item nested">
+                            <div class="material-name">↳ Missile Launcher</div>
+                            <div class="material-amount">× 16</div>
+                        </div>
+                        <div class="crafting-item nested-2">
+                            <div class="material-name">↳ Electronics</div>
+                            <div class="material-amount">× 64</div>
+                        </div>
+
+                        <div class="crafting-item">
+                            <div class="material-name">Combat Rotor</div>
+                            <div class="material-amount">× 10</div>
+                        </div>
+                        <div class="crafting-item nested">
+                            <div class="material-name">↳ Reinforced Blades</div>
+                            <div class="material-amount">× 40</div>
+                        </div>
+                    </div>
+
+                    <div class="total-materials">
+                        <h4>Gesamt-Basismaterialien:</h4>
+                        <div class="total-item">
+                            <span>Titanium Plates</span>
+                            <span>× 120</span>
+                        </div>
+                        <div class="total-item">
+                            <span>Gun Mount</span>
+                            <span>× 40</span>
+                        </div>
+                        <div class="total-item">
+                            <span>Electronics</span>
+                            <span>× 64</span>
+                        </div>
+                        <div class="total-item">
+                            <span>Reinforced Blades</span>
+                            <span>× 40</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section" id="scout-heli-section">
+            <div class="detail-header">
+                <div class="back-button" onclick="showHome()">← Zurück zur Übersicht</div>
+                <!-- Added Download Button -->
+                <button class="download-button" onclick="downloadScreenshot()">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M5 20h14v-2H5v2zm14-9v6H5v-6h2v4h10v-4h2zM5 8l7-7 7 7h-3v6h-8v-6H5z"/></svg>
+                    Download
+                </button>
+            </div>
+            <div id="capture-container">
+                <div class="detail-view">
+                    <div class="detail-image">
+                        <div class="placeholder-image">Scout Helicopter</div>
+                    </div>
+
+                    <div class="detail-info">
+                        <h2>Scout Helicopter</h2>
+                        <p>Leichter und wendiger Aufklärungshubschrauber. Perfekt für Spähaufgaben und schnelle Einsätze.</p>
+
+                        <div class="stats">
+                            <div class="stat">
+                                <div class="stat-label">
+                                    <span>Max Speed</span>
+                                    <span class="stat-value">220 km/h</span>
+                                </div>
+                                <div class="stat-bar-container">
+                                    <div class="stat-bar" style="width: 80%;">220</div>
+                                </div>
+                            </div>
+
+                            <div class="stat">
+                                <div class="stat-label">
+                                    <span>Maneuverability</span>
+                                    <span class="stat-value">125</span>
+                                </div>
+                                <div class="stat-bar-container">
+                                    <div class="stat-bar" style="width: 100%;">125</div>
+                                </div>
+                            </div>
+
+                            <div class="stat">
+                                <div class="stat-label">
+                                    <span>Stealth</span>
+                                    <span class="stat-value">90</span>
+                                </div>
+                                <div class="stat-bar-container">
+                                    <div class="stat-bar" style="width: 72%;">90</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Added crafting calculator for Scout Helicopter -->
+                <div class="crafting-calculator">
+                    <h3>Crafting Rezept</h3>
+                    <div class="crafting-list">
+                        <div class="crafting-item">
+                            <div class="material-name">Lightweight Frame</div>
+                            <div class="material-amount">× 20</div>
+                        </div>
+                        <div class="crafting-item nested">
+                            <div class="material-name">↳ Light Alloy</div>
+                            <div class="material-amount">× 60</div>
+                        </div>
+
+                        <div class="crafting-item">
+                            <div class="material-name">Recon Equipment</div>
+                            <div class="material-amount">× 15</div>
+                        </div>
+                        <div class="crafting-item nested">
+                            <div class="material-name">↳ Camera System</div>
+                            <div class="material-amount">× 30</div>
+                        </div>
+                        <div class="crafting-item nested-2">
+                            <div class="material-name">↳ Optical Lens</div>
+                            <div class="material-amount">× 60</div>
+                        </div>
+                        <div class="crafting-item nested">
+                            <div class="material-name">↳ Radar Module</div>
+                            <div class="material-amount">× 10</div>
+                        </div>
+
+                        <div class="crafting-item">
+                            <div class="material-name">Agile Rotor</div>
+                            <div class="material-amount">× 8</div>
+                        </div>
+                        <div class="crafting-item nested">
+                            <div class="material-name">↳ Flexible Blades</div>
+                            <div class="material-amount">× 32</div>
+                        </div>
+                    </div>
+
+                    <div class="total-materials">
+                        <h4>Gesamt-Basismaterialien:</h4>
+                        <div class="total-item">
+                            <span>Light Alloy</span>
+                            <span>× 60</span>
+                        </div>
+                        <div class="total-item">
+                            <span>Optical Lens</span>
+                            <span>× 60</span>
+                        </div>
+                        <div class="total-item">
+                            <span>Radar Module</span>
+                            <span>× 10</span>
+                        </div>
+                        <div class="total-item">
+                            <span>Flexible Blades</span>
+                            <span>× 32</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section" id="assault-rifle-section">
+            <div class="detail-header">
+                <div class="back-button" onclick="showHome()">← Zurück zur Übersicht</div>
+                <!-- Added Download Button -->
+                <button class="download-button" onclick="downloadScreenshot()">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M5 20h14v-2H5v2zm14-9v6H5v-6h2v4h10v-4h2zM5 8l7-7 7 7h-3v6h-8v-6H5z"/></svg>
+                    Download
+                </button>
+            </div>
+            <div id="capture-container">
+                <div class="detail-view">
+                    <div class="detail-image">
+                        <div class="placeholder-image">Assault Rifle MK-47</div>
+                    </div>
+
+                    <div class="detail-info">
+                        <h2>Assault Rifle MK-47</h2>
+                        <p>Standard-Sturmgewehr mit hoher Zuverlässigkeit und Präzision. Ideal für mittlere bis lange Distanzen.</p>
+
+                        <div class="stats">
+                            <div class="stat">
+                                <div class="stat-label">
+                                    <span>Damage</span>
+                                    <span class="stat-value">95</span>
+                                </div>
+                                <div class="stat-bar-container">
+                                    <div class="stat-bar" style="width: 95%;">95</div>
+                                </div>
+                            </div>
+
+                            <div class="stat">
+                                <div class="stat-label">
+                                    <span>Accuracy</span>
+                                    <span class="stat-value">88</span>
+                                </div>
+                                <div class="stat-bar-container">
+                                    <div class="stat-bar" style="width: 88%;">88</div>
+                                </div>
+                            </div>
+
+                            <div class="stat">
+                                <div class="stat-label">
+                                    <span>Rate of Fire</span>
+                                    <span class="stat-value">750 RPM</span>
+                                </div>
+                                <div class="stat-bar-container">
+                                    <div class="stat-bar medium" style="width: 75%;">750</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Added crafting calculator for Assault Rifle -->
+                <div class="crafting-calculator">
+                    <h3>Crafting Rezept</h3>
+                    <div class="crafting-list">
+                        <div class="crafting-item">
+                            <div class="material-name">Weapon Frame</div>
+                            <div class="material-amount">× 5</div>
+                        </div>
+                        <div class="crafting-item nested">
+                            <div class="material-name">↳ Hardened Steel</div>
+                            <div class="material-amount">× 20</div>
+                        </div>
+                        <div class="crafting-item nested-2">
+                            <div class="material-name">↳ Iron Ingot</div>
+                            <div class="material-amount">× 40</div>
+                        </div>
+                        <div class="crafting-item nested-2">
+                            <div class="material-name">↳ Coal</div>
+                            <div class="material-amount">× 15</div>
+                        </div>
+
+                        <div class="crafting-item">
+                            <div class="material-name">Firing Mechanism</div>
+                            <div class="material-amount">× 8</div>
+                        </div>
+                        <div class="crafting-item nested">
+                            <div class="material-name">↳ Precision Springs</div>
+                            <div class="material-amount">× 16</div>
+                        </div>
+                        <div class="crafting-item nested">
+                            <div class="material-name">↳ Trigger Assembly</div>
+                            <div class="material-amount">× 8</div>
+                        </div>
+                        <div class="crafting-item nested-2">
+                            <div class="material-name">↳ Fine Metal</div>
+                            <div class="material-amount">× 32</div>
+                        </div>
+
+                        <div class="crafting-item">
+                            <div class="material-name">Barrel</div>
+                            <div class="material-amount">× 3</div>
+                        </div>
+                        <div class="crafting-item nested">
+                            <div class="material-name">↳ Rifled Steel</div>
+                            <div class="material-amount">× 12</div>
+                        </div>
+                    </div>
+
+                    <div class="total-materials">
+                        <h4>Gesamt-Basismaterialien:</h4>
+                        <div class="total-item">
+                            <span>Iron Ingot</span>
+                            <span>× 40</span>
+                        </div>
+                        <div class="total-item">
+                            <span>Coal</span>
+                            <span>× 15</span>
+                        </div>
+                        <div class="total-item">
+                            <span>Precision Springs</span>
+                            <span>× 16</span>
+                        </div>
+                        <div class="total-item">
+                            <span>Fine Metal</span>
+                            <span>× 32</span>
+                        </div>
+                        <div class="total-item">
+                            <span>Rifled Steel</span>
+                            <span>× 12</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section" id="sniper-section">
+            <div class="detail-header">
+                <div class="back-button" onclick="showHome()">← Zurück zur Übersicht</div>
+                <!-- Added Download Button -->
+                <button class="download-button" onclick="downloadScreenshot()">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M5 20h14v-2H5v2zm14-9v6H5v-6h2v4h10v-4h2zM5 8l7-7 7 7h-3v6h-8v-6H5z"/></svg>
+                    Download
+                </button>
+            </div>
+            <div id="capture-container">
+                <div class="detail-view">
+                    <div class="detail-image">
+                        <div class="placeholder-image">Sniper Rifle</div>
+                    </div>
+
+                    <div class="detail-info">
+                        <h2>Sniper Rifle</h2>
+                        <p>Hochpräzises Scharfschützengewehr für Langstreckeneinsätze. Maximale Genauigkeit auf große Entfernung.</p>
+
+                        <div class="stats">
+                            <div class="stat">
+                                <div class="stat-label">
+                                    <span>Damage</span>
+                                    <span class="stat-value">150</span>
+                                </div>
+                                <div class="stat-bar-container">
+                                    <div class="stat-bar" style="width: 100%;">150</div>
+                                </div>
+                            </div>
+
+                            <div class="stat">
+                                <div class="stat-label">
+                                    <span>Accuracy</span>
+                                    <span class="stat-value">125</span>
+                                </div>
+                                <div class="stat-bar-container">
+                                    <div class="stat-bar" style="width: 100%;">125</div>
+                                </div>
+                            </div>
+
+                            <div class="stat">
+                                <div class="stat-label">
+                                    <span>Rate of Fire</span>
+                                    <span class="stat-value">60 RPM</span>
+                                </div>
+                                <div class="stat-bar-container">
+                                    <div class="stat-bar low" style="width: 24%;">60</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Added crafting calculator for Sniper Rifle -->
+                <div class="crafting-calculator">
+                    <h3>Crafting Rezept</h3>
+                    <div class="crafting-list">
+                        <div class="crafting-item">
+                            <div class="material-name">Precision Frame</div>
+                            <div class="material-amount">× 6</div>
+                        </div>
+                        <div class="crafting-item nested">
+                            <div class="material-name">↳ High-Grade Steel</div>
+                            <div class="material-amount">× 25</div>
+                        </div>
+
+                        <div class="crafting-item">
+                            <div class="material-name">Scope System</div>
+                            <div class="material-amount">× 4</div>
+                        </div>
+                        <div class="crafting-item nested">
+                            <div class="material-name">↳ Precision Glass</div>
+                            <div class="material-amount">× 8</div>
+                        </div>
+                        <div class="crafting-item nested-2">
+                            <div class="material-name">↳ Silica</div>
+                            <div class="material-amount">× 30</div>
+                        </div>
+                        <div class="crafting-item nested">
+                            <div class="material-name">↳ Focus Mechanism</div>
+                            <div class="material-amount">× 12</div>
+                        </div>
+
+                        <div class="crafting-item">
+                            <div class="material-name">Long Barrel</div>
+                            <div class="material-amount">× 2</div>
+                        </div>
+                        <div class="crafting-item nested">
+                            <div class="material-name">↳ Ultra-Rifled Steel</div>
+                            <div class="material-amount">× 18</div>
+                        </div>
+                    </div>
+
+                    <div class="total-materials">
+                        <h4>Gesamt-Basismaterialien:</h4>
+                        <div class="total-item">
+                            <span>High-Grade Steel</span>
+                            <span>× 25</span>
+                        </div>
+                        <div class="total-item">
+                            <span>Silica</span>
+                            <span>× 30</span>
+                        </div>
+                        <div class="total-item">
+                            <span>Focus Mechanism</span>
+                            <span>× 12</span>
+                        </div>
+                        <div class="total-item">
+                            <span>Ultra-Rifled Steel</span>
+                            <span>× 18</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section" id="pistol-section">
+            <div class="detail-header">
+                <div class="back-button" onclick="showHome()">← Zurück zur Übersicht</div>
+                <!-- Added Download Button -->
+                <button class="download-button" onclick="downloadScreenshot()">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M5 20h14v-2H5v2zm14-9v6H5v-6h2v4h10v-4h2zM5 8l7-7 7 7h-3v6h-8v-6H5z"/></svg>
+                    Download
+                </button>
+            </div>
+            <div id="capture-container">
+                <div class="detail-view">
+                    <div class="detail-image">
+                        <div class="placeholder-image">Combat Pistol</div>
+                    </div>
+
+                    <div class="detail-info">
+                        <h2>Combat Pistol</h2>
+                        <p>Zuverlässige Sekundärwaffe für Nahkampfsituationen. Leicht und schnell einsetzbar.</p>
+
+                        <div class="stats">
+                            <div class="stat">
+                                <div class="stat-label">
+                                    <span>Damage</span>
+                                    <span class="stat-value">55</span>
+                                </div>
+                                <div class="stat-bar-container">
+                                    <div class="stat-bar medium" style="width: 55%;">55</div>
+                                </div>
+                            </div>
+
+                            <div class="stat">
+                                <div class="stat-label">
+                                    <span>Accuracy</span>
+                                    <span class="stat-value">70</span>
+                                </div>
+                                <div class="stat-bar-container">
+                                    <div class="stat-bar medium" style="width: 70%;">70</div>
+                                </div>
+                            </div>
+
+                            <div class="stat">
+                                <div class="stat-label">
+                                    <span>Mobility</span>
+                                    <span class="stat-value">120</span>
+                                </div>
+                                <div class="stat-bar-container">
+                                    <div class="stat-bar" style="width: 96%;">120</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Added crafting calculator for Combat Pistol -->
+                <div class="crafting-calculator">
+                    <h3>Crafting Rezept</h3>
+                    <div class="crafting-list">
+                        <div class="crafting-item">
+                            <div class="material-name">Compact Frame</div>
+                            <div class="material-amount">× 3</div>
+                        </div>
+                        <div class="crafting-item nested">
+                            <div class="material-name">↳ Steel Alloy</div>
+                            <div class="material-amount">× 10</div>
+                        </div>
+
+                        <div class="crafting-item">
+                            <div class="material-name">Slide Mechanism</div>
+                            <div class="material-amount">× 4</div>
+                        </div>
+                        <div class="crafting-item nested">
+                            <div class="material-name">↳ Machined Parts</div>
+                            <div class="material-amount">× 12</div>
+                        </div>
+
+                        <div class="crafting-item">
+                            <div class="material-name">Grip</div>
+                            <div class="material-amount">× 2</div>
+                        </div>
+                        <div class="crafting-item nested">
+                            <div class="material-name">↳ Polymer</div>
+                            <div class="material-amount">× 8</div>
+                        </div>
+                    </div>
+
+                    <div class="total-materials">
+                        <h4>Gesamt-Basismaterialien:</h4>
+                        <div class="total-item">
+                            <span>Steel Alloy</span>
+                            <span>× 10</span>
+                        </div>
+                        <div class="total-item">
+                            <span>Machined Parts</span>
+                            <span>× 12</span>
+                        </div>
+                        <div class="total-item">
+                            <span>Polymer</span>
+                            <span>× 8</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section" id="shotgun-section">
+            <div class="detail-header">
+                <div class="back-button" onclick="showHome()">← Zurück zur Übersicht</div>
+                <!-- Added Download Button -->
+                <button class="download-button" onclick="downloadScreenshot()">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M5 20h14v-2H5v2zm14-9v6H5v-6h2v4h10v-4h2zM5 8l7-7 7 7h-3v6h-8v-6H5z"/></svg>
+                    Download
+                </button>
+            </div>
+            <div id="capture-container">
+                <div class="detail-view">
+                    <div class="detail-image">
+                        <div class="placeholder-image">Tactical Shotgun</div>
+                    </div>
+
+                    <div class="detail-info">
+                        <h2>Tactical Shotgun</h2>
+                        <p>Pump-Action Schrotflinte mit verheerender Nahkampfwirkung. Perfekt für enge Räume.</p>
+
+                        <div class="stats">
+                            <div class="stat">
+                                <div class="stat-label">
+                                    <span>Damage (Close Range)</span>
+                                    <span class="stat-value">130</span>
+                                </div>
+                                <div class="stat-bar-container">
+                                    <div class="stat-bar" style="width: 87%;">130</div>
+                                </div>
+                            </div>
+
+                            <div class="stat">
+                                <div class="stat-label">
+                                    <span>Spread</span>
+                                    <span class="stat-value">45</span>
+                                </div>
+                                <div class="stat-bar-container">
+                                    <div class="stat-bar low" style="width: 45%;">45</div>
+                                </div>
+                            </div>
+
+                            <div class="stat">
+                                <div class="stat-label">
+                                    <span>Rate of Fire</span>
+                                    <span class="stat-value">120 RPM</span>
+                                </div>
+                                <div class="stat-bar-container">
+                                    <div class="stat-bar low" style="width: 48%;">120</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Added crafting calculator for Tactical Shotgun -->
+                <div class="crafting-calculator">
+                    <h3>Crafting Rezept</h3>
+                    <div class="crafting-list">
+                        <div class="crafting-item">
+                            <div class="material-name">Heavy Frame</div>
+                            <div class="material-amount">× 7</div>
+                        </div>
+                        <div class="crafting-item nested">
+                            <div class="material-name">↳ Reinforced Steel</div>
+                            <div class="material-amount">× 28</div>
+                        </div>
+
+                        <div class="crafting-item">
+                            <div class="material-name">Pump Action</div>
+                            <div class="material-amount">× 5</div>
+                        </div>
+                        <div class="crafting-item nested">
+                            <div class="material-name">↳ Cylinder Parts</div>
+                            <div class="material-amount">× 15</div>
+                        </div>
+                        <div class="crafting-item nested-2">
+                            <div class="material-name">↳ Lubricated Metal</div>
+                            <div class="material-amount">× 30</div>
+                        </div>
+
+                        <div class="crafting-item">
+                            <div class="material-name">Wide Barrel</div>
+                            <div class="material-amount">× 3</div>
+                        </div>
+                        <div class="crafting-item nested">
+                            <div class="material-name">↳ Bored Steel</div>
+                            <div class="material-amount">× 15</div>
+                        </div>
+                    </div>
+
+                    <div class="total-materials">
+                        <h4>Gesamt-Basismaterialien:</h4>
+                        <div class="total-item">
+                            <span>Reinforced Steel</span>
+                            <span>× 28</span>
+                        </div>
+                        <div class="total-item">
+                            <span>Lubricated Metal</span>
+                            <span>× 30</span>
+                        </div>
+                        <div class="total-item">
+                            <span>Bored Steel</span>
+                            <span>× 15</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section" id="tactical-vest-section">
+            <div class="detail-header">
+                <div class="back-button" onclick="showHome()">← Zurück zur Übersicht</div>
+                <!-- Added Download Button -->
+                <button class="download-button" onclick="downloadScreenshot()">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M5 20h14v-2H5v2zm14-9v6H5v-6h2v4h10v-4h2zM5 8l7-7 7 7h-3v6h-8v-6H5z"/></svg>
+                    Download
+                </button>
+            </div>
+            <div id="capture-container">
+                <div class="detail-view">
+                    <div class="detail-image">
+                        <div class="placeholder-image">Tactical Combat Vest</div>
+                    </div>
+
+                    <div class="detail-info">
+                        <h2>Tactical Combat Vest</h2>
+                        <p>Hochwertige taktische Weste mit mehreren Taschen und Schutzplatten. Bietet guten Schutz bei hoher Mobilität.</p>
+
+                        <div class="stats">
+                            <div class="stat">
+                                <div class="stat-label">
+                                    <span>Protection</span>
+                                    <span class="stat-value">110</span>
+                                </div>
+                                <div class="stat-bar-container">
+                                    <div class="stat-bar" style="width: 88%;">110</div>
+                                </div>
+                            </div>
+
+                            <div class="stat">
+                                <div class="stat-label">
+                                    <span>Storage Slots</span>
+                                    <span class="stat-value">12</span>
+                                </div>
+                                <div class="stat-bar-container">
+                                    <div class="stat-bar" style="width: 96%;">12</div>
+                                </div>
+                            </div>
+
+                            <div class="stat">
+                                <div class="stat-label">
+                                    <span>Mobility</span>
+                                    <span class="stat-value">75</span>
+                                </div>
+                                <div class="stat-bar-container">
+                                    <div class="stat-bar medium" style="width: 75%;">75</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Added crafting calculator for Tactical Vest -->
+                <div class="crafting-calculator">
+                    <h3>Crafting Rezept</h3>
+                    <div class="crafting-list">
+                        <div class="crafting-item">
+                            <div class="material-name">Armor Plates</div>
+                            <div class="material-amount">× 10</div>
+                        </div>
+                        <div class="crafting-item nested">
+                            <div class="material-name">↳ Ceramic Composite</div>
+                            <div class="material-amount">× 40</div>
+                        </div>
+                        <div class="crafting-item nested-2">
+                            <div class="material-name">↳ Ceramic Powder</div>
+                            <div class="material-amount">× 80</div>
+                        </div>
+                        <div class="crafting-item nested-2">
+                            <div class="material-name">↳ Binding Agent</div>
+                            <div class="material-amount">× 20</div>
+                        </div>
+
+                        <div class="crafting-item">
+                            <div class="material-name">Tactical Fabric</div>
+                            <div class="material-amount">× 15</div>
+                        </div>
+                        <div class="crafting-item nested">
+                            <div class="material-name">↳ Kevlar Thread</div>
+                            <div class="material-amount">× 60</div>
+                        </div>
+                        <div class="crafting-item nested">
+                            <div class="material-name">↳ Nylon</div>
+                            <div class="material-amount">× 30</div>
+                        </div>
+
+                        <div class="crafting-item">
+                            <div class="material-name">Straps & Buckles</div>
+                            <div class="material-amount">× 8</div>
+                        </div>
+                        <div class="crafting-item nested">
+                            <div class="material-name">↳ Heavy Webbing</div>
+                            <div class="material-amount">× 25</div>
+                        </div>
+                    </div>
+
+                    <div class="total-materials">
+                        <h4>Gesamt-Basismaterialien:</h4>
+                        <div class="total-item">
+                            <span>Ceramic Powder</span>
+                            <span>× 80</span>
+                        </div>
+                        <div class="total-item">
+                            <span>Binding Agent</span>
+                            <span>× 20</span>
+                        </div>
+                        <div class="total-item">
+                            <span>Kevlar Thread</span>
+                            <span>× 60</span>
+                        </div>
+                        <div class="total-item">
+                            <span>Nylon</span>
+                            <span>× 30</span>
+                        </div>
+                        <div class="total-item">
+                            <span>Heavy Webbing</span>
+                            <span>× 25</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section" id="helmet-section">
+            <div class="detail-header">
+                <div class="back-button" onclick="showHome()">← Zurück zur Übersicht</div>
+                <!-- Added Download Button -->
+                <button class="download-button" onclick="downloadScreenshot()">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M5 20h14v-2H5v2zm14-9v6H5v-6h2v4h10v-4h2zM5 8l7-7 7 7h-3v6h-8v-6H5z"/></svg>
+                    Download
+                </button>
+            </div>
+            <div id="capture-container">
+                <div class="detail-view">
+                    <div class="detail-image">
+                        <div class="placeholder-image">Combat Helmet</div>
+                    </div>
+
+                    <div class="detail-info">
+                        <h2>Combat Helmet</h2>
+                        <p>Moderner Gefechtshelm mit ballistischem Schutz. Schützt vor Kopftreffern und Splittern.</p>
+
+                        <div class="stats">
+                            <div class="stat">
+                                <div class="stat-label">
+                                    <span>Head Protection</span>
+                                    <span class="stat-value">120</span>
+                                </div>
+                                <div class="stat-bar-container">
+                                    <div class="stat-bar" style="width: 96%;">120</div>
+                                </div>
+                            </div>
+
+                            <div class="stat">
+                                <div class="stat-label">
+                                    <span>Weight</span>
+                                    <span class="stat-value">55</span>
+                                </div>
+                                <div class="stat-bar-container">
+                                    <div class="stat-bar medium" style="width: 55%;">55</div>
+                                </div>
+                            </div>
+
+                            <div class="stat">
+                                <div class="stat-label">
+                                    <span>Visibility</span>
+                                    <span class="stat-value">85</span>
+                                </div>
+                                <div class="stat-bar-container">
+                                    <div class="stat-bar" style="width: 85%;">85</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Added crafting calculator for Combat Helmet -->
+                <div class="crafting-calculator">
+                    <h3>Crafting Rezept</h3>
+                    <div class="crafting-list">
+                        <div class="crafting-item">
+                            <div class="material-name">Helmet Shell</div>
+                            <div class="material-amount">× 5</div>
+                        </div>
+                        <div class="crafting-item nested">
+                            <div class="material-name">↳ Ballistic Polymer</div>
+                            <div class="material-amount">× 20</div>
+                        </div>
+                        <div class="crafting-item nested-2">
+                            <div class="material-name">↳ High-Density Resin</div>
+                            <div class="material-amount">× 40</div>
+                        </div>
+
+                        <div class="crafting-item">
+                            <div class="material-name">Padding System</div>
+                            <div class="material-amount">× 8</div>
+                        </div>
+                        <div class="crafting-item nested">
+                            <div class="material-name">↳ Impact Foam</div>
+                            <div class="material-amount">× 32</div>
+                        </div>
+
+                        <div class="crafting-item">
+                            <div class="material-name">Chin Strap</div>
+                            <div class="material-amount">× 2</div>
+                        </div>
+                        <div class="crafting-item nested">
+                            <div class="material-name">↳ Nylon Strap</div>
+                            <div class="material-amount">× 8</div>
+                        </div>
+                    </div>
+
+                    <div class="total-materials">
+                        <h4>Gesamt-Basismaterialien:</h4>
+                        <div class="total-item">
+                            <span>High-Density Resin</span>
+                            <span>× 40</span>
+                        </div>
+                        <div class="total-item">
+                            <span>Impact Foam</span>
+                            <span>× 32</span>
+                        </div>
+                        <div class="total-item">
+                            <span>Nylon Strap</span>
+                            <span>× 8</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section" id="boots-section">
+            <div class="detail-header">
+                <div class="back-button" onclick="showHome()">← Zurück zur Übersicht</div>
+                <!-- Added Download Button -->
+                <button class="download-button" onclick="downloadScreenshot()">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M5 20h14v-2H5v2zm14-9v6H5v-6h2v4h10v-4h2zM5 8l7-7 7 7h-3v6h-8v-6H5z"/></svg>
+                    Download
+                </button>
+            </div>
+            <div id="capture-container">
+                <div class="detail-view">
+                    <div class="detail-image">
+                        <div class="placeholder-image">Military Boots</div>
+                    </div>
+
+                    <div class="detail-info">
+                        <h2>Military Boots</h2>
+                        <p>Robuste Militärstiefel mit gutem Halt und Schutz. Geeignet für alle Geländearten.</p>
+
+                        <div class="stats">
+                            <div class="stat">
+                                <div class="stat-label">
+                                    <span>Durability</span>
+                                    <span class="stat-value">105</span>
+                                </div>
+                                <div class="stat-bar-container">
+                                    <div class="stat-bar" style="width: 84%;">105</div>
+                                </div>
+                            </div>
+
+                            <div class="stat">
+                                <div class="stat-label">
+                                    <span>Grip</span>
+                                    <span class="stat-value">95</span>
+                                </div>
+                                <div class="stat-bar-container">
+                                    <div class="stat-bar" style="width: 95%;">95</div>
+                                </div>
+                            </div>
+
+                            <div class="stat">
+                                <div class="stat-label">
+                                    <span>Comfort</span>
+                                    <span class="stat-value">80</span>
+                                </div>
+                                <div class="stat-bar-container">
+                                    <div class="stat-bar" style="width: 80%;">80</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Added crafting calculator for Military Boots -->
+                <div class="crafting-calculator">
+                    <h3>Crafting Rezept</h3>
+                    <div class="crafting-list">
+                        <div class="crafting-item">
+                            <div class="material-name">Boot Leather</div>
+                            <div class="material-amount">× 12</div>
+                        </div>
+                        <div class="crafting-item nested">
+                            <div class="material-name">↳ Treated Hide</div>
+                            <div class="material-amount">× 24</div>
+                        </div>
+                        <div class="crafting-item nested-2">
+                            <div class="material-name">↳ Raw Leather</div>
+                            <div class="material-amount">× 48</div>
+                        </div>
+                        <div class="crafting-item nested-2">
+                            <div class="material-name">↳ Tanning Solution</div>
+                            <div class="material-amount">× 12</div>
+                        </div>
+
+                        <div class="crafting-item">
+                            <div class="material-name">Sole</div>
+                            <div class="material-amount">× 4</div>
+                        </div>
+                        <div class="crafting-item nested">
+                            <div class="material-name">↳ Heavy Rubber</div>
+                            <div class="material-amount">× 16</div>
+                        </div>
+
+                        <div class="crafting-item">
+                            <div class="material-name">Laces & Eyelets</div>
+                            <div class="material-amount">× 6</div>
+                        </div>
+                        <div class="crafting-item nested">
+                            <div class="material-name">↳ Reinforced Cord</div>
+                            <div class="material-amount">× 12</div>
+                        </div>
+                        <div class="crafting-item nested">
+                            <div class="material-name">↳ Metal Eyelets</div>
+                            <div class="material-amount">× 24</div>
+                        </div>
+                    </div>
+
+                    <div class="total-materials">
+                        <h4>Gesamt-Basismaterialien:</h4>
+                        <div class="total-item">
+                            <span>Raw Leather</span>
+                            <span>× 48</span>
+                        </div>
+                        <div class="total-item">
+                            <span>Tanning Solution</span>
+                            <span>× 12</span>
+                        </div>
+                        <div class="total-item">
+                            <span>Heavy Rubber</span>
+                            <span>× 16</span>
+                        </div>
+                        <div class="total-item">
+                            <span>Reinforced Cord</span>
+                            <span>× 12</span>
+                        </div>
+                        <div class="total-item">
+                            <span>Metal Eyelets</span>
+                            <span>× 24</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
+    <!-- Existing JavaScript -->
     <script>
         let gameData = {};
-        let favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
-        let craftingProgress = JSON.parse(localStorage.getItem('craftingProgress') || '{}');
+        let materialStates = {};
+        let currentItemId = null;
+
+        window.addEventListener('scroll', () => {
+            const scrollTopBtn = document.getElementById('scrollTopBtn');
+            if (window.pageYOffset > 300) {
+                scrollTopBtn.classList.add('visible');
+            } else {
+                scrollTopBtn.classList.remove('visible');
+            }
+        });
+
+        function scrollToTop() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        }
+
+        function showNotification(message, type = 'info') {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.className = `notification ${type}`;
+            notification.classList.add('show');
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+
+        function loadStatesFromCookies() {
+            const cookieValue = document.cookie
+                .split('; ')
+                .find(row => row.startsWith('materialStates='));
+            
+            if (cookieValue) {
+                try {
+                    materialStates = JSON.parse(decodeURIComponent(cookieValue.split('=')[1]));
+                } catch (e) {
+                    console.error('Error parsing cookie:', e);
+                    materialStates = {};
+                }
+            }
+        }
+
+        function saveStatesToCookies() {
+            const expires = new Date();
+            expires.setFullYear(expires.getFullYear() + 1); // Cookie expires in 1 year
+            document.cookie = `materialStates=${encodeURIComponent(JSON.stringify(materialStates))}; expires=${expires.toUTCString()}; path=/`;
+        }
 
         async function loadData() {
             try {
                 const response = await fetch('data.json');
                 gameData = await response.json();
+                loadStatesFromCookies();
                 renderCategories();
             } catch (error) {
                 console.error('Error loading data:', error);
+                showNotification('Error loading data', 'error');
             }
         }
 
-        function isFavorite(itemId) {
-            return favorites.includes(itemId);
-        }
-
-        function toggleFavorite(itemId) {
-            const index = favorites.indexOf(itemId);
-            if (index > -1) {
-                favorites.splice(index, 1);
-            } else {
-                favorites.push(itemId);
-            }
-            localStorage.setItem('favorites', JSON.JSON.stringify(favorites));
-            renderCategories();
+        function filterItems(searchTerm) {
+            const term = searchTerm.toLowerCase().trim();
+            const categories = document.querySelectorAll('.category-section');
             
-            // Update detail view if currently viewing this item
-            const currentItem = getCurrentItem(itemId);
-            if (currentItem) {
-                showDetail(itemId);
+            if (!term) {
+                categories.forEach(cat => {
+                    cat.classList.remove('hidden');
+                    const items = cat.querySelectorAll('.item-link');
+                    items.forEach(item => {
+                        item.classList.remove('highlight');
+                        item.style.display = 'block';
+                    });
+                });
+                return;
             }
+
+            categories.forEach(cat => {
+                const items = cat.querySelectorAll('.item-link');
+                let hasVisibleItems = false;
+
+                items.forEach(item => {
+                    const itemName = item.textContent.toLowerCase();
+                    if (itemName.includes(term)) {
+                        item.style.display = 'block';
+                        item.classList.add('highlight');
+                        hasVisibleItems = true;
+                    } else {
+                        item.style.display = 'none';
+                        item.classList.remove('highlight');
+                    }
+                });
+
+                if (hasVisibleItems) {
+                    cat.classList.remove('hidden');
+                    cat.classList.add('open');
+                } else {
+                    cat.classList.add('hidden');
+                }
+            });
         }
 
-        function getCurrentItem(itemId) {
+        function renderCategories() {
+            const container = document.getElementById('categories-container');
+            container.innerHTML = '';
+
+            gameData.categories.forEach((category, categoryIndex) => {
+                const section = document.createElement('div');
+                section.className = 'category-section';
+                
+                const header = document.createElement('div');
+                header.className = 'category-header';
+                header.onclick = () => toggleCategory(header);
+                header.innerHTML = `
+                    <h2>${category.name}</h2>
+                    <span class="category-arrow">›</span>
+                `;
+                
+                const itemsContainer = document.createElement('div');
+                itemsContainer.className = 'category-items';
+                
+                category.items.forEach((item, itemIndex) => {
+                    const link = document.createElement('div');
+                    link.className = 'item-link';
+                    link.textContent = item.name;
+                    link.onclick = () => showDetail(category.id, item.id); // Use category.id and item.id
+                    itemsContainer.appendChild(link);
+                });
+                
+                section.appendChild(header);
+                section.appendChild(itemsContainer);
+                container.appendChild(section);
+            });
+        }
+
+        function toggleCategory(header) {
+            const section = header.parentElement;
+            section.classList.toggle('open');
+        }
+
+        function showDetail(categoryId, itemId) {
+            currentItemId = itemId; // Set the global currentItemId
+            const category = gameData.categories.find(cat => cat.id === categoryId);
+            const item = category.items.find(i => i.id === itemId);
+            
+            if (!item) {
+                console.error(`Item with ID ${itemId} not found.`);
+                return;
+            }
+
+            document.getElementById('home-section').classList.remove('active');
+            document.getElementById('detail-section').classList.add('active');
+            scrollToTop();
+
+            let craftingHTML = '';
+            if (item.crafting && item.crafting.direct) {
+                const progress = calculateProgress(item.crafting.direct, item.id);
+                craftingHTML = `
+                    <div class="crafting-calculator">
+                        <div class="crafting-header">
+                            <h3>Crafting Rezept</h3>
+                            <div class="crafting-progress">
+                                <span>${progress.completed}/${progress.total} Materials</span>
+                                <div class="progress-bar-small">
+                                    <div class="progress-bar-fill" style="width: ${progress.percentage}%"></div>
+                                </div>
+                            </div>
+                            <div class="crafting-actions">
+                                <button class="action-button" onclick="completeAllMaterials('${itemId}')">Complete All</button>
+                                <button class="action-button reset" onclick="resetAllMaterials('${itemId}')">Reset All</button>
+                            </div>
+                        </div>
+                        <div class="crafting-list">
+                            ${generateCraftingItems(item.crafting.direct, item.id, '', 0)}
+                        </div>
+                        ${renderCraftingTotals(item.crafting.direct, item.id)}
+                    </div>
+                `;
+            }
+
+            document.getElementById('detail-section').innerHTML = `
+                <div class="detail-header">
+                    <div class="back-button" onclick="showHome()">← Zurück zur Übersicht</div>
+                    <button class="download-button" onclick="downloadAsImage('${item.name}')">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                        </svg>
+                        Als Bild speichern
+                    </button>
+                </div>
+                
+                <div id="capture-container">
+                    <div class="detail-view">
+                        <div class="detail-image">
+                            ${item.image ? `<img src="${item.image}" alt="${item.name}">` : `<div class="placeholder-image">${item.name}</div>`}
+                        </div>
+
+                        <div class="detail-info">
+                            <h2>${item.name}</h2>
+                            <p>${item.description}</p>
+
+                            <div class="stats">
+                                ${renderStats(item.stats)}
+                            </div>
+                        </div>
+                    </div>
+                    ${craftingHTML}
+                </div>
+            `;
+        }
+
+
+        function calculateProgress(materials, itemId, path = '') {
+            let total = 0;
+            let completed = 0;
+
+            function count(mats, currentPath) {
+                mats.forEach((material, index) => {
+                    const materialPath = currentPath ? `${currentPath}.${index}` : `${index}`;
+                    const stateKey = `${itemId}.${materialPath}`;
+                    // Get current amount - if not in state, use material's default amount
+                    const currentAmount = materialStates[stateKey] !== undefined ? materialStates[stateKey] : material.amount;
+                    // Only count as completed if explicitly set to 0
+                    if (currentAmount === 0) {
+                        completed++;
+                    }
+                    total++; // Count all materials that need crafting/completing
+                    if (material.components) {
+                        count(material.components, `${materialPath}.components`);
+                    }
+                });
+            }
+
+            count(materials, path);
+
+            return {
+                total,
+                completed,
+                percentage: total > 0 ? Math.round((completed / total) * 100) : 0
+            };
+        }
+
+
+        function completeAllMaterials(itemId) {
+            const item = findItemById(itemId);
+            if (!item || !item.crafting || !item.crafting.direct) return;
+
+            function completeAll(materials, path = '') {
+                materials.forEach((material, index) => {
+                    const materialPath = path ? `${path}.${index}` : `${index}`;
+                    const stateKey = `${itemId}.${materialPath}`;
+                    materialStates[stateKey] = 0; // Mark as completed
+                    if (material.components) {
+                        completeAll(material.components, `${materialPath}.components`);
+                    }
+                });
+            }
+
+            completeAll(item.crafting.direct);
+            saveStatesToCookies();
+            showNotification('All materials completed!', 'success');
+            
+            // Re-render current detail
+            showDetail(gameData.categories.find(cat => cat.items.some(i => i.id === itemId)).id, itemId);
+        }
+
+        function resetAllMaterials(itemId) {
+            const item = findItemById(itemId);
+            if (!item || !item.crafting || !item.crafting.direct) return;
+
+            function resetAll(materials, path = '') {
+                materials.forEach((material, index) => {
+                    const materialPath = path ? `${path}.${index}` : `${index}`;
+                    const stateKey = `${itemId}.${materialPath}`;
+                    materialStates[stateKey] = material.amount; // Reset to default amount
+                    if (material.components) {
+                        resetAll(material.components, `${materialPath}.components`);
+                    }
+                });
+            }
+
+            resetAll(item.crafting.direct);
+            saveStatesToCookies();
+            showNotification('All materials reset!', 'info');
+            
+            // Re-render current detail
+            showDetail(gameData.categories.find(cat => cat.items.some(i => i.id === itemId)).id, itemId);
+        }
+
+        function findItemById(itemId) {
             for (const category of gameData.categories) {
                 const item = category.items.find(i => i.id === itemId);
                 if (item) return item;
@@ -674,296 +3028,227 @@
             return null;
         }
 
-        function renderCategories() {
-            const container = document.getElementById('categories');
-            container.innerHTML = '';
-
-            gameData.categories.forEach(category => {
-                const categoryDiv = document.createElement('div');
-                categoryDiv.className = 'category-section open';
+        function renderStats(stats) {
+            let html = '';
+            for (const [key, stat] of Object.entries(stats)) {
+                // Use a default max value if not provided or 0, to avoid division by zero
+                const maxValue = stat.max && stat.max > 0 ? stat.max : 1; 
+                const percentage = (stat.value / maxValue) * 100;
+                const barClass = percentage >= 80 ? '' : percentage >= 50 ? 'medium' : 'low';
+                const displayValue = stat.unit ? `${stat.value}${stat.unit}` : stat.value;
                 
-                categoryDiv.innerHTML = `
-                    <div class="category-header" onclick="toggleCategory(this)">
-                        <h2>${category.name}</h2>
-                        <span class="category-arrow">›</span>
+                html += `
+                    <div class="stat">
+                        <div class="stat-label">
+                            <span>${key.charAt(0).toUpperCase() + key.slice(1)}</span>
+                            <span class="stat-value">${displayValue}</span>
+                        </div>
+                        <div class="stat-bar-container">
+                            <div class="stat-bar ${barClass}" style="width: ${percentage}%;">${displayValue}</div>
+                        </div>
                     </div>
-                    <div class="category-items">
-                        ${category.items.map(item => {
-                            const isFav = isFavorite(item.id);
-                            return `
-                                <div class="item-link" onclick="showDetail('${item.id}')">
-                                    <div class="item-link-content">
-                                        <span>${item.name}</span>
-                                    </div>
-                                    <span class="favorite-star ${isFav ? 'active' : ''}">⭐</span>
-                                </div>
-                            `;
-                        }).join('')}
+                `;
+            }
+            return html;
+        }
+
+        function generateCraftingItems(materials, itemId, path, level) {
+            if (!materials) return '';
+            
+            let html = '';
+            materials.forEach((material, index) => {
+                const materialPath = path ? `${path}.${index}` : `${index}`;
+                const stateKey = `${itemId}.${materialPath}`;
+                // If state is not set, use the material's default amount. If it's 0, it's completed.
+                const currentAmount = materialStates[stateKey] !== undefined ? materialStates[stateKey] : material.amount;
+                const isCompleted = currentAmount === 0;
+                const nestClass = level === 0 ? '' : level === 1 ? 'nested' : 'nested-2';
+                const zeroClass = currentAmount === 0 ? 'zero' : '';
+                
+                html += `
+                    <div class="crafting-item ${nestClass} ${isCompleted ? 'completed' : ''}" id="item-${stateKey}">
+                        <div class="amount-controls">
+                            <div class="amount-btn" onclick="decrementAmount('${stateKey}', ${material.amount})">−</div>
+                            <input 
+                                type="number" 
+                                class="crafting-amount-input ${zeroClass}" 
+                                value="${currentAmount}" 
+                                min="0"
+                                max="${material.amount}"
+                                onchange="updateMaterialAmount('${stateKey}', this.value, ${material.amount})"
+                                data-max="${material.amount}"
+                                id="input-${stateKey}"
+                            >
+                            <div class="amount-btn" onclick="incrementAmount('${stateKey}', ${material.amount})">+</div>
+                        </div>
+                        <div class="crafting-content">
+                            <div class="material-name">${material.name}</div>
+                            <div class="material-amount">× ${material.amount}</div>
+                            ${material.description ? `<div class="material-description">${material.description}</div>` : ''}
+                        </div>
                     </div>
                 `;
                 
-                container.appendChild(categoryDiv);
+                if (material.components) {
+                    html += generateCraftingItems(material.components, itemId, `${materialPath}.components`, level + 1);
+                }
             });
-        }
-
-        function toggleCategory(header) {
-            header.parentElement.classList.toggle('open');
-        }
-
-        function handleSearch(query) {
-            const lowerQuery = query.toLowerCase();
             
-            document.querySelectorAll('.category-section').forEach(categorySection => {
-                let hasVisibleItems = false;
-                
-                categorySection.querySelectorAll('.item-link').forEach(itemLink => {
-                    const itemName = itemLink.querySelector('.item-link-content span').textContent.toLowerCase();
-                    const matches = itemName.includes(lowerQuery);
-                    
-                    itemLink.style.display = matches ? 'flex' : 'none';
-                    if (matches) hasVisibleItems = true;
-                    
-                    if (matches && query) {
-                        itemLink.classList.add('highlight');
-                    } else {
-                        itemLink.classList.remove('highlight');
-                    }
-                });
-                
-                categorySection.classList.toggle('hidden', !hasVisibleItems);
-            });
+            return html;
         }
 
-        function showDetail(itemId) {
-            const item = getCurrentItem(itemId);
-            if (!item) return;
 
-            document.getElementById('home-section').style.display = 'none';
-            document.getElementById('detail-section').classList.add('active');
+        function incrementAmount(stateKey, maxAmount) {
+            const input = document.getElementById(`input-${stateKey}`);
+            const currentValue = parseInt(input.value) || 0;
+            if (currentValue < maxAmount) {
+                updateMaterialAmount(stateKey, currentValue + 1, maxAmount);
+            }
+        }
 
-            // Render image
-            const imageContainer = document.getElementById('detail-image');
-            if (item.image) {
-                imageContainer.innerHTML = `<img src="${item.image}" alt="${item.name}">`;
+        function decrementAmount(stateKey, maxAmount) {
+            const input = document.getElementById(`input-${stateKey}`);
+            const currentValue = parseInt(input.value) || 0;
+            if (currentValue > 0) {
+                updateMaterialAmount(stateKey, currentValue - 1, maxAmount);
+            }
+        }
+
+        function updateMaterialAmount(stateKey, value, maxAmount) {
+            const numValue = Math.max(0, Math.min(parseInt(value) || 0, maxAmount));
+            materialStates[stateKey] = numValue;
+            saveStatesToCookies();
+            
+            const input = document.getElementById(`input-${stateKey}`);
+            input.value = numValue;
+            
+            if (numValue === 0) {
+                input.classList.add('zero');
             } else {
-                imageContainer.innerHTML = `<div class="placeholder-image">No Image Available</div>`;
+                input.classList.remove('zero');
+            }
+            
+            const itemElement = document.getElementById(`item-${stateKey}`);
+            if (itemElement) {
+                if (materialStates[stateKey] === 0) {
+                    itemElement.classList.add('completed');
+                } else {
+                    itemElement.classList.remove('completed');
+                }
             }
 
-            const infoContainer = document.getElementById('detail-info');
-            const isFav = isFavorite(item.id);
-            
-            infoContainer.innerHTML = `
-                <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem;">
-                    <h2>${item.name}</h2>
-                    <button class="favorite-btn ${isFav ? 'active' : ''}" 
-                            onclick="toggleFavorite('${item.id}')">
-                        ${isFav ? '⭐' : '☆'}
-                    </button>
-                </div>
-                <p class="description">${item.description || 'No description available'}</p>
-                ${renderStats(item.stats)}
-            `;
-
-            renderCrafting(item);
+            updateCraftingDisplay();
         }
 
-        function renderStats(stats) {
-            if (!stats) return '';
-            
-            return `
-                <div class="stats-grid">
-                    ${Object.entries(stats).map(([key, stat]) => {
-                        let barClass = '';
-                        const percentage = stat.max ? (stat.value / stat.max) * 100 : 0;
-                        if (percentage >= 70) barClass = '';
-                        else if (percentage >= 40) barClass = 'medium';
-                        else barClass = 'low';
-                        
-                        return `
-                            <div class="stat-item">
-                                <div class="stat-label">
-                                    <span>${key.charAt(0).toUpperCase() + key.slice(1)}</span>
-                                    <span class="stat-value">${stat.value}${stat.unit || ''}</span>
-                                </div>
-                                ${stat.max ? `
-                                    <div class="stat-bar-container">
-                                        <div class="stat-bar ${barClass}" style="width: ${percentage}%;">${stat.value}</div>
-                                    </div>
-                                ` : ''}
-                            </div>
-                        `;
-                    }).join('')}
-                </div>
-            `;
+        function updateCraftingDisplay() {
+            const item = findItemById(currentItemId);
+            if (!item || !item.crafting || !item.crafting.direct) return;
+
+            const progress = calculateProgress(item.crafting.direct, currentItemId);
+            const progressElement = document.querySelector('.crafting-progress');
+            if (progressElement) {
+                progressElement.innerHTML = `
+                    <span>${progress.completed}/${progress.total} Materials</span>
+                    <div class="progress-bar-small">
+                        <div class="progress-bar-fill" style="width: ${progress.percentage}%"></div>
+                    </div>
+                `;
+            }
+
+            const totalsElement = document.querySelector('.total-materials');
+            if (totalsElement) {
+                totalsElement.outerHTML = renderCraftingTotals(item.crafting.direct, currentItemId);
+            }
         }
 
-        function renderCrafting(item) {
-            const container = document.getElementById('crafting-calculator');
+        function renderCraftingTotals(materials, itemId) {
+            const totals = {};
             
-            if (!item.crafting || !item.crafting.direct || item.crafting.direct.length === 0) {
-                container.innerHTML = '<h3>No Crafting Recipe</h3>';
+            function calculateTotals(currentMaterials, currentPath = '') {
+                if (!currentMaterials) return;
+
+                currentMaterials.forEach((material, index) => {
+                    const materialPath = currentPath ? `${currentPath}.${index}` : `${index}`;
+                    const stateKey = `${itemId}.${materialPath}`;
+                    const amountNeeded = materialStates[stateKey] !== undefined ? materialStates[stateKey] : material.amount;
+
+                    if (material.components) {
+                        calculateTotals(material.components, `${materialPath}.components`);
+                    } else {
+                        totals[material.name] = (totals[material.name] || 0) + amountNeeded;
+                    }
+                });
+            }
+
+            calculateTotals(materials);
+
+            let totalsHTML = '<div class="total-materials"><h4>Total Base Materials:</h4>';
+            const sortedTotals = Object.entries(totals).sort((a, b) => a[0].localeCompare(b[0])); // Sort alphabetically
+            sortedTotals.forEach(([name, amount]) => {
+                const completedClass = amount === 0 ? 'completed' : '';
+                totalsHTML += `<div class="total-item ${completedClass}"><span>${name}</span><span>× ${amount}</span></div>`;
+            });
+            totalsHTML += '</div>';
+            return totalsHTML;
+        }
+
+        function showHome() {
+            document.getElementById('detail-section').classList.remove('active');
+            document.getElementById('home-section').classList.add('active');
+            currentItemId = null;
+            scrollToTop();
+        }
+
+        async function downloadAsImage(itemName) {
+            const button = document.querySelector('.download-button');
+            const captureElement = document.getElementById('capture-container');
+            
+            if (!captureElement) {
+                showNotification('Fehler beim Erstellen des Screenshots', 'error');
                 return;
             }
 
-            const materials = [];
-            const extractMaterials = (mats, level = 0) => {
-                mats.forEach(mat => {
-                    materials.push({ ...mat, level, itemId: item.id });
-                    if (mat.components) {
-                        extractMaterials(mat.components, level + 1);
-                    }
-                });
-            };
-            extractMaterials(item.crafting.direct);
-
-            const progress = calculateProgress(item);
-
-            container.innerHTML = `
-                <div class="crafting-header">
-                    <h3>Crafting Recipe</h3>
-                    <div class="crafting-progress">
-                        <div class="progress-bar-small">
-                            <div class="progress-bar-fill" style="width: ${progress}%"></div>
-                        </div>
-                        <span>${progress}%</span>
-                    </div>
-                    <div class="crafting-actions">
-                        <button class="action-button" onclick="exportCrafting('${item.id}')">📸 Export</button>
-                        <button class="action-button reset" onclick="resetProgress('${item.id}')">🔄 Reset</button>
-                    </div>
-                </div>
-                <div class="crafting-list">
-                    ${materials.map(mat => renderMaterialInput(mat)).join('')}
-                </div>
+            // Show loading state
+            button.classList.add('downloading');
+            button.innerHTML = `
+                <svg class="animate-spin" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                </svg>
+                Wird erstellt...
             `;
-        }
 
-        function calculateProgress(item) {
-            if (!item.crafting || !item.crafting.direct) return 0;
-            
-            const allMaterials = [];
-            const extractMaterials = (materials, level = 0) => {
-                materials.forEach(mat => {
-                    allMaterials.push({ name: mat.name, amount: mat.amount, level });
-                    if (mat.components) {
-                        extractMaterials(mat.components, level + 1);
-                    }
-                });
-            };
-            extractMaterials(item.crafting.direct);
-
-            let completed = 0;
-            allMaterials.forEach(mat => {
-                const key = `${item.id}_${mat.name}_${mat.level}`;
-                const remaining = craftingProgress[key] || mat.amount;
-                if (remaining === 0) completed++;
-            });
-
-            return allMaterials.length > 0 ? Math.round((completed / allMaterials.length) * 100) : 0;
-        }
-
-        function renderMaterialInput(material) {
-            const key = `${material.itemId}_${material.name}_${material.level}`;
-            const remaining = craftingProgress[key] !== undefined ? craftingProgress[key] : material.amount;
-            const isCompleted = remaining === 0;
-
-            let className = 'crafting-item';
-            if (isCompleted) className += ' completed';
-            if (material.level === 1) className += ' nested';
-            if (material.level === 2) className += ' nested-2';
-
-            return `
-                <div class="${className}">
-                    <div class="amount-controls">
-                        <button class="amount-btn" onclick="adjustAmount('${key}', -10, ${material.amount})">--</button>
-                        <button class="amount-btn" onclick="adjustAmount('${key}', -1, ${material.amount})">-</button>
-                        <input 
-                            type="number" 
-                            class="crafting-amount-input ${isCompleted ? 'zero' : ''}" 
-                            value="${remaining}" 
-                            onchange="updateAmount('${key}', this.value, ${material.amount})"
-                            min="0"
-                            max="${material.amount}"
-                        >
-                        <button class="amount-btn" onclick="adjustAmount('${key}', 1, ${material.amount})">+</button>
-                        <button class="amount-btn" onclick="adjustAmount('${key}', 10, ${material.amount})">++</button>
-                    </div>
-                    <div class="crafting-content">
-                        <div class="material-name">${material.name}</div>
-                        <div class="material-amount">Required: ${material.amount}</div>
-                    </div>
-                </div>
-            `;
-        }
-
-        function adjustAmount(key, delta, max) {
-            const current = craftingProgress[key] !== undefined ? craftingProgress[key] : max;
-            const newValue = Math.max(0, Math.min(max, current + delta));
-            updateAmount(key, newValue, max);
-        }
-
-        function updateAmount(key, value, max) {
-            const numValue = Math.max(0, Math.min(max, parseInt(value) || 0));
-            craftingProgress[key] = numValue;
-            localStorage.setItem('craftingProgress', JSON.stringify(craftingProgress));
-            
-            const itemId = key.split('_')[0];
-            const item = getCurrentItem(itemId);
-            if (item) {
-                renderCrafting(item);
-            }
-        }
-
-        function resetProgress(itemId) {
-            Object.keys(craftingProgress).forEach(key => {
-                if (key.startsWith(itemId + '_')) {
-                    delete craftingProgress[key];
-                }
-            });
-            localStorage.setItem('craftingProgress', JSON.stringify(craftingProgress));
-            
-            const item = getCurrentItem(itemId);
-            if (item) {
-                renderCrafting(item);
-            }
-        }
-
-        async function exportCrafting(itemId) {
-            const item = getCurrentItem(itemId);
-            if (!item) return;
-
-            const calculator = document.getElementById('crafting-calculator');
-            
             try {
-                const canvas = await html2canvas(calculator, {
-                    backgroundColor: '#1a1a1a',
-                    scale: 2
+                const canvas = await html2canvas(captureElement, {
+                    backgroundColor: '#121212',
+                    scale: 2, // Higher quality
+                    useCORS: true,
+                    allowTaint: true,
+                    logging: false
                 });
-                
+
+                // Create download link
                 const link = document.createElement('a');
-                link.download = `${item.name.replace(/\s+/g, '_')}_crafting.png`;
-                link.href = canvas.toDataURL();
+                link.download = `${itemName.replace(/[^a-zA-Z0-9]/g, '_')}_crafting.png`;
+                link.href = canvas.toDataURL('image/png');
                 link.click();
+
+                showNotification('Screenshot wurde heruntergeladen!', 'success');
             } catch (error) {
-                console.error('Export failed:', error);
+                console.error('Screenshot error:', error);
+                showNotification('Fehler beim Erstellen des Screenshots', 'error');
             }
+
+            // Reset button
+            button.classList.remove('downloading');
+            button.innerHTML = `
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                </svg>
+                Als Bild speichern
+            `;
         }
 
-        function showList() {
-            document.getElementById('detail-section').classList.remove('active');
-            document.getElementById('home-section').style.display = 'block';
-        }
-        
-        function scrollToTop() {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-
-        window.addEventListener('scroll', () => {
-            const btn = document.querySelector('.scroll-top-btn');
-            btn.classList.toggle('visible', window.scrollY > 300);
-        });
-
-        loadData();
+        window.onload = loadData;
     </script>
 </body>
 </html>
