@@ -317,7 +317,13 @@
 
             <!-- Pro Tip Section -->
             <div class="section-box" style="margin-top: 2rem;">
-                <h3>Pro Tip Section</h3>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                    <h3>Pro Tip Section</h3>
+                    <div class="checkbox-group" style="margin: 0;">
+                        <input type="checkbox" id="protip-enabled" onchange="updateProTip('enabled', this.checked)">
+                        <label for="protip-enabled">Enable Section</label>
+                    </div>
+                </div>
                 <div class="form-group">
                     <label>Icon (Emoji)</label>
                     <input type="text" id="protip-icon" onchange="updateProTip('icon', this.value)" maxlength="2">
@@ -334,7 +340,13 @@
 
             <!-- Community Section -->
             <div class="section-box">
-                <h3>Community Section</h3>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                    <h3>Community Section</h3>
+                    <div class="checkbox-group" style="margin: 0;">
+                        <input type="checkbox" id="community-enabled" onchange="updateCommunity('enabled', this.checked)">
+                        <label for="community-enabled">Enable Section</label>
+                    </div>
+                </div>
                 <div class="form-group">
                     <label>Title</label>
                     <input type="text" id="community-title" onchange="updateCommunity('title', this.value)">
@@ -374,12 +386,12 @@
             document.getElementById('hub-title').value = hubData.title;
             document.getElementById('hub-subtitle').value = hubData.subtitle;
 
-            // Populate pro tip fields
+            document.getElementById('protip-enabled').checked = hubData.proTip.enabled !== false;
             document.getElementById('protip-icon').value = hubData.proTip.icon;
             document.getElementById('protip-title').value = hubData.proTip.title;
             document.getElementById('protip-text').value = hubData.proTip.text;
 
-            // Populate community fields
+            document.getElementById('community-enabled').checked = hubData.community.enabled !== false;
             document.getElementById('community-title').value = hubData.community.title;
             document.getElementById('community-text').value = hubData.community.text;
 
