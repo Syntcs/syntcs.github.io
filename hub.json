@@ -1,11 +1,11 @@
 {
   "title": "Syntcs Elan Helper",
-  "subtitle": "Everything you need, nothing you don't.",
+  "subtitle": "Helping Yes!! Scamming No!!",
   "tools": [
     {
       "id": "equipment-wiki",
       "title": "Equipment Wiki",
-      "url": "hub",
+      "url": "elan",
       "badge": "updated",
       "locked": false
     },
@@ -19,19 +19,19 @@
     {
       "id": "server-status",
       "title": "Server Status",
-      "url": "server-status.html",
+      "url": "serverstatus",
       "badge": "new",
-      "locked": false
+      "locked": true
     }
   ],
   "proTip": {
-    "enabled": true,
+    "enabled": false,
     "icon": "💡",
     "title": "Pro Tip",
     "text": "Use the Equipment Wiki to find the best gear combinations for your playstyle."
   },
   "community": {
-    "enabled": true,
+    "enabled": false,
     "title": "Join Our Community",
     "text": "Connect with fellow ELAN Life players, get support, and help shape the future of these tools."
   }
