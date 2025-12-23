@@ -5,7 +5,7 @@
     {
       "id": "equipment-wiki",
       "title": "Equipment Wiki",
-      "url": "elan",
+      "url": "hub",
       "badge": "updated",
       "locked": false
     },
@@ -19,17 +19,19 @@
     {
       "id": "server-status",
       "title": "Server Status",
-      "url": "",
-      "badge": "coming-soon",
-      "locked": true
+      "url": "server-status.html",
+      "badge": "new",
+      "locked": false
     }
   ],
   "proTip": {
+    "enabled": true,
     "icon": "💡",
     "title": "Pro Tip",
     "text": "Use the Equipment Wiki to find the best gear combinations for your playstyle."
   },
   "community": {
+    "enabled": true,
     "title": "Join Our Community",
     "text": "Connect with fellow ELAN Life players, get support, and help shape the future of these tools."
   }
