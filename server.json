@@ -1,0 +1,39 @@
+{
+  "servers": [
+    {
+      "id": "27429034",
+      "apiUrl": "https://api.battlemetrics.com/servers/27429034",
+      "enabled": true
+    },
+    {
+      "id": "28035581",
+      "apiUrl": "https://api.battlemetrics.com/servers/28035581",
+      "enabled": true
+    },
+    {
+      "id": "30844316",
+      "apiUrl": "https://api.battlemetrics.com/servers/30844316",
+      "enabled": true
+    },
+    {
+      "id": "31614162",
+      "apiUrl": "https://api.battlemetrics.com/servers/31614162",
+      "enabled": true
+    },
+    {
+      "id": "29675841",
+      "apiUrl": "https://api.battlemetrics.com/servers/29675841",
+      "enabled": true
+    },
+    {
+      "id": "30871980",
+      "apiUrl": "https://api.battlemetrics.com/servers/30871980",
+      "enabled": true
+    },
+    {
+      "id": "33676045",
+      "apiUrl": "https://api.battlemetrics.com/servers/33676045",
+      "enabled": true
+    }
+  ]
+}
