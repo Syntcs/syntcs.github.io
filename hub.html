@@ -271,11 +271,9 @@
         function renderHub() {
             if (!hubData) return;
 
-            // Update title and subtitle
             document.getElementById('main-title').textContent = hubData.title;
             document.getElementById('main-subtitle').textContent = hubData.subtitle;
 
-            // Render tool cards
             const cardsContainer = document.getElementById('cards-container');
             cardsContainer.innerHTML = hubData.tools.map(tool => {
                 const cardClass = tool.locked ? 'card locked' : 'card available';
@@ -305,20 +303,28 @@
                 `;
             }).join('');
 
-            // Render pro tip section
             const proTipSection = document.getElementById('pro-tip-section');
-            proTipSection.innerHTML = `
-                <div class="pro-tip-icon">${hubData.proTip.icon}</div>
-                <h2 class="section-title">${hubData.proTip.title}</h2>
-                <p class="section-text">${hubData.proTip.text}</p>
-            `;
+            if (hubData.proTip.enabled) {
+                proTipSection.style.display = 'block';
+                proTipSection.innerHTML = `
+                    <div class="pro-tip-icon">${hubData.proTip.icon}</div>
+                    <h2 class="section-title">${hubData.proTip.title}</h2>
+                    <p class="section-text">${hubData.proTip.text}</p>
+                `;
+            } else {
+                proTipSection.style.display = 'none';
+            }
 
-            // Render community section
             const communitySection = document.getElementById('community-section');
-            communitySection.innerHTML = `
-                <h2 class="section-title">${hubData.community.title}</h2>
-                <p class="section-text">${hubData.community.text}</p>
-            `;
+            if (hubData.community.enabled) {
+                communitySection.style.display = 'block';
+                communitySection.innerHTML = `
+                    <h2 class="section-title">${hubData.community.title}</h2>
+                    <p class="section-text">${hubData.community.text}</p>
+                `;
+            } else {
+                communitySection.style.display = 'none';
+            }
         }
 
         loadHubData();
