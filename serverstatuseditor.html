@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Server Editor - Team Elan</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(to bottom, #0a0f1a 0%, #000000 100%);
+            color: #ffffff;
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #00d4ff 0%, #0099ff 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 12px;
+            filter: drop-shadow(0 0 20px rgba(0, 212, 255, 0.3));
+        }
+
+        .subtitle {
+            color: #94a3b8;
+            font-size: 1rem;
+        }
+
+        .back-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 24px;
+            background: rgba(15, 23, 42, 0.8);
+            border: 1px solid rgba(148, 163, 184, 0.2);
+            border-radius: 12px;
+            color: #00d4ff;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+            margin-bottom: 24px;
+        }
+
+        .back-button:hover {
+            border-color: rgba(14, 165, 233, 0.6);
+            box-shadow: 0 4px 16px rgba(14, 165, 233, 0.3);
+            transform: translateX(-4px);
+        }
+
+        .editor-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            margin-bottom: 24px;
+        }
+
+        .panel {
+            background: rgba(15, 23, 42, 0.8);
+            border: 1px solid rgba(148, 163, 184, 0.2);
+            border-radius: 16px;
+            padding: 24px;
+        }
+
+        .panel-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #00d4ff;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .server-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            max-height: 600px;
+            overflow-y: auto;
+        }
+
+        .server-item {
+            background: rgba(30, 41, 59, 0.6);
+            border: 1px solid rgba(148, 163, 184, 0.2);
+            border-radius: 12px;
+            padding: 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s;
+        }
+
+        .server-item:hover {
+            border-color: rgba(14, 165, 233, 0.4);
+            box-shadow: 0 4px 16px rgba(14, 165, 233, 0.2);
+        }
+
+        .server-info {
+            flex: 1;
+        }
+
+        .server-id {
+            font-weight: 600;
+            color: #ffffff;
+            margin-bottom: 4px;
+        }
+
+        .server-url {
+            font-size: 0.875rem;
+            color: #94a3b8;
+            word-break: break-all;
+        }
+
+        .server-actions {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .toggle-switch {
+            position: relative;
+            width: 48px;
+            height: 24px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(148, 163, 184, 0.3);
+            transition: 0.4s;
+            border-radius: 24px;
+        }
+
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: 0.4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .toggle-slider {
+            background: linear-gradient(135deg, #00d4ff 0%, #0099ff 100%);
+        }
+
+        input:checked + .toggle-slider:before {
+            transform: translateX(24px);
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.875rem;
+        }
+
+        .btn-danger {
+            background: rgba(239, 68, 68, 0.2);
+            color: #ef4444;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+
+        .btn-danger:hover {
+            background: rgba(239, 68, 68, 0.3);
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #00d4ff 0%, #0099ff 100%);
+            color: #ffffff;
+            border: none;
+            padding: 12px 24px;
+            font-size: 1rem;
+        }
+
+        .btn-primary:hover {
+            box-shadow: 0 4px 16px rgba(0, 212, 255, 0.4);
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: rgba(148, 163, 184, 0.2);
+            color: #94a3b8;
+            border: 1px solid rgba(148, 163, 184, 0.3);
+            padding: 12px 24px;
+            font-size: 1rem;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(148, 163, 184, 0.3);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            color: #94a3b8;
+            margin-bottom: 8px;
+            font-size: 0.875rem;
+            font-weight: 600;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px;
+            background: rgba(30, 41, 59, 0.6);
+            border: 1px solid rgba(148, 163, 184, 0.2);
+            border-radius: 8px;
+            color: #ffffff;
+            font-size: 0.875rem;
+            transition: all 0.3s;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: rgba(14, 165, 233, 0.6);
+            box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.1);
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+            margin-top: 24px;
+        }
+
+        .json-preview {
+            background: rgba(10, 15, 26, 0.8);
+            border: 1px solid rgba(148, 163, 184, 0.2);
+            border-radius: 12px;
+            padding: 16px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .json-preview pre {
+            color: #94a3b8;
+            font-family: 'Courier New', monospace;
+            font-size: 0.875rem;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 16px 24px;
+            background: linear-gradient(135deg, #00d4ff 0%, #0099ff 100%);
+            color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 16px rgba(0, 212, 255, 0.4);
+            font-weight: 600;
+            opacity: 0;
+            transform: translateY(-20px);
+            transition: all 0.3s;
+            z-index: 1000;
+        }
+
+        .notification.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        @media (max-width: 968px) {
+            .editor-container {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="server-status.html" class="back-button">
+            ← Back to Server Status
+        </a>
+
+        <header class="header">
+            <h1 class="title">Server Editor</h1>
+            <p class="subtitle">Manage BattleMetrics API endpoints for Team Elan servers</p>
+        </header>
+
+        <div class="editor-container">
+            <div class="panel">
+                <h2 class="panel-title">Add New Server</h2>
+                
+                <div class="form-group">
+                    <label class="form-label">Server ID</label>
+                    <input type="text" id="server-id" class="form-input" placeholder="e.g., 27429034">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">API URL</label>
+                    <input type="text" id="server-url" class="form-input" placeholder="https://api.battlemetrics.com/servers/27429034">
+                </div>
+
+                <div class="form-actions">
+                    <button class="btn btn-secondary" onclick="clearForm()">Clear</button>
+                    <button class="btn btn-primary" onclick="addServer()">Add Server</button>
+                </div>
+
+                <div style="margin-top: 24px;">
+                    <h3 class="panel-title" style="font-size: 1rem; margin-bottom: 12px;">JSON Preview</h3>
+                    <div class="json-preview">
+                        <pre id="json-preview"></pre>
+                    </div>
+                </div>
+
+                <div class="form-actions" style="margin-top: 16px;">
+                    <button class="btn btn-primary" onclick="downloadJSON()">Download server.json</button>
+                </div>
+            </div>
+
+            <div class="panel">
+                <h2 class="panel-title">Server List</h2>
+                <div class="server-list" id="server-list">
+                    <!-- Server items will be loaded here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="notification" id="notification"></div>
+
+    <script>
+        let serverData = {
+            servers: []
+        };
+
+        // Load server data from server.json
+        async function loadServerData() {
+            try {
+                const response = await fetch('server.json');
+                serverData = await response.json();
+                renderServerList();
+                updateJSONPreview();
+            } catch (err) {
+                console.error('Error loading server data:', err);
+                showNotification('Error loading server data');
+            }
+        }
+
+        // Render server list
+        function renderServerList() {
+            const serverList = document.getElementById('server-list');
+            
+            if (serverData.servers.length === 0) {
+                serverList.innerHTML = '<p style="color: #94a3b8; text-align: center; padding: 20px;">No servers configured yet</p>';
+                return;
+            }
+
+            serverList.innerHTML = serverData.servers.map((server, index) => `
+                <div class="server-item">
+                    <div class="server-info">
+                        <div class="server-id">Server ID: ${server.id}</div>
+                        <div class="server-url">${server.apiUrl}</div>
+                    </div>
+                    <div class="server-actions">
+                        <label class="toggle-switch">
+                            <input type="checkbox" ${server.enabled ? 'checked' : ''} 
+                                   onchange="toggleServer(${index})">
+                            <span class="toggle-slider"></span>
+                        </label>
+                        <button class="btn btn-danger" onclick="removeServer(${index})">Remove</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Add new server
+        function addServer() {
+            const serverId = document.getElementById('server-id').value.trim();
+            const serverUrl = document.getElementById('server-url').value.trim();
+
+            if (!serverId) {
+                showNotification('Please enter a server ID');
+                return;
+            }
+
+            // Auto-generate URL if not provided
+            const finalUrl = serverUrl || `https://api.battlemetrics.com/servers/${serverId}`;
+
+            // Check if server already exists
+            if (serverData.servers.some(s => s.id === serverId)) {
+                showNotification('Server already exists');
+                return;
+            }
+
+            serverData.servers.push({
+                id: serverId,
+                apiUrl: finalUrl,
+                enabled: true
+            });
+
+            renderServerList();
+            updateJSONPreview();
+            clearForm();
+            showNotification('Server added successfully');
+        }
+
+        // Remove server
+        function removeServer(index) {
+            if (confirm('Are you sure you want to remove this server?')) {
+                serverData.servers.splice(index, 1);
+                renderServerList();
+                updateJSONPreview();
+                showNotification('Server removed');
+            }
+        }
+
+        // Toggle server enabled status
+        function toggleServer(index) {
+            serverData.servers[index].enabled = !serverData.servers[index].enabled;
+            updateJSONPreview();
+            showNotification(`Server ${serverData.servers[index].enabled ? 'enabled' : 'disabled'}`);
+        }
+
+        // Clear form
+        function clearForm() {
+            document.getElementById('server-id').value = '';
+            document.getElementById('server-url').value = '';
+        }
+
+        // Update JSON preview
+        function updateJSONPreview() {
+            const preview = document.getElementById('json-preview');
+            preview.textContent = JSON.stringify(serverData, null, 2);
+        }
+
+        // Download JSON file
+        function downloadJSON() {
+            const dataStr = JSON.stringify(serverData, null, 2);
+            const dataBlob = new Blob([dataStr], { type: 'application/json' });
+            const url = URL.createObjectURL(dataBlob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = 'server.json';
+            link.click();
+            URL.revokeObjectURL(url);
+            showNotification('JSON file downloaded');
+        }
+
+        // Show notification
+        function showNotification(message) {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.classList.add('show');
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+
+        // Auto-fill URL when server ID changes
+        document.getElementById('server-id').addEventListener('input', (e) => {
+            const serverId = e.target.value.trim();
+            const urlInput = document.getElementById('server-url');
+            if (serverId && !urlInput.value) {
+                urlInput.value = `https://api.battlemetrics.com/servers/${serverId}`;
+            }
+        });
+
+        // Load data on page load
+        loadServerData();
+    </script>
+</body>
+</html>
