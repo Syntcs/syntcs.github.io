@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hub Editor - Syntcs Elan Helper</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(to bottom, #0a0f1a 0%, #000000 100%);
+            color: #e0e0e0;
+            min-height: 100vh;
+        }
+
+        .header {
+            background: rgba(20, 20, 30, 0.95);
+            border-bottom: 2px solid rgba(100, 200, 255, 0.3);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 20px rgba(100, 200, 255, 0.1);
+        }
+
+        .header h1 {
+            font-size: 1.5rem;
+            background: linear-gradient(135deg, #00d4ff 0%, #0099ff 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn {
+            padding: 0.6rem 1.2rem;
+            border: none;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #00d4ff 0%, #0099ff 100%);
+            color: #000;
+            box-shadow: 0 0 20px rgba(0, 212, 255, 0.3);
+        }
+
+        .btn-primary:hover {
+            box-shadow: 0 0 30px rgba(0, 212, 255, 0.5);
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: rgba(100, 200, 255, 0.2);
+            color: #00d4ff;
+            border: 1px solid rgba(100, 200, 255, 0.4);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(100, 200, 255, 0.3);
+        }
+
+        .container {
+            display: flex;
+            height: calc(100vh - 80px);
+        }
+
+        .editor-main {
+            flex: 1;
+            padding: 2rem;
+            overflow-y: auto;
+        }
+
+        .json-preview {
+            width: 400px;
+            background: rgba(20, 20, 30, 0.95);
+            border-left: 2px solid rgba(100, 200, 255, 0.3);
+            padding: 1.5rem;
+            overflow-y: auto;
+        }
+
+        .json-preview h3 {
+            color: #00d4ff;
+            margin-bottom: 1rem;
+        }
+
+        .json-preview pre {
+            background: rgba(10, 10, 15, 0.8);
+            padding: 1rem;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            overflow-x: auto;
+            border: 1px solid rgba(100, 200, 255, 0.2);
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid rgba(100, 200, 255, 0.3);
+        }
+
+        .section-header h2 {
+            font-size: 1.5rem;
+            color: #00d4ff;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #aaa;
+            font-size: 0.9rem;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.8rem;
+            background: rgba(40, 40, 40, 0.8);
+            border: 2px solid rgba(100, 200, 255, 0.3);
+            border-radius: 6px;
+            color: #e0e0e0;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: rgba(100, 200, 255, 0.8);
+            box-shadow: 0 0 15px rgba(100, 200, 255, 0.2);
+        }
+
+        .form-group textarea {
+            min-height: 80px;
+            resize: vertical;
+        }
+
+        .tool-card {
+            background: rgba(30, 30, 40, 0.6);
+            border: 2px solid rgba(100, 200, 255, 0.3);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            position: relative;
+        }
+
+        .tool-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .tool-card-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #00d4ff;
+        }
+
+        .remove-btn {
+            background: rgba(231, 76, 60, 0.8);
+            color: white;
+            border: none;
+            padding: 0.4rem 0.8rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.3s ease;
+        }
+
+        .remove-btn:hover {
+            background: rgba(231, 76, 60, 1);
+        }
+
+        .add-tool-btn {
+            width: 100%;
+            padding: 1rem;
+            background: rgba(16, 185, 129, 0.2);
+            border: 2px dashed rgba(16, 185, 129, 0.5);
+            border-radius: 8px;
+            color: #10b981;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .add-tool-btn:hover {
+            background: rgba(16, 185, 129, 0.3);
+            border-color: rgba(16, 185, 129, 0.8);
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+
+        .checkbox-group label {
+            margin: 0;
+            cursor: pointer;
+        }
+
+        .badge-select {
+            padding: 0.8rem;
+            background: rgba(40, 40, 40, 0.8);
+            border: 2px solid rgba(100, 200, 255, 0.3);
+            border-radius: 6px;
+            color: #e0e0e0;
+            font-size: 1rem;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        .notification {
+            position: fixed;
+            top: 2rem;
+            right: 2rem;
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            z-index: 1000;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        .notification.success {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+        }
+
+        .notification.error {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            color: white;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .section-box {
+            background: rgba(30, 30, 40, 0.6);
+            border: 2px solid rgba(100, 200, 255, 0.3);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .section-box h3 {
+            color: #00d4ff;
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <h1>Hub Editor</h1>
+        <div class="header-actions">
+            <button class="btn btn-secondary" onclick="window.location.href='hub.html'">Preview Hub</button>
+            <button class="btn btn-primary" onclick="downloadJSON()">Download JSON</button>
+        </div>
+    </header>
+
+    <div class="container">
+        <main class="editor-main">
+            <!-- Header Section -->
+            <div class="section-box">
+                <h3>Header Settings</h3>
+                <div class="form-group">
+                    <label>Title</label>
+                    <input type="text" id="hub-title" onchange="updateHeader('title', this.value)">
+                </div>
+                <div class="form-group">
+                    <label>Subtitle</label>
+                    <input type="text" id="hub-subtitle" onchange="updateHeader('subtitle', this.value)">
+                </div>
+            </div>
+
+            <!-- Tools Section -->
+            <div class="section-header">
+                <h2>Tools</h2>
+            </div>
+            <div id="tools-container"></div>
+            <button class="add-tool-btn" onclick="addTool()">+ Add New Tool</button>
+
+            <!-- Pro Tip Section -->
+            <div class="section-box" style="margin-top: 2rem;">
+                <h3>Pro Tip Section</h3>
+                <div class="form-group">
+                    <label>Icon (Emoji)</label>
+                    <input type="text" id="protip-icon" onchange="updateProTip('icon', this.value)" maxlength="2">
+                </div>
+                <div class="form-group">
+                    <label>Title</label>
+                    <input type="text" id="protip-title" onchange="updateProTip('title', this.value)">
+                </div>
+                <div class="form-group">
+                    <label>Text</label>
+                    <textarea id="protip-text" onchange="updateProTip('text', this.value)"></textarea>
+                </div>
+            </div>
+
+            <!-- Community Section -->
+            <div class="section-box">
+                <h3>Community Section</h3>
+                <div class="form-group">
+                    <label>Title</label>
+                    <input type="text" id="community-title" onchange="updateCommunity('title', this.value)">
+                </div>
+                <div class="form-group">
+                    <label>Text</label>
+                    <textarea id="community-text" onchange="updateCommunity('text', this.value)"></textarea>
+                </div>
+            </div>
+        </main>
+
+        <aside class="json-preview">
+            <h3>JSON Preview</h3>
+            <pre id="json-output"></pre>
+        </aside>
+    </div>
+
+    <script>
+        let hubData = null;
+
+        async function loadData() {
+            try {
+                const response = await fetch('hub.json');
+                hubData = await response.json();
+                renderEditor();
+                updateJSONPreview();
+            } catch (error) {
+                console.error('Error loading hub data:', error);
+                showNotification('Error loading hub.json', 'error');
+            }
+        }
+
+        function renderEditor() {
+            if (!hubData) return;
+
+            // Populate header fields
+            document.getElementById('hub-title').value = hubData.title;
+            document.getElementById('hub-subtitle').value = hubData.subtitle;
+
+            // Populate pro tip fields
+            document.getElementById('protip-icon').value = hubData.proTip.icon;
+            document.getElementById('protip-title').value = hubData.proTip.title;
+            document.getElementById('protip-text').value = hubData.proTip.text;
+
+            // Populate community fields
+            document.getElementById('community-title').value = hubData.community.title;
+            document.getElementById('community-text').value = hubData.community.text;
+
+            // Render tools
+            renderTools();
+        }
+
+        function renderTools() {
+            const container = document.getElementById('tools-container');
+            container.innerHTML = hubData.tools.map((tool, index) => `
+                <div class="tool-card">
+                    <div class="tool-card-header">
+                        <span class="tool-card-title">Tool ${index + 1}</span>
+                        <button class="remove-btn" onclick="removeTool(${index})">Remove</button>
+                    </div>
+                    <div class="form-group">
+                        <label>Title</label>
+                        <input type="text" value="${tool.title}" onchange="updateTool(${index}, 'title', this.value)">
+                    </div>
+                    <div class="form-group">
+                        <label>URL (leave empty if locked)</label>
+                        <input type="text" value="${tool.url}" onchange="updateTool(${index}, 'url', this.value)" placeholder="index.html">
+                    </div>
+                    <div class="form-group">
+                        <label>Badge Type</label>
+                        <select class="badge-select" onchange="updateTool(${index}, 'badge', this.value)">
+                            <option value="none" ${tool.badge === 'none' ? 'selected' : ''}>None</option>
+                            <option value="updated" ${tool.badge === 'updated' ? 'selected' : ''}>Updated</option>
+                            <option value="new" ${tool.badge === 'new' ? 'selected' : ''}>New</option>
+                            <option value="coming-soon" ${tool.badge === 'coming-soon' ? 'selected' : ''}>Coming Soon</option>
+                        </select>
+                    </div>
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="locked-${index}" ${tool.locked ? 'checked' : ''} onchange="updateTool(${index}, 'locked', this.checked)">
+                        <label for="locked-${index}">Locked (Coming Soon)</label>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function updateHeader(field, value) {
+            hubData[field] = value;
+            updateJSONPreview();
+        }
+
+        function updateTool(index, field, value) {
+            hubData.tools[index][field] = value;
+            updateJSONPreview();
+        }
+
+        function updateProTip(field, value) {
+            hubData.proTip[field] = value;
+            updateJSONPreview();
+        }
+
+        function updateCommunity(field, value) {
+            hubData.community[field] = value;
+            updateJSONPreview();
+        }
+
+        function addTool() {
+            const newTool = {
+                id: `tool-${Date.now()}`,
+                title: "New Tool",
+                url: "",
+                badge: "coming-soon",
+                locked: true
+            };
+            hubData.tools.push(newTool);
+            renderTools();
+            updateJSONPreview();
+            showNotification('New tool added', 'success');
+        }
+
+        function removeTool(index) {
+            if (!confirm(`Remove "${hubData.tools[index].title}"?`)) return;
+            hubData.tools.splice(index, 1);
+            renderTools();
+            updateJSONPreview();
+            showNotification('Tool removed', 'success');
+        }
+
+        function updateJSONPreview() {
+            document.getElementById('json-output').textContent = JSON.stringify(hubData, null, 2);
+        }
+
+        function downloadJSON() {
+            const jsonStr = JSON.stringify(hubData, null, 2);
+            const blob = new Blob([jsonStr], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'hub.json';
+            a.click();
+            URL.revokeObjectURL(url);
+            showNotification('hub.json downloaded', 'success');
+        }
+
+        function showNotification(message, type = 'success') {
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            setTimeout(() => notification.remove(), 3000);
+        }
+
+        loadData();
+    </script>
+</body>
+</html>
