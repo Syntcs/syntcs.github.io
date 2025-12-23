@@ -400,6 +400,19 @@
         ];
 
         let serversData = [];
+        let serverConfig = [];
+
+        async function loadServerConfig() {
+            try {
+                const response = await fetch('server.json');
+                const data = await response.json();
+                serverConfig = data.servers.filter(s => s.enabled);
+                return serverConfig;
+            } catch (err) {
+                console.error('Error loading server config:', err);
+                return [];
+            }
+        }
 
         async function fetchServerData() {
             try {
@@ -407,23 +420,28 @@
                 const error = document.getElementById('error');
                 const serversContainer = document.getElementById('servers-container');
 
-                // If no server IDs are configured, use mock data
-                if (TEAM_ELAN_SERVERS.length === 0) {
-                    console.log('[v0] No server IDs configured, using mock data');
-                    loadMockData();
+                // Load server configuration
+                const servers = await loadServerConfig();
+
+                if (servers.length === 0) {
+                    error.style.display = 'block';
+                    error.innerHTML = '<p>No servers configured. Please add servers in the editor.</p>';
+                    loading.style.display = 'none';
                     return;
                 }
 
-                const serverPromises = TEAM_ELAN_SERVERS.map(serverId =>
-                    fetch(`${BATTLEMETRICS_API}/servers/${serverId}`, {
-                        headers: {
-                            'Authorization': `Bearer ${API_KEY}`
-                        }
-                    }).then(res => res.json())
+                // Fetch all server data from BattleMetrics API
+                const serverPromises = servers.map(server =>
+                    fetch(server.apiUrl)
+                        .then(res => res.json())
+                        .catch(err => {
+                            console.error(`Error fetching server ${server.id}:`, err);
+                            return null;
+                        })
                 );
 
                 const results = await Promise.all(serverPromises);
-                serversData = results.map(result => result.data);
+                serversData = results.filter(result => result !== null);
 
                 loading.style.display = 'none';
                 error.style.display = 'none';
@@ -434,133 +452,78 @@
 
             } catch (err) {
                 console.error('Error fetching server data:', err);
-                // Fallback to mock data
-                loadMockData();
+                const loading = document.getElementById('loading');
+                const error = document.getElementById('error');
+                loading.style.display = 'none';
+                error.style.display = 'block';
             }
-        }
-
-        function loadMockData() {
-            // Mock data for demonstration
-            serversData = [
-                {
-                    id: '1',
-                    attributes: {
-                        name: 'Team Elan | EU Main Server',
-                        status: 'online',
-                        players: 45,
-                        maxPlayers: 64,
-                        ip: '192.168.1.1',
-                        port: 2001,
-                        details: {
-                            map: 'Everon',
-                            time: 'Day',
-                            version: '1.0.0'
-                        }
-                    }
-                },
-                {
-                    id: '2',
-                    attributes: {
-                        name: 'Team Elan | EU Training Server',
-                        status: 'online',
-                        players: 12,
-                        maxPlayers: 32,
-                        ip: '192.168.1.2',
-                        port: 2002,
-                        details: {
-                            map: 'Arland',
-                            time: 'Night',
-                            version: '1.0.0'
-                        }
-                    }
-                },
-                {
-                    id: '3',
-                    attributes: {
-                        name: 'Team Elan | US Server',
-                        status: 'online',
-                        players: 28,
-                        maxPlayers: 64,
-                        ip: '192.168.1.3',
-                        port: 2003,
-                        details: {
-                            map: 'Everon',
-                            time: 'Day',
-                            version: '1.0.0'
-                        }
-                    }
-                },
-                {
-                    id: '4',
-                    attributes: {
-                        name: 'Team Elan | Event Server',
-                        status: 'offline',
-                        players: 0,
-                        maxPlayers: 64,
-                        ip: '192.168.1.4',
-                        port: 2004,
-                        details: {
-                            map: 'Everon',
-                            time: '-',
-                            version: '1.0.0'
-                        }
-                    }
-                }
-            ];
-
-            const loading = document.getElementById('loading');
-            const error = document.getElementById('error');
-            const serversContainer = document.getElementById('servers-container');
-
-            loading.style.display = 'none';
-            error.style.display = 'none';
-            serversContainer.style.display = 'grid';
-
-            renderServers();
-            updateStats();
         }
 
         function renderServers() {
             const serversContainer = document.getElementById('servers-container');
             
-            serversContainer.innerHTML = serversData.map(server => {
+            serversContainer.innerHTML = serversData.map(serverData => {
+                const server = serverData.data;
                 const attrs = server.attributes;
-                const statusClass = attrs.status === 'online' ? 'online' : 'offline';
-                const playerPercentage = attrs.maxPlayers > 0 
-                    ? (attrs.players / attrs.maxPlayers * 100).toFixed(0) 
+                
+                // Determine status based on queryStatus and status fields
+                const isOnline = attrs.status === 'online' && attrs.queryStatus !== 'timeout' && attrs.queryStatus !== 'removed';
+                const statusClass = isOnline ? 'online' : 'offline';
+                const statusText = isOnline ? 'ONLINE' : 'OFFLINE';
+                
+                const players = attrs.players || 0;
+                const maxPlayers = attrs.maxPlayers || 128;
+                const playerPercentage = maxPlayers > 0 
+                    ? (players / maxPlayers * 100).toFixed(0) 
                     : 0;
+
+                // Extract relevant info
+                const serverName = attrs.name || 'Unknown Server';
+                const ipAddress = attrs.ip && attrs.port ? `${attrs.ip}:${attrs.port}` : 'N/A';
+                const map = attrs.details?.reforger?.scenarioName || 'Unknown';
+                const version = attrs.details?.version || 'N/A';
+                const hasPassword = attrs.details?.password ? 'Yes' : 'No';
+                const modCount = attrs.details?.reforger?.mods?.length || 0;
 
                 return `
                     <div class="server-card ${statusClass}">
                         <div class="server-header">
                             <div>
-                                <h3 class="server-name">${attrs.name}</h3>
+                                <h3 class="server-name">${serverName}</h3>
                             </div>
                             <div class="server-status ${statusClass}">
                                 <span class="status-dot ${statusClass}"></span>
-                                ${attrs.status.toUpperCase()}
+                                ${statusText}
                             </div>
                         </div>
 
                         <div class="server-info">
                             <div class="info-row">
                                 <span class="info-label">IP Address</span>
-                                <span class="info-value">${attrs.ip}:${attrs.port}</span>
+                                <span class="info-value">${ipAddress}</span>
                             </div>
                             <div class="info-row">
                                 <span class="info-label">Map</span>
-                                <span class="info-value">${attrs.details?.map || 'Unknown'}</span>
+                                <span class="info-value">${map}</span>
                             </div>
                             <div class="info-row">
-                                <span class="info-label">Time</span>
-                                <span class="info-value">${attrs.details?.time || '-'}</span>
+                                <span class="info-label">Version</span>
+                                <span class="info-value">${version}</span>
+                            </div>
+                            <div class="info-row">
+                                <span class="info-label">Password</span>
+                                <span class="info-value">${hasPassword}</span>
+                            </div>
+                            <div class="info-row">
+                                <span class="info-label">Mods</span>
+                                <span class="info-value">${modCount} active</span>
                             </div>
                         </div>
 
                         <div class="players-bar">
                             <div class="players-label">
-                                <span class="players-count">${attrs.players} Players</span>
-                                <span class="players-max">/ ${attrs.maxPlayers}</span>
+                                <span class="players-count">${players} Players</span>
+                                <span class="players-max">/ ${maxPlayers}</span>
                             </div>
                             <div class="progress-bar">
                                 <div class="progress-fill" style="width: ${playerPercentage}%"></div>
@@ -573,10 +536,14 @@
 
         function updateStats() {
             const totalServers = serversData.length;
-            const onlineServers = serversData.filter(s => s.attributes.status === 'online').length;
-            const totalPlayers = serversData.reduce((sum, s) => sum + (s.attributes.players || 0), 0);
-            const avgCapacity = totalServers > 0 
-                ? ((totalPlayers / serversData.reduce((sum, s) => sum + s.attributes.maxPlayers, 0)) * 100).toFixed(0)
+            const onlineServers = serversData.filter(s => {
+                const attrs = s.data.attributes;
+                return attrs.status === 'online' && attrs.queryStatus !== 'timeout' && attrs.queryStatus !== 'removed';
+            }).length;
+            const totalPlayers = serversData.reduce((sum, s) => sum + (s.data.attributes.players || 0), 0);
+            const totalMaxPlayers = serversData.reduce((sum, s) => sum + (s.data.attributes.maxPlayers || 128), 0);
+            const avgCapacity = totalMaxPlayers > 0 
+                ? ((totalPlayers / totalMaxPlayers) * 100).toFixed(0)
                 : 0;
 
             document.getElementById('total-servers').textContent = totalServers;
