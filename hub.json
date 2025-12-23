@@ -21,7 +21,7 @@
       "title": "Server Status",
       "url": "serverstatus",
       "badge": "new",
-      "locked": true
+      "locked": false
     }
   ],
   "proTip": {
