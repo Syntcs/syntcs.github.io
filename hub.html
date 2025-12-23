@@ -234,58 +234,94 @@
 <body>
     <div class="container">
         <header class="header">
-            <h1 class="title">Syntcs Elan Helper</h1>
-            <p class="subtitle">Everything you need, nothing you don't.</p>
+            <h1 class="title" id="main-title">Syntcs Elan Helper</h1>
+            <p class="subtitle" id="main-subtitle">Everything you need, nothing you don't.</p>
         </header>
 
         <main class="main-content">
-            <div class="cards-grid">
-                <!-- Available: Equipment Wiki -->
-                <a href="index.html" class="card available">
-                    <div class="card-header">
-                        <h2 class="card-title">Equipment Wiki</h2>
-                    </div>
-                    <span class="badge updated">Updated!</span>
-                </a>
-
-                <!-- Coming Soon: Weapon Compatibility -->
-                <div class="card locked">
-                    <div class="card-header">
-                        <h2 class="card-title">
-                            Weapon Compatibility
-                            <span class="lock-icon">🔒</span>
-                        </h2>
-                    </div>
-                    <span class="badge coming-soon">Coming Soon</span>
-                </div>
-
-                <!-- Coming Soon: Server Status -->
-                <div class="card locked">
-                    <div class="card-header">
-                        <h2 class="card-title">
-                            Server Status
-                            <span class="lock-icon">🔒</span>
-                        </h2>
-                    </div>
-                    <span class="badge coming-soon">Coming Soon</span>
-                </div>
+            <div class="cards-grid" id="cards-container">
+                <!-- Cards will be loaded from hub.json -->
             </div>
         </main>
 
-        <section class="section pro-tip">
-            <div class="pro-tip-icon">💡</div>
-            <h2 class="section-title">Pro Tip</h2>
-            <p class="section-text">
-                Use the Equipment Wiki to find the best gear combinations for your playstyle.
-            </p>
+        <section class="section pro-tip" id="pro-tip-section">
+            <!-- Pro tip will be loaded from hub.json -->
         </section>
 
-        <section class="section">
-            <h2 class="section-title">Join Our Community</h2>
-            <p class="section-text">
-                Connect with fellow ELAN Life players, get support, and help shape the future of these tools.
-            </p>
+        <section class="section" id="community-section">
+            <!-- Community section will be loaded from hub.json -->
         </section>
     </div>
+
+    <!-- Added JavaScript to load data from hub.json -->
+    <script>
+        let hubData = null;
+
+        async function loadHubData() {
+            try {
+                const response = await fetch('hub.json');
+                hubData = await response.json();
+                renderHub();
+            } catch (error) {
+                console.error('Error loading hub data:', error);
+                // Fallback to default content if JSON fails
+            }
+        }
+
+        function renderHub() {
+            if (!hubData) return;
+
+            // Update title and subtitle
+            document.getElementById('main-title').textContent = hubData.title;
+            document.getElementById('main-subtitle').textContent = hubData.subtitle;
+
+            // Render tool cards
+            const cardsContainer = document.getElementById('cards-container');
+            cardsContainer.innerHTML = hubData.tools.map(tool => {
+                const cardClass = tool.locked ? 'card locked' : 'card available';
+                const cardTag = tool.locked ? 'div' : 'a';
+                const href = tool.locked ? '' : `href="${tool.url}"`;
+                const lockIcon = tool.locked ? '<span class="lock-icon">🔒</span>' : '';
+                
+                let badgeHTML = '';
+                if (tool.badge === 'updated') {
+                    badgeHTML = '<span class="badge updated">Updated!</span>';
+                } else if (tool.badge === 'new') {
+                    badgeHTML = '<span class="badge new">New!</span>';
+                } else if (tool.badge === 'coming-soon') {
+                    badgeHTML = '<span class="badge coming-soon">Coming Soon</span>';
+                }
+
+                return `
+                    <${cardTag} ${href} class="${cardClass}">
+                        <div class="card-header">
+                            <h2 class="card-title">
+                                ${tool.title}
+                                ${lockIcon}
+                            </h2>
+                        </div>
+                        ${badgeHTML}
+                    </${cardTag}>
+                `;
+            }).join('');
+
+            // Render pro tip section
+            const proTipSection = document.getElementById('pro-tip-section');
+            proTipSection.innerHTML = `
+                <div class="pro-tip-icon">${hubData.proTip.icon}</div>
+                <h2 class="section-title">${hubData.proTip.title}</h2>
+                <p class="section-text">${hubData.proTip.text}</p>
+            `;
+
+            // Render community section
+            const communitySection = document.getElementById('community-section');
+            communitySection.innerHTML = `
+                <h2 class="section-title">${hubData.community.title}</h2>
+                <p class="section-text">${hubData.community.text}</p>
+            `;
+        }
+
+        loadHubData();
+    </script>
 </body>
 </html>
