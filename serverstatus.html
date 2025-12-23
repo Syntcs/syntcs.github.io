@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Server Status - Team Elan</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(to bottom, #0a0f1a 0%, #000000 100%);
+            color: #ffffff;
+            min-height: 100vh;
+            padding: 40px 20px;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 60px;
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        .title {
+            font-size: 3rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #00d4ff 0%, #0099ff 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 16px;
+            text-shadow: 0 0 40px rgba(0, 212, 255, 0.5);
+            filter: drop-shadow(0 0 20px rgba(0, 212, 255, 0.3));
+        }
+
+        .subtitle {
+            font-size: 1.125rem;
+            color: #94a3b8;
+            font-weight: 400;
+            margin-bottom: 32px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .stat-card {
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid rgba(148, 163, 184, 0.2);
+            border-radius: 16px;
+            padding: 24px;
+            text-align: center;
+            box-shadow: 0 0 30px rgba(0, 212, 255, 0.1);
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #00d4ff 0%, #0099ff 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 8px;
+        }
+
+        .stat-label {
+            font-size: 0.875rem;
+            color: #94a3b8;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .servers-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 24px;
+            animation: fadeIn 1s ease-out 0.3s backwards;
+        }
+
+        .server-card {
+            background: rgba(15, 23, 42, 0.8);
+            border: 1px solid rgba(148, 163, 184, 0.2);
+            border-radius: 16px;
+            padding: 24px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .server-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #00d4ff 0%, #0099ff 100%);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .server-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(14, 165, 233, 0.6);
+            box-shadow: 0 8px 32px rgba(14, 165, 233, 0.3),
+                        0 0 40px rgba(14, 165, 233, 0.2);
+        }
+
+        .server-card:hover::before {
+            opacity: 1;
+        }
+
+        .server-card.online {
+            border-color: rgba(16, 185, 129, 0.4);
+        }
+
+        .server-card.online::before {
+            background: linear-gradient(90deg, #10b981 0%, #059669 100%);
+        }
+
+        .server-card.offline {
+            border-color: rgba(239, 68, 68, 0.4);
+            opacity: 0.7;
+        }
+
+        .server-card.offline::before {
+            background: linear-gradient(90deg, #ef4444 0%, #dc2626 100%);
+        }
+
+        .server-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 16px;
+        }
+
+        .server-name {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #ffffff;
+            margin-bottom: 4px;
+        }
+
+        .server-status {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .server-status.online {
+            background: rgba(16, 185, 129, 0.2);
+            color: #10b981;
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+
+        .server-status.offline {
+            background: rgba(239, 68, 68, 0.2);
+            color: #ef4444;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        .status-dot.online {
+            background: #10b981;
+            box-shadow: 0 0 10px #10b981;
+        }
+
+        .status-dot.offline {
+            background: #ef4444;
+            box-shadow: 0 0 10px #ef4444;
+        }
+
+        .server-info {
+            margin-bottom: 16px;
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+        }
+
+        .info-row:last-child {
+            border-bottom: none;
+        }
+
+        .info-label {
+            color: #94a3b8;
+            font-size: 0.875rem;
+        }
+
+        .info-value {
+            color: #ffffff;
+            font-weight: 600;
+            font-size: 0.875rem;
+        }
+
+        .players-bar {
+            margin-top: 16px;
+        }
+
+        .players-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 0.875rem;
+        }
+
+        .players-count {
+            color: #00d4ff;
+            font-weight: 600;
+        }
+
+        .players-max {
+            color: #94a3b8;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: rgba(148, 163, 184, 0.1);
+            border-radius: 4px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #00d4ff 0%, #0099ff 100%);
+            border-radius: 4px;
+            transition: width 0.5s ease;
+            box-shadow: 0 0 10px rgba(0, 212, 255, 0.5);
+        }
+
+        .loading {
+            text-align: center;
+            padding: 60px 20px;
+            color: #94a3b8;
+            font-size: 1.125rem;
+        }
+
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid rgba(148, 163, 184, 0.1);
+            border-top-color: #00d4ff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 16px;
+        }
+
+        .error {
+            text-align: center;
+            padding: 60px 20px;
+            color: #ef4444;
+        }
+
+        .back-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 24px;
+            background: rgba(15, 23, 42, 0.8);
+            border: 1px solid rgba(148, 163, 184, 0.2);
+            border-radius: 12px;
+            color: #00d4ff;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+            margin-bottom: 24px;
+        }
+
+        .back-button:hover {
+            border-color: rgba(14, 165, 233, 0.6);
+            box-shadow: 0 4px 16px rgba(14, 165, 233, 0.3);
+            transform: translateX(-4px);
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.5;
+            }
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .title {
+                font-size: 2rem;
+            }
+
+            .servers-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="hub.html" class="back-button">
+            ← Back to Hub
+        </a>
+
+        <header class="header">
+            <h1 class="title">Team Elan Server Status</h1>
+            <p class="subtitle">Live server status for Arma Reforger</p>
+        </header>
+
+        <div class="stats-grid" id="stats-container">
+            <div class="stat-card">
+                <div class="stat-value" id="total-servers">-</div>
+                <div class="stat-label">Total Servers</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="online-servers">-</div>
+                <div class="stat-label">Online</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="total-players">-</div>
+                <div class="stat-label">Total Players</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="avg-capacity">-</div>
+                <div class="stat-label">Avg Capacity</div>
+            </div>
+        </div>
+
+        <div id="loading" class="loading">
+            <div class="loading-spinner"></div>
+            <p>Loading server data from BattleMetrics...</p>
+        </div>
+
+        <div id="error" class="error" style="display: none;">
+            <p>Failed to load server data. Please try again later.</p>
+        </div>
+
+        <div class="servers-grid" id="servers-container" style="display: none;">
+            <!-- Server cards will be loaded here -->
+        </div>
+    </div>
+
+    <script>
+        // BattleMetrics API configuration
+        // Note: You'll need to replace 'YOUR_API_KEY' with an actual BattleMetrics API key
+        // and find the correct organization or server IDs for Team Elan
+        const BATTLEMETRICS_API = 'https://api.battlemetrics.com';
+        const API_KEY = 'YOUR_API_KEY'; // Replace with actual API key
+        
+        // Example server IDs - replace with actual Team Elan server IDs
+        const TEAM_ELAN_SERVERS = [
+            // Add Team Elan server IDs here
+            // Example: '12345678', '87654321'
+        ];
+
+        let serversData = [];
+
+        async function fetchServerData() {
+            try {
+                const loading = document.getElementById('loading');
+                const error = document.getElementById('error');
+                const serversContainer = document.getElementById('servers-container');
+
+                // If no server IDs are configured, use mock data
+                if (TEAM_ELAN_SERVERS.length === 0) {
+                    console.log('[v0] No server IDs configured, using mock data');
+                    loadMockData();
+                    return;
+                }
+
+                const serverPromises = TEAM_ELAN_SERVERS.map(serverId =>
+                    fetch(`${BATTLEMETRICS_API}/servers/${serverId}`, {
+                        headers: {
+                            'Authorization': `Bearer ${API_KEY}`
+                        }
+                    }).then(res => res.json())
+                );
+
+                const results = await Promise.all(serverPromises);
+                serversData = results.map(result => result.data);
+
+                loading.style.display = 'none';
+                error.style.display = 'none';
+                serversContainer.style.display = 'grid';
+
+                renderServers();
+                updateStats();
+
+            } catch (err) {
+                console.error('Error fetching server data:', err);
+                // Fallback to mock data
+                loadMockData();
+            }
+        }
+
+        function loadMockData() {
+            // Mock data for demonstration
+            serversData = [
+                {
+                    id: '1',
+                    attributes: {
+                        name: 'Team Elan | EU Main Server',
+                        status: 'online',
+                        players: 45,
+                        maxPlayers: 64,
+                        ip: '192.168.1.1',
+                        port: 2001,
+                        details: {
+                            map: 'Everon',
+                            time: 'Day',
+                            version: '1.0.0'
+                        }
+                    }
+                },
+                {
+                    id: '2',
+                    attributes: {
+                        name: 'Team Elan | EU Training Server',
+                        status: 'online',
+                        players: 12,
+                        maxPlayers: 32,
+                        ip: '192.168.1.2',
+                        port: 2002,
+                        details: {
+                            map: 'Arland',
+                            time: 'Night',
+                            version: '1.0.0'
+                        }
+                    }
+                },
+                {
+                    id: '3',
+                    attributes: {
+                        name: 'Team Elan | US Server',
+                        status: 'online',
+                        players: 28,
+                        maxPlayers: 64,
+                        ip: '192.168.1.3',
+                        port: 2003,
+                        details: {
+                            map: 'Everon',
+                            time: 'Day',
+                            version: '1.0.0'
+                        }
+                    }
+                },
+                {
+                    id: '4',
+                    attributes: {
+                        name: 'Team Elan | Event Server',
+                        status: 'offline',
+                        players: 0,
+                        maxPlayers: 64,
+                        ip: '192.168.1.4',
+                        port: 2004,
+                        details: {
+                            map: 'Everon',
+                            time: '-',
+                            version: '1.0.0'
+                        }
+                    }
+                }
+            ];
+
+            const loading = document.getElementById('loading');
+            const error = document.getElementById('error');
+            const serversContainer = document.getElementById('servers-container');
+
+            loading.style.display = 'none';
+            error.style.display = 'none';
+            serversContainer.style.display = 'grid';
+
+            renderServers();
+            updateStats();
+        }
+
+        function renderServers() {
+            const serversContainer = document.getElementById('servers-container');
+            
+            serversContainer.innerHTML = serversData.map(server => {
+                const attrs = server.attributes;
+                const statusClass = attrs.status === 'online' ? 'online' : 'offline';
+                const playerPercentage = attrs.maxPlayers > 0 
+                    ? (attrs.players / attrs.maxPlayers * 100).toFixed(0) 
+                    : 0;
+
+                return `
+                    <div class="server-card ${statusClass}">
+                        <div class="server-header">
+                            <div>
+                                <h3 class="server-name">${attrs.name}</h3>
+                            </div>
+                            <div class="server-status ${statusClass}">
+                                <span class="status-dot ${statusClass}"></span>
+                                ${attrs.status.toUpperCase()}
+                            </div>
+                        </div>
+
+                        <div class="server-info">
+                            <div class="info-row">
+                                <span class="info-label">IP Address</span>
+                                <span class="info-value">${attrs.ip}:${attrs.port}</span>
+                            </div>
+                            <div class="info-row">
+                                <span class="info-label">Map</span>
+                                <span class="info-value">${attrs.details?.map || 'Unknown'}</span>
+                            </div>
+                            <div class="info-row">
+                                <span class="info-label">Time</span>
+                                <span class="info-value">${attrs.details?.time || '-'}</span>
+                            </div>
+                        </div>
+
+                        <div class="players-bar">
+                            <div class="players-label">
+                                <span class="players-count">${attrs.players} Players</span>
+                                <span class="players-max">/ ${attrs.maxPlayers}</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: ${playerPercentage}%"></div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function updateStats() {
+            const totalServers = serversData.length;
+            const onlineServers = serversData.filter(s => s.attributes.status === 'online').length;
+            const totalPlayers = serversData.reduce((sum, s) => sum + (s.attributes.players || 0), 0);
+            const avgCapacity = totalServers > 0 
+                ? ((totalPlayers / serversData.reduce((sum, s) => sum + s.attributes.maxPlayers, 0)) * 100).toFixed(0)
+                : 0;
+
+            document.getElementById('total-servers').textContent = totalServers;
+            document.getElementById('online-servers').textContent = onlineServers;
+            document.getElementById('total-players').textContent = totalPlayers;
+            document.getElementById('avg-capacity').textContent = `${avgCapacity}%`;
+        }
+
+        // Load data on page load
+        fetchServerData();
+
+        // Refresh data every 30 seconds
+        setInterval(fetchServerData, 30000);
+    </script>
+</body>
+</html>
