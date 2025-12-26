@@ -12,7 +12,7 @@
       "items": [
         {
           "id": "new-item-1765571788389",
-          "name": "Ural Device",
+          "name": "Ural-4320 Transport Truck - Device",
           "description": "The Ural Device is a craftable-only auto-farmer truck, unavailable for direct purchase in shops. Unlike standard Ural-4320 variants (Fuel or Transport), it passively harvests resources like ingots, oil, or crops during loops without manual loading, maximizing efficiency for high-volume farming routes.",
           "icon": "https://i.imgur.com/X2I5bOH.jpeg",
           "image": "https://i.imgur.com/X2I5bOH.jpeg",
@@ -84,6 +84,96 @@
                   {
                     "name": "Canister (petrol)",
                     "amount": 810
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "new-item-1766745346076",
+          "name": "Ural-4320 Transport Truck - Canopy",
+          "description": "Description here",
+          "stats": {},
+          "crafting": {
+            "direct": [
+              {
+                "name": "Mechanical component (HQ)",
+                "amount": 5,
+                "components": [
+                  {
+                    "name": "Mechanical component",
+                    "amount": 45,
+                    "components": [
+                      {
+                        "name": "Iron ingot",
+                        "amount": 90
+                      },
+                      {
+                        "name": "Copper ingot",
+                        "amount": 90
+                      }
+                    ]
+                  },
+                  {
+                    "name": "Gold ingot",
+                    "amount": 225
+                  }
+                ]
+              },
+              {
+                "name": "Interior part (HQ)",
+                "amount": 5,
+                "components": [
+                  {
+                    "name": "Interior part",
+                    "amount": 45,
+                    "components": [
+                      {
+                        "name": "Fabric",
+                        "amount": 90
+                      },
+                      {
+                        "name": "Polyester",
+                        "amount": 90
+                      }
+                    ]
+                  },
+                  {
+                    "name": "Wooden planks",
+                    "amount": 225
+                  }
+                ]
+              },
+              {
+                "name": "Engine part (HQ)",
+                "amount": 3,
+                "components": [
+                  {
+                    "name": "Engine Part",
+                    "amount": 27,
+                    "components": [
+                      {
+                        "name": "Iron ingot",
+                        "amount": 27
+                      },
+                      {
+                        "name": "Copper ingot",
+                        "amount": 27
+                      },
+                      {
+                        "name": "Canister (petrol)",
+                        "amount": 27
+                      }
+                    ]
+                  },
+                  {
+                    "name": "Copper ingot",
+                    "amount": 135
+                  },
+                  {
+                    "name": "Canister (petrol)",
+                    "amount": 135
                   }
                 ]
               }
@@ -227,12 +317,166 @@
     {
       "id": "weapon",
       "name": "Weapon",
-      "items": []
+      "items": [
+        {
+          "id": "new-item-1766745437722",
+          "name": "M16 Carbine",
+          "description": "Description here",
+          "stats": {
+            "stat1": {
+              "value": 50,
+              "max": 100,
+              "unit": ""
+            }
+          },
+          "crafting": {
+            "direct": [
+              {
+                "name": "Weapon part",
+                "amount": 29,
+                "components": [
+                  {
+                    "name": "Iron ingot",
+                    "amount": 29
+                  },
+                  {
+                    "name": "Copper ingot",
+                    "amount": 29
+                  }
+                ]
+              },
+              {
+                "name": "Stabilizer",
+                "amount": 16,
+                "components": [
+                  {
+                    "name": "Iron ingot",
+                    "amount": 32
+                  },
+                  {
+                    "name": "Gold ingot",
+                    "amount": 16
+                  }
+                ]
+              },
+              {
+                "name": "Attachment part",
+                "amount": 18,
+                "components": [
+                  {
+                    "name": "Copper ingot",
+                    "amount": 36
+                  },
+                  {
+                    "name": "Silver ingot",
+                    "amount": 18
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "new-item-1766745503899",
+          "name": "MP5A2",
+          "description": "Description here",
+          "stats": {},
+          "crafting": {
+            "direct": [
+              {
+                "name": "Weapon part",
+                "amount": 15,
+                "components": [
+                  {
+                    "name": "Iron ingot",
+                    "amount": 15
+                  },
+                  {
+                    "name": "Copper ingot",
+                    "amount": 15
+                  }
+                ]
+              },
+              {
+                "name": "Stabilizer",
+                "amount": 8,
+                "components": [
+                  {
+                    "name": "Iron ingot",
+                    "amount": 16
+                  },
+                  {
+                    "name": "Gold ingot",
+                    "amount": 8
+                  }
+                ]
+              },
+              {
+                "name": "Attachment part",
+                "amount": 9,
+                "components": [
+                  {
+                    "name": "Copper ingot",
+                    "amount": 18
+                  },
+                  {
+                    "name": "Silver ingot",
+                    "amount": 9
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ]
     },
     {
       "id": "cloth",
       "name": "Cloth",
-      "items": []
+      "items": [
+        {
+          "id": "new-item-1766745248425",
+          "name": "6B2 Vest",
+          "description": "Description here",
+          "stats": {},
+          "crafting": {
+            "direct": [
+              {
+                "name": "Iron plate",
+                "amount": 4,
+                "components": [
+                  {
+                    "name": "Iron ingot",
+                    "amount": 4
+                  },
+                  {
+                    "name": "Fabric",
+                    "amount": 4
+                  },
+                  {
+                    "name": "Polyester",
+                    "amount": 4
+                  }
+                ]
+              },
+              {
+                "name": "Cloth",
+                "amount": 6,
+                "components": [
+                  {
+                    "name": "Fabric",
+                    "amount": 6
+                  },
+                  {
+                    "name": "Polyester",
+                    "amount": 6
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ]
     }
   ]
 }
