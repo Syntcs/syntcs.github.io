@@ -452,6 +452,43 @@
             border-left: 3px solid rgba(200, 100, 255, 0.5);
         }
 
+        /* Added styles for material dropdown selector */
+        .material-selector {
+            background: rgba(40, 40, 40, 0.8);
+            border: 2px solid rgba(100, 200, 255, 0.3);
+            border-radius: 6px;
+            color: #e0e0e0;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            padding: 0.8rem;
+            width: 100%;
+            cursor: pointer;
+        }
+
+        .material-selector:focus {
+            outline: none;
+            border-color: rgba(100, 200, 255, 0.8);
+            box-shadow: 0 0 15px rgba(100, 200, 255, 0.2);
+        }
+
+        .material-selector option {
+            background: #1a1a1a;
+            color: #e0e0e0;
+            padding: 0.5rem;
+        }
+
+        .custom-material-toggle {
+            margin-top: 0.5rem;
+            font-size: 0.85rem;
+            color: #64c8ff;
+            cursor: pointer;
+            display: inline-block;
+        }
+
+        .custom-material-toggle:hover {
+            text-decoration: underline;
+        }
+
         /* Material header with drag handle */
         .material-header {
             display: flex;
@@ -600,9 +637,9 @@
     <div class="container">
         <h1>Equipment Wiki Editor</h1>
 
-        <!-- Added search bar -->
+        <!-- Updated search placeholder to English -->
         <div class="search-bar">
-            <input type="text" placeholder="Suche nach Items oder Kategorien..." oninput="searchEditor(this.value)">
+            <input type="text" placeholder="Search for items or categories..." oninput="searchEditor(this.value)">
         </div>
 
         <div class="editor-controls">
@@ -650,7 +687,126 @@
         let historyIndex = -1;
         const MAX_HISTORY = 50;
 
-        async function loadData() {
+        const PREDEFINED_MATERIALS = {
+            'Cloth': [
+                { name: 'Fabric', amount: 1 },
+                { name: 'Polyester', amount: 1 }
+            ],
+            'Iron plate': [
+                { name: 'Iron ingot', amount: 1 },
+                { name: 'Fabric', amount: 1 },
+                { name: 'Polyester', amount: 1 }
+            ],
+            'Component': [
+                { name: 'Iron ingot', amount: 1 },
+                { name: 'Copper ingot', amount: 1 }
+            ],
+            'Tempered glass': [
+                { name: 'Glass', amount: 2 },
+                { name: 'Polyester', amount: 1 }
+            ],
+            'Weapon part': [
+                { name: 'Iron ingot', amount: 1 },
+                { name: 'Copper ingot', amount: 1 }
+            ],
+            'Stabilizer': [
+                { name: 'Iron ingot', amount: 2 },
+                { name: 'Gold ingot', amount: 1 }
+            ],
+            'Attachment part': [
+                { name: 'Copper ingot', amount: 2 },
+                { name: 'Silver ingot', amount: 1 }
+            ],
+            'Ammo': [
+                { name: 'Iron ingot', amount: 1 },
+                { name: 'Charcoal', amount: 1 }
+            ],
+            'Mechanical component': [
+                { name: 'Iron ingot', amount: 2 },
+                { name: 'Copper ingot', amount: 2 }
+            ],
+            'Engine Part': [
+                { name: 'Iron ingot', amount: 1 },
+                { name: 'Copper ingot', amount: 1 },
+                { name: 'Canister (petrol)', amount: 1 }
+            ],
+            'Interior part': [
+                { name: 'Fabric', amount: 2 },
+                { name: 'Polyester', amount: 2 }
+            ],
+            'Rotor': [
+                { name: 'Charcoal', amount: 1 },
+                { name: 'Polyester', amount: 1 }
+            ],
+            'Kevlar': [
+                { name: 'Iron plate', amount: 1 },
+                { name: 'Iron ingot', amount: 20 }
+            ],
+            'Component (HQ)': [
+                { name: 'Component', amount: 2 },
+                { name: 'Gold ingot', amount: 15 }
+            ],
+            'Weapon part (HQ)': [
+                { name: 'Weapon part', amount: 3 },
+                { name: 'Iron ingot', amount: 15 },
+                { name: 'Copper ingot', amount: 16 }
+            ],
+            'Stabilizer (HQ)': [
+                { name: 'Stabilizer', amount: 3 },
+                { name: 'Polyester', amount: 15 }
+            ],
+            'Attachment part (HQ)': [
+                { name: 'Attachment part', amount: 3 },
+                { name: 'Wooden planks', amount: 15 }
+            ],
+            'Ammo (HQ)': [
+                { name: 'Ammo', amount: 3 },
+                { name: 'Canister (petrol)', amount: 1 }
+            ],
+            'Mechanical component (HQ)': [
+                { name: 'Mechanical component', amount: 9 },
+                { name: 'Gold ingot', amount: 45 }
+            ],
+            'Engine part (HQ)': [
+                { name: 'Engine Part', amount: 9 },
+                { name: 'Copper ingot', amount: 45 },
+                { name: 'Canister (petrol)', amount: 45 }
+            ],
+            'Interior part (HQ)': [
+                { name: 'Interior part', amount: 9 },
+                { name: 'Wooden planks', amount: 45 }
+            ],
+            'Rotor (HQ)': [
+                { name: 'Rotor', amount: 9 },
+                { name: 'Silver ingot', amount: 30 }
+            ]
+        };
+
+        function expandMaterialRecipe(materialName, multiplier = 1) {
+            const recipe = PREDEFINED_MATERIALS[materialName];
+            if (!recipe) return null;
+
+            return recipe.map(component => {
+                const expandedComponent = {
+                    name: component.name,
+                    amount: component.amount * multiplier
+                };
+
+                // Recursively expand if the component itself is a predefined material
+                const nestedRecipe = PREDEFINED_MATERIALS[component.name];
+                if (nestedRecipe) {
+                    expandedComponent.components = nestedRecipe.map(nested => ({
+                        name: nested.name,
+                        amount: nested.amount * expandedComponent.amount
+                    }));
+                }
+
+                return expandedComponent;
+            });
+        }
+
+
+        function loadData() {
             try {
                 const response = await fetch('data.json');
                 gameData = await response.json();
@@ -890,11 +1046,11 @@
             const errors = [];
             
             if (!item.name || item.name.trim() === '') {
-                errors.push('Name ist erforderlich');
+                errors.push('Name is required');
             }
             
             if (!item.id || item.id.trim() === '') {
-                errors.push('ID ist erforderlich');
+                errors.push('ID is required');
             }
             
             // Check for duplicate ID
@@ -905,7 +1061,7 @@
                 });
             });
             if (idCount > 1) {
-                errors.push('ID ist bereits vergeben');
+                errors.push('ID is already in use');
             }
             
             return errors;
@@ -921,7 +1077,7 @@
             const errors = validateItem(item);
             const errorHTML = errors.length > 0 ? `
                 <div class="validation-error">
-                    <strong>Validierungsfehler:</strong>
+                    <strong>Validation Errors:</strong>
                     <ul>${errors.map(e => `<li>${e}</li>`).join('')}</ul>
                 </div>
             ` : '';
@@ -1068,13 +1224,13 @@
         }
 
         function deleteStat(statKey) {
-            if (!confirm(`Stat "${statKey}" löschen?`)) return;
+            if (!confirm(`Delete stat "${statKey}"?`)) return;
             const item = gameData.categories[currentCategory].items[currentItem];
             delete item.stats[statKey];
             saveToHistory();
             renderEditor();
             updateJSONPreview();
-            showNotification(`Stat "${statKey}" gelöscht`);
+            showNotification(`Stat "${statKey}" deleted`);
         }
 
         function updateMaterial(path, field, value) {
@@ -1102,12 +1258,12 @@
         }
 
         function addStat() {
-            const statName = prompt('Stat-Name eingeben:');
+            const statName = prompt('Enter stat name:');
             if (!statName) return;
             
             const item = gameData.categories[currentCategory].items[currentItem];
             if (item.stats[statName]) {
-                showNotification('Stat existiert bereits', 'error');
+                showNotification('Stat already exists', 'error');
                 return;
             }
             
@@ -1115,18 +1271,118 @@
             saveToHistory();
             renderEditor();
             updateJSONPreview();
-            showNotification(`Stat "${statName}" hinzugefügt`);
+            showNotification(`Stat "${statName}" added`);
         }
 
         function addMaterial() {
             const item = gameData.categories[currentCategory].items[currentItem];
             if (!item.crafting) item.crafting = {};
             if (!item.crafting.direct) item.crafting.direct = [];
-            item.crafting.direct.push({ name: 'New Material', amount: 1 });
+            
+            const materialOptions = Object.keys(PREDEFINED_MATERIALS).sort();
+            let optionsHTML = materialOptions.map(mat => `<option value="${mat}">${mat}</option>`).join('');
+            
+            const dialogHTML = `
+                <div style="background: rgba(30, 30, 30, 0.98); padding: 2rem; border-radius: 8px; border: 2px solid rgba(100, 200, 255, 0.6); max-width: 500px;">
+                    <h3 style="color: #fff; margin-bottom: 1rem;">Add Material</h3>
+                    <div style="margin-bottom: 1rem;">
+                        <label style="display: block; color: #aaa; margin-bottom: 0.5rem;">Select Predefined Material</label>
+                        <select id="material-select" class="material-selector">
+                            <option value="">-- Select Material --</option>
+                            ${optionsHTML}
+                        </select>
+                    </div>
+                    <div style="margin-bottom: 1rem;">
+                        <label style="display: block; color: #aaa; margin-bottom: 0.5rem;">Amount</label>
+                        <input type="number" id="material-amount" value="1" min="1" style="width: 100%; padding: 0.8rem; background: rgba(40, 40, 40, 0.8); border: 2px solid rgba(100, 200, 255, 0.3); border-radius: 6px; color: #e0e0e0;">
+                    </div>
+                    <div style="margin-bottom: 1rem;">
+                        <span class="custom-material-toggle" onclick="toggleCustomMaterial()">Or enter custom material name</span>
+                    </div>
+                    <div id="custom-material-input" style="display: none; margin-bottom: 1rem;">
+                        <label style="display: block; color: #aaa; margin-bottom: 0.5rem;">Custom Material Name</label>
+                        <input type="text" id="custom-material-name" placeholder="Enter custom material name" style="width: 100%; padding: 0.8rem; background: rgba(40, 40, 40, 0.8); border: 2px solid rgba(100, 200, 255, 0.3); border-radius: 6px; color: #e0e0e0;">
+                    </div>
+                    <div style="display: flex; gap: 1rem; justify-content: flex-end;">
+                        <button onclick="closeMaterialDialog()" style="padding: 0.8rem 1.5rem; background: rgba(150, 150, 150, 0.3); border: 2px solid rgba(150, 150, 150, 0.6); border-radius: 6px; color: #fff; cursor: pointer;">Cancel</button>
+                        <button onclick="confirmAddMaterial()" style="padding: 0.8rem 1.5rem; background: rgba(100, 200, 255, 0.3); border: 2px solid rgba(100, 200, 255, 0.6); border-radius: 6px; color: #fff; cursor: pointer;">Add Material</button>
+                    </div>
+                </div>
+            `;
+            
+            const overlay = document.createElement('div');
+            overlay.id = 'material-dialog-overlay';
+            overlay.style.cssText = 'position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.8); display: flex; align-items: center; justify-content: center; z-index: 3000;';
+            overlay.innerHTML = dialogHTML;
+            document.body.appendChild(overlay);
+            
+            overlay.onclick = (e) => {
+                if (e.target === overlay) closeMaterialDialog();
+            };
+        }
+
+        function toggleCustomMaterial() {
+            const customInput = document.getElementById('custom-material-input');
+            const select = document.getElementById('material-select');
+            
+            if (customInput.style.display === 'none') {
+                customInput.style.display = 'block';
+                select.disabled = true;
+                select.style.opacity = '0.5';
+            } else {
+                customInput.style.display = 'none';
+                select.disabled = false;
+                select.style.opacity = '1';
+            }
+        }
+
+        function confirmAddMaterial() {
+            const select = document.getElementById('material-select');
+            const amountInput = document.getElementById('material-amount');
+            const customInput = document.getElementById('custom-material-name');
+            const item = gameData.categories[currentCategory].items[currentItem];
+            
+            const amount = parseInt(amountInput.value) || 1;
+            let materialName = select.value;
+            
+            // Check if using custom material
+            if (customInput && customInput.value.trim()) {
+                materialName = customInput.value.trim();
+            }
+            
+            if (!materialName) {
+                showNotification('Please select or enter a material', 'error');
+                return;
+            }
+            
+            // If it's a predefined material, expand its recipe
+            const expandedRecipe = expandMaterialRecipe(materialName, amount);
+            
+            if (expandedRecipe) {
+                // Add material with auto-calculated components
+                item.crafting.direct.push({
+                    name: materialName,
+                    amount: amount,
+                    components: expandedRecipe
+                });
+            } else {
+                // Add as simple material without components
+                item.crafting.direct.push({
+                    name: materialName,
+                    amount: amount
+                });
+            }
+            
+            closeMaterialDialog();
             saveToHistory();
             renderEditor();
             updateJSONPreview();
-            showNotification('Material hinzugefügt');
+            showNotification(`Material "${materialName}" added with ${amount}x multiplier`);
+        }
+
+        function closeMaterialDialog() {
+            const overlay = document.getElementById('material-dialog-overlay');
+            if (overlay) overlay.remove();
         }
 
         function addSubMaterial(path) {
@@ -1152,11 +1408,11 @@
             saveToHistory();
             renderEditor();
             updateJSONPreview();
-            showNotification('Component hinzugefügt');
+            showNotification('Component added');
         }
 
         function removeMaterial(path) {
-            if (!confirm('Material löschen?')) return;
+            if (!confirm('Delete material?')) return;
             
             const item = gameData.categories[currentCategory].items[currentItem];
             const parts = path.split('.');
@@ -1189,14 +1445,14 @@
             saveToHistory();
             renderEditor();
             updateJSONPreview();
-            showNotification('Material gelöscht');
+            showNotification('Material deleted');
         }
 
         function addNewItem() {
             const categoryNames = gameData.categories.map((cat, i) => `${i}: ${cat.name}`).join('\n');
-            const categoryIndex = Number(prompt(`Kategorie-Index eingeben:\n${categoryNames}`));
+            const categoryIndex = Number(prompt(`Enter category index:\n${categoryNames}`));
             if (isNaN(categoryIndex) || categoryIndex < 0 || categoryIndex >= gameData.categories.length) {
-                showNotification('Ungültiger Kategorie-Index', 'error');
+                showNotification('Invalid category index', 'error');
                 return;
             }
 
@@ -1222,19 +1478,19 @@
             renderSidebar();
             renderEditor();
             updateJSONPreview();
-            showNotification('Neues Item erstellt');
+            showNotification('New item created');
         }
 
         function duplicateCurrentItem() {
             if (currentCategory === null || currentItem === null) {
-                showNotification('Kein Item ausgewählt', 'error');
+                showNotification('No item selected', 'error');
                 return;
             }
             
             const original = gameData.categories[currentCategory].items[currentItem];
             const duplicate = JSON.parse(JSON.stringify(original));
             duplicate.id = `${original.id}-copy-${Date.now()}`;
-            duplicate.name = `${original.name} (Kopie)`;
+            duplicate.name = `${original.name} (Copy)`;
             
             gameData.categories[currentCategory].items.push(duplicate);
             currentItem = gameData.categories[currentCategory].items.length - 1;
@@ -1243,11 +1499,11 @@
             renderSidebar();
             renderEditor();
             updateJSONPreview();
-            showNotification(`"${original.name}" dupliziert`);
+            showNotification(`"${original.name}" duplicated`);
         }
 
         function addNewCategory() {
-            const categoryName = prompt('Neuen Kategorie-Namen eingeben:');
+            const categoryName = prompt('Enter new category name:');
             if (!categoryName) return;
             
             const categoryId = categoryName.toLowerCase().replace(/\s+/g, '-');
@@ -1261,26 +1517,26 @@
             saveToHistory();
             renderSidebar();
             updateJSONPreview();
-            showNotification(`Kategorie "${categoryName}" erstellt`);
+            showNotification(`Category "${categoryName}" created`);
         }
 
         function deleteCurrentItem() {
             if (currentCategory === null || currentItem === null) {
-                showNotification('Kein Item ausgewählt', 'error');
+                showNotification('No item selected', 'error');
                 return;
             }
-            if (!confirm('Item wirklich löschen?')) return;
+            if (!confirm('Really delete this item?')) return;
 
             const itemName = gameData.categories[currentCategory].items[currentItem].name;
             gameData.categories[currentCategory].items.splice(currentItem, 1);
             currentCategory = null;
             currentItem = null;
 
-            document.getElementById('editor-main').innerHTML = '<div class="empty-state"><h3>Item gelöscht</h3><p>Wähle ein anderes Item zum Bearbeiten</p></div>';
+            document.getElementById('editor-main').innerHTML = '<div class="empty-state"><h3>Item deleted</h3><p>Select another item to edit</p></div>';
             saveToHistory();
             renderSidebar();
             updateJSONPreview();
-            showNotification(`"${itemName}" gelöscht`);
+            showNotification(`"${itemName}" deleted`);
         }
 
         function updateJSONPreview() {
@@ -1289,8 +1545,13 @@
 
         function saveData() {
             const jsonStr = JSON.stringify(gameData, null, 2);
-            showNotification('JSON in Konsole ausgegeben. Kopiere es manuell in data.json', 'success');
-            console.log(jsonStr);
+            navigator.clipboard.writeText(jsonStr).then(() => {
+                showNotification('JSON copied to clipboard!', 'success');
+            }).catch(err => {
+                console.error('Failed to copy:', err);
+                showNotification('Failed to copy to clipboard. Check console.', 'error');
+                console.log(jsonStr); // Fallback: log to console
+            });
         }
 
         function downloadJSON() {
@@ -1302,7 +1563,7 @@
             a.download = 'data.json';
             a.click();
             URL.revokeObjectURL(url);
-            showNotification('JSON heruntergeladen');
+            showNotification('JSON downloaded');
         }
 
         loadData();
