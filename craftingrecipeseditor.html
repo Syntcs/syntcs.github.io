@@ -808,7 +808,7 @@
 
     async function loadData() {
         try {
-            const response = await fetch('data.json');
+            const response = await fetch('craftingrecipes.json');
             gameData = await response.json();
             saveToHistory();
             renderSidebar();
@@ -816,7 +816,7 @@
             initSortable();
         } catch (error) {
             console.error('Error loading data:', error);
-            showNotification('Error loading data. Make sure data.json exists.', 'error');
+            showNotification('Error loading data. Make sure craftingrecipes.json exists.', 'error');
         }
     }
 
@@ -1561,7 +1561,7 @@
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = 'data.json';
+            a.download = 'craftingrecipes.json';
             a.click();
             URL.revokeObjectURL(url);
             showNotification('JSON downloaded');
