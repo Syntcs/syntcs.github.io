@@ -806,19 +806,20 @@
         }
 
 
-        function loadData() {
-            try {
-                const response = await fetch('data.json');
-                gameData = await response.json();
-                saveToHistory();
-                renderSidebar();
-                updateJSONPreview();
-                initSortable();
-            } catch (error) {
-                console.error('Error loading data:', error);
-                showNotification('Error loading data. Make sure data.json exists.', 'error');
-            }
+    async function loadData() {
+        try {
+            const response = await fetch('data.json');
+            gameData = await response.json();
+            saveToHistory();
+            renderSidebar();
+            updateJSONPreview();
+            initSortable();
+        } catch (error) {
+            console.error('Error loading data:', error);
+            showNotification('Error loading data. Make sure data.json exists.', 'error');
         }
+    }
+
 
         function saveToHistory() {
             // Remove any future states if we're not at the end
