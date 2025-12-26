@@ -4,8 +4,8 @@
   "tools": [
     {
       "id": "equipment-wiki",
-      "title": "Equipment Wiki",
-      "url": "elan",
+      "title": "Crafting Recipes",
+      "url": "craftingrecipes",
       "badge": "updated",
       "locked": false
     },
