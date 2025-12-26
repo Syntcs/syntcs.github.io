@@ -424,7 +424,7 @@
     // Load default config on start
     async function loadDefault() {
       try {
-        const response = await fetch('config.json');
+        const response = await fetch('cs2.json');
         const config = await response.json();
         
         document.getElementById('config-title').value = config.title || '';
@@ -547,7 +547,7 @@
       
       const a = document.createElement('a');
       a.href = url;
-      a.download = 'config.json';
+      a.download = 'cs2.json';
       a.click();
       
       URL.revokeObjectURL(url);
