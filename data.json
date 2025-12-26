@@ -111,19 +111,107 @@
             "direct": [
               {
                 "name": "Mechanical component (HQ)",
-                "amount": 30
+                "amount": 30,
+                "components": [
+                  {
+                    "name": "Mechanical component",
+                    "amount": 270,
+                    "components": [
+                      {
+                        "name": "Iron ingot",
+                        "amount": 540
+                      },
+                      {
+                        "name": "Copper ingot",
+                        "amount": 540
+                      }
+                    ]
+                  },
+                  {
+                    "name": "Gold ingot",
+                    "amount": 1350
+                  }
+                ]
               },
               {
                 "name": "Interior part (HQ)",
-                "amount": 27
+                "amount": 27,
+                "components": [
+                  {
+                    "name": "Interior part",
+                    "amount": 243,
+                    "components": [
+                      {
+                        "name": "Fabric",
+                        "amount": 486
+                      },
+                      {
+                        "name": "Polyester",
+                        "amount": 486
+                      }
+                    ]
+                  },
+                  {
+                    "name": "Wooden planks",
+                    "amount": 45
+                  }
+                ]
               },
               {
                 "name": "Engine part (HQ)",
-                "amount": 19
+                "amount": 19,
+                "components": [
+                  {
+                    "name": "Engine part",
+                    "amount": 171,
+                    "components": [
+                      {
+                        "name": "Iron ingot",
+                        "amount": 171
+                      },
+                      {
+                        "name": "Copper ingot",
+                        "amount": 171
+                      },
+                      {
+                        "name": "Canister (petrol)",
+                        "amount": 171
+                      }
+                    ]
+                  },
+                  {
+                    "name": "Copper ingot",
+                    "amount": 855
+                  },
+                  {
+                    "name": "Canister (petrol)",
+                    "amount": 855
+                  }
+                ]
               },
               {
                 "name": "Rotor (HQ)",
-                "amount": 48
+                "amount": 48,
+                "components": [
+                  {
+                    "name": "Rotor",
+                    "amount": 432,
+                    "components": [
+                      {
+                        "name": "Charcoal",
+                        "amount": 432
+                      },
+                      {
+                        "name": "Polyester",
+                        "amount": 432
+                      }
+                    ]
+                  },
+                  {
+                    "name": "Silver ingot",
+                    "amount": 1440
+                  }
+                ]
               },
               {
                 "name": "Special rotor",
