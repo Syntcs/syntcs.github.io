@@ -171,7 +171,9 @@
                 ]
               }
             ]
-          }
+          },
+          "icon": "https://i.imgur.com/bKXiSlh.png",
+          "image": "https://i.imgur.com/bKXiSlh.png"
         },
         {
           "id": "new-item-1766853872287",
@@ -639,7 +641,9 @@
                 ]
               }
             ]
-          }
+          },
+          "icon": "https://i.imgur.com/dc3FpeW.png",
+          "image": "https://i.imgur.com/dc3FpeW.png"
         }
       ]
     },
@@ -770,8 +774,8 @@
               }
             ]
           },
-          "icon": "https://i.imgur.com/TnwPqjA.jpeg",
-          "image": "https://i.imgur.com/TnwPqjA.jpeg"
+          "icon": "https://i.imgur.com/i97yEgX.png",
+          "image": "https://i.imgur.com/i97yEgX.png"
         }
       ]
     },
