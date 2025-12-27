@@ -11,8 +11,8 @@
           "description": "Description here",
           "stats": {
             "level": {
-              "value": 13,
-              "max": 7,
+              "value": 7,
+              "max": 13,
               "unit": ""
             }
           },
@@ -322,6 +322,26 @@
           },
           "icon": "https://i.imgur.com/CxZ3KVf.png",
           "image": "https://i.imgur.com/CxZ3KVf.png"
+        },
+        {
+          "id": "new-item-1766861196945",
+          "name": "New Item",
+          "description": "Description here",
+          "stats": {
+            "stat1": {
+              "value": 50,
+              "max": 100,
+              "unit": ""
+            }
+          },
+          "crafting": {
+            "direct": [
+              {
+                "name": "Material 1",
+                "amount": 10
+              }
+            ]
+          }
         }
       ]
     },
@@ -611,8 +631,8 @@
           "description": "Description here",
           "stats": {
             "level": {
-              "value": 13,
-              "max": 9,
+              "value": 9,
+              "max": 13,
               "unit": ""
             }
           },
@@ -1689,6 +1709,372 @@
                   {
                     "name": "Polyester",
                     "amount": 20
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "ammo",
+      "name": "Ammo",
+      "items": [
+        {
+          "id": "new-item-1766860891017",
+          "name": "9x18mm 8rnd PM Mag",
+          "description": "Weapon: PM",
+          "stats": {
+            "level": {
+              "value": 2,
+              "max": 13,
+              "unit": ""
+            }
+          },
+          "crafting": {
+            "direct": [
+              {
+                "name": "Ammo",
+                "amount": 1,
+                "components": [
+                  {
+                    "name": "Iron ingot",
+                    "amount": 1
+                  },
+                  {
+                    "name": "Charcoal",
+                    "amount": 1
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "new-item-1766861042515",
+          "name": "9x19mm 15rnd M9 Mag",
+          "description": "Description here",
+          "stats": {
+            "level": {
+              "value": 3,
+              "max": 13,
+              "unit": ""
+            }
+          },
+          "crafting": {
+            "direct": [
+              {
+                "name": "Ammo",
+                "amount": 1,
+                "components": [
+                  {
+                    "name": "Iron ingot",
+                    "amount": 1
+                  },
+                  {
+                    "name": "Charcoal",
+                    "amount": 1
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "new-item-1766861073112",
+          "name": "30rnd 9x19 Mag",
+          "description": "Description here",
+          "stats": {
+            "level": {
+              "value": 5,
+              "max": 13,
+              "unit": ""
+            }
+          },
+          "crafting": {
+            "direct": [
+              {
+                "name": "Ammo",
+                "amount": 1,
+                "components": [
+                  {
+                    "name": "Iron ingot",
+                    "amount": 1
+                  },
+                  {
+                    "name": "Charcoal",
+                    "amount": 1
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "new-item-1766861102186",
+          "name": "MP7A2 4.6x40 40rnd",
+          "description": "Description here",
+          "stats": {
+            "level": {
+              "value": 5,
+              "max": 13,
+              "unit": ""
+            }
+          },
+          "crafting": {
+            "direct": [
+              {
+                "name": "Ammo",
+                "amount": 1,
+                "components": [
+                  {
+                    "name": "Iron ingot",
+                    "amount": 1
+                  },
+                  {
+                    "name": "Charcoal",
+                    "amount": 1
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "new-item-1766861140808",
+          "name": "5.56x45mm 30rnd STANAG Mag",
+          "description": "Description here",
+          "stats": {
+            "level": {
+              "value": 5,
+              "max": 13,
+              "unit": ""
+            }
+          },
+          "crafting": {
+            "direct": [
+              {
+                "name": "Ammo",
+                "amount": 1,
+                "components": [
+                  {
+                    "name": "Iron ingot",
+                    "amount": 1
+                  },
+                  {
+                    "name": "Charcoal",
+                    "amount": 1
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "new-item-1766861168651",
+          "name": ".300 Blackout Magazine",
+          "description": "Description here",
+          "stats": {
+            "level": {
+              "value": 7,
+              "max": 13,
+              "unit": ""
+            }
+          },
+          "crafting": {
+            "direct": [
+              {
+                "name": "Ammo",
+                "amount": 2,
+                "components": [
+                  {
+                    "name": "Iron ingot",
+                    "amount": 2
+                  },
+                  {
+                    "name": "Charcoal",
+                    "amount": 2
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "new-item-1766861292364",
+          "name": "7.62x51mm 20rnd M14 Mag",
+          "description": "Description here",
+          "stats": {
+            "level": {
+              "value": 7,
+              "max": 13,
+              "unit": ""
+            }
+          },
+          "crafting": {
+            "direct": [
+              {
+                "name": "Ammo",
+                "amount": 1,
+                "components": [
+                  {
+                    "name": "Iron ingot",
+                    "amount": 1
+                  },
+                  {
+                    "name": "Charcoal",
+                    "amount": 1
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "new-item-1766861327315",
+          "name": "5.45x39mm 30rnd AK Mag",
+          "description": "Description here",
+          "stats": {
+            "level": {
+              "value": 8,
+              "max": 13,
+              "unit": ""
+            }
+          },
+          "crafting": {
+            "direct": [
+              {
+                "name": "Ammo",
+                "amount": 2,
+                "components": [
+                  {
+                    "name": "Iron ingot",
+                    "amount": 2
+                  },
+                  {
+                    "name": "Charcoal",
+                    "amount": 2
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "new-item-1766861357038",
+          "name": "SPEAR 6.8x51 25rnd",
+          "description": "Description here",
+          "stats": {
+            "level": {
+              "value": 9,
+              "max": 13,
+              "unit": ""
+            }
+          },
+          "crafting": {
+            "direct": [
+              {
+                "name": "Ammo (HQ)",
+                "amount": 1,
+                "components": [
+                  {
+                    "name": "Ammo",
+                    "amount": 3,
+                    "components": [
+                      {
+                        "name": "Iron ingot",
+                        "amount": 3
+                      },
+                      {
+                        "name": "Charcoal",
+                        "amount": 3
+                      }
+                    ]
+                  },
+                  {
+                    "name": "Canister (petrol)",
+                    "amount": 1
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "new-item-1766861398694",
+          "name": "SR25 7.62x51 20rnd",
+          "description": "Description here",
+          "stats": {
+            "level": {
+              "value": 11,
+              "max": 13,
+              "unit": ""
+            }
+          },
+          "crafting": {
+            "direct": [
+              {
+                "name": "Ammo (HQ)",
+                "amount": 1,
+                "components": [
+                  {
+                    "name": "Ammo",
+                    "amount": 3,
+                    "components": [
+                      {
+                        "name": "Iron ingot",
+                        "amount": 3
+                      },
+                      {
+                        "name": "Charcoal",
+                        "amount": 3
+                      }
+                    ]
+                  },
+                  {
+                    "name": "Canister (petrol)",
+                    "amount": 1
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "new-item-1766861457332",
+          "name": "7.62x54mmR 100rnd PK Belt",
+          "description": "Description here",
+          "stats": {
+            "level": {
+              "value": 12,
+              "max": 13,
+              "unit": ""
+            }
+          },
+          "crafting": {
+            "direct": [
+              {
+                "name": "Ammo (HQ)",
+                "amount": 10,
+                "components": [
+                  {
+                    "name": "Ammo",
+                    "amount": 30,
+                    "components": [
+                      {
+                        "name": "Iron ingot",
+                        "amount": 30
+                      },
+                      {
+                        "name": "Charcoal",
+                        "amount": 30
+                      }
+                    ]
+                  },
+                  {
+                    "name": "Canister (petrol)",
+                    "amount": 10
                   }
                 ]
               }
