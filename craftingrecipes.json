@@ -4,7 +4,288 @@
       "id": "car",
       "name": "Car",
       "icon": "/placeholder.svg?height=50&width=50",
-      "items": []
+      "items": [
+        {
+          "id": "new-item-1766853718045",
+          "name": "VW Rolf",
+          "description": "Description here",
+          "stats": {},
+          "crafting": {
+            "direct": [
+              {
+                "name": "Mechanical component",
+                "amount": 31,
+                "components": [
+                  {
+                    "name": "Iron ingot",
+                    "amount": 62
+                  },
+                  {
+                    "name": "Copper ingot",
+                    "amount": 62
+                  }
+                ]
+              },
+              {
+                "name": "Interior part",
+                "amount": 19,
+                "components": [
+                  {
+                    "name": "Fabric",
+                    "amount": 38
+                  },
+                  {
+                    "name": "Polyester",
+                    "amount": 38
+                  }
+                ]
+              },
+              {
+                "name": "Engine Part",
+                "amount": 31,
+                "components": [
+                  {
+                    "name": "Iron ingot",
+                    "amount": 31
+                  },
+                  {
+                    "name": "Copper ingot",
+                    "amount": 31
+                  },
+                  {
+                    "name": "Canister (petrol)",
+                    "amount": 31
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "new-item-1766853757615",
+          "name": "M1025 Light Armored Vehicle",
+          "description": "Description here",
+          "stats": {},
+          "crafting": {
+            "direct": [
+              {
+                "name": "Mechanical component",
+                "amount": 9,
+                "components": [
+                  {
+                    "name": "Iron ingot",
+                    "amount": 18
+                  },
+                  {
+                    "name": "Copper ingot",
+                    "amount": 18
+                  }
+                ]
+              },
+              {
+                "name": "Interior part",
+                "amount": 5,
+                "components": [
+                  {
+                    "name": "Fabric",
+                    "amount": 10
+                  },
+                  {
+                    "name": "Polyester",
+                    "amount": 10
+                  }
+                ]
+              },
+              {
+                "name": "Engine Part",
+                "amount": 9,
+                "components": [
+                  {
+                    "name": "Iron ingot",
+                    "amount": 9
+                  },
+                  {
+                    "name": "Copper ingot",
+                    "amount": 9
+                  },
+                  {
+                    "name": "Canister (petrol)",
+                    "amount": 9
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "new-item-1766853826822",
+          "name": "S1203 Minibus",
+          "description": "Description here",
+          "stats": {},
+          "crafting": {
+            "direct": [
+              {
+                "name": "Mechanical component",
+                "amount": 7,
+                "components": [
+                  {
+                    "name": "Iron ingot",
+                    "amount": 14
+                  },
+                  {
+                    "name": "Copper ingot",
+                    "amount": 14
+                  }
+                ]
+              },
+              {
+                "name": "Interior part",
+                "amount": 4,
+                "components": [
+                  {
+                    "name": "Fabric",
+                    "amount": 8
+                  },
+                  {
+                    "name": "Polyester",
+                    "amount": 8
+                  }
+                ]
+              },
+              {
+                "name": "Engine Part",
+                "amount": 7,
+                "components": [
+                  {
+                    "name": "Iron ingot",
+                    "amount": 7
+                  },
+                  {
+                    "name": "Copper ingot",
+                    "amount": 7
+                  },
+                  {
+                    "name": "Canister (petrol)",
+                    "amount": 7
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "new-item-1766853872287",
+          "name": "S105 Car",
+          "description": "Description here",
+          "stats": {},
+          "crafting": {
+            "direct": [
+              {
+                "name": "Mechanical component",
+                "amount": 3,
+                "components": [
+                  {
+                    "name": "Iron ingot",
+                    "amount": 6
+                  },
+                  {
+                    "name": "Copper ingot",
+                    "amount": 6
+                  }
+                ]
+              },
+              {
+                "name": "Interior part",
+                "amount": 2,
+                "components": [
+                  {
+                    "name": "Fabric",
+                    "amount": 4
+                  },
+                  {
+                    "name": "Polyester",
+                    "amount": 4
+                  }
+                ]
+              },
+              {
+                "name": "Engine Part",
+                "amount": 3,
+                "components": [
+                  {
+                    "name": "Iron ingot",
+                    "amount": 3
+                  },
+                  {
+                    "name": "Copper ingot",
+                    "amount": 3
+                  },
+                  {
+                    "name": "Canister (petrol)",
+                    "amount": 3
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "new-item-1766853914020",
+          "name": "M151A2 Off-road",
+          "description": "Description here",
+          "stats": {},
+          "crafting": {
+            "direct": [
+              {
+                "name": "Mechanical component",
+                "amount": 1,
+                "components": [
+                  {
+                    "name": "Iron ingot",
+                    "amount": 2
+                  },
+                  {
+                    "name": "Copper ingot",
+                    "amount": 2
+                  }
+                ]
+              },
+              {
+                "name": "Interior part",
+                "amount": 1,
+                "components": [
+                  {
+                    "name": "Fabric",
+                    "amount": 2
+                  },
+                  {
+                    "name": "Polyester",
+                    "amount": 2
+                  }
+                ]
+              },
+              {
+                "name": "Engine Part",
+                "amount": 1,
+                "components": [
+                  {
+                    "name": "Iron ingot",
+                    "amount": 1
+                  },
+                  {
+                    "name": "Copper ingot",
+                    "amount": 1
+                  },
+                  {
+                    "name": "Canister (petrol)",
+                    "amount": 1
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ]
     },
     {
       "id": "truck",
@@ -179,6 +460,186 @@
               }
             ]
           }
+        },
+        {
+          "id": "new-item-1766853611570",
+          "name": "Ural-4320 Transport Truck",
+          "description": "Description here",
+          "stats": {},
+          "crafting": {
+            "direct": [
+              {
+                "name": "Mechanical component (HQ)",
+                "amount": 4,
+                "components": [
+                  {
+                    "name": "Mechanical component",
+                    "amount": 36,
+                    "components": [
+                      {
+                        "name": "Iron ingot",
+                        "amount": 72
+                      },
+                      {
+                        "name": "Copper ingot",
+                        "amount": 72
+                      }
+                    ]
+                  },
+                  {
+                    "name": "Gold ingot",
+                    "amount": 180
+                  }
+                ]
+              },
+              {
+                "name": "Interior part (HQ)",
+                "amount": 3,
+                "components": [
+                  {
+                    "name": "Interior part",
+                    "amount": 27,
+                    "components": [
+                      {
+                        "name": "Fabric",
+                        "amount": 54
+                      },
+                      {
+                        "name": "Polyester",
+                        "amount": 54
+                      }
+                    ]
+                  },
+                  {
+                    "name": "Wooden planks",
+                    "amount": 135
+                  }
+                ]
+              },
+              {
+                "name": "Engine part (HQ)",
+                "amount": 2,
+                "components": [
+                  {
+                    "name": "Engine Part",
+                    "amount": 18,
+                    "components": [
+                      {
+                        "name": "Iron ingot",
+                        "amount": 18
+                      },
+                      {
+                        "name": "Copper ingot",
+                        "amount": 18
+                      },
+                      {
+                        "name": "Canister (petrol)",
+                        "amount": 18
+                      }
+                    ]
+                  },
+                  {
+                    "name": "Copper ingot",
+                    "amount": 90
+                  },
+                  {
+                    "name": "Canister (petrol)",
+                    "amount": 90
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "new-item-1766853668685",
+          "name": "Ural-4320 Fuel Truck",
+          "description": "Description here",
+          "stats": {},
+          "crafting": {
+            "direct": [
+              {
+                "name": "Mechanical component (HQ)",
+                "amount": 4,
+                "components": [
+                  {
+                    "name": "Mechanical component",
+                    "amount": 36,
+                    "components": [
+                      {
+                        "name": "Iron ingot",
+                        "amount": 72
+                      },
+                      {
+                        "name": "Copper ingot",
+                        "amount": 72
+                      }
+                    ]
+                  },
+                  {
+                    "name": "Gold ingot",
+                    "amount": 180
+                  }
+                ]
+              },
+              {
+                "name": "Interior part (HQ)",
+                "amount": 3,
+                "components": [
+                  {
+                    "name": "Interior part",
+                    "amount": 27,
+                    "components": [
+                      {
+                        "name": "Fabric",
+                        "amount": 54
+                      },
+                      {
+                        "name": "Polyester",
+                        "amount": 54
+                      }
+                    ]
+                  },
+                  {
+                    "name": "Wooden planks",
+                    "amount": 135
+                  }
+                ]
+              },
+              {
+                "name": "Engine part (HQ)",
+                "amount": 2,
+                "components": [
+                  {
+                    "name": "Engine Part",
+                    "amount": 18,
+                    "components": [
+                      {
+                        "name": "Iron ingot",
+                        "amount": 18
+                      },
+                      {
+                        "name": "Copper ingot",
+                        "amount": 18
+                      },
+                      {
+                        "name": "Canister (petrol)",
+                        "amount": 18
+                      }
+                    ]
+                  },
+                  {
+                    "name": "Copper ingot",
+                    "amount": 90
+                  },
+                  {
+                    "name": "Canister (petrol)",
+                    "amount": 90
+                  }
+                ]
+              }
+            ]
+          }
         }
       ]
     },
@@ -319,57 +780,155 @@
       "name": "Weapon",
       "items": [
         {
-          "id": "new-item-1766745437722",
-          "name": "M16 Carbine",
+          "id": "new-item-1766854614952",
+          "name": "PM",
           "description": "Description here",
-          "stats": {
-            "stat1": {
-              "value": 50,
-              "max": 100,
-              "unit": ""
-            }
-          },
+          "stats": {},
           "crafting": {
             "direct": [
               {
                 "name": "Weapon part",
-                "amount": 29,
+                "amount": 4,
                 "components": [
                   {
                     "name": "Iron ingot",
-                    "amount": 29
+                    "amount": 4
                   },
                   {
                     "name": "Copper ingot",
-                    "amount": 29
+                    "amount": 4
                   }
                 ]
               },
               {
                 "name": "Stabilizer",
-                "amount": 16,
+                "amount": 2,
                 "components": [
                   {
                     "name": "Iron ingot",
-                    "amount": 32
+                    "amount": 4
                   },
                   {
                     "name": "Gold ingot",
-                    "amount": 16
+                    "amount": 2
                   }
                 ]
               },
               {
                 "name": "Attachment part",
-                "amount": 18,
+                "amount": 2,
                 "components": [
                   {
                     "name": "Copper ingot",
-                    "amount": 36
+                    "amount": 4
                   },
                   {
                     "name": "Silver ingot",
-                    "amount": 18
+                    "amount": 2
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "new-item-1766854557728",
+          "name": "M9",
+          "description": "Description here",
+          "stats": {},
+          "crafting": {
+            "direct": [
+              {
+                "name": "Weapon part",
+                "amount": 5,
+                "components": [
+                  {
+                    "name": "Iron ingot",
+                    "amount": 5
+                  },
+                  {
+                    "name": "Copper ingot",
+                    "amount": 5
+                  }
+                ]
+              },
+              {
+                "name": "Stabilizer",
+                "amount": 3,
+                "components": [
+                  {
+                    "name": "Iron ingot",
+                    "amount": 6
+                  },
+                  {
+                    "name": "Gold ingot",
+                    "amount": 3
+                  }
+                ]
+              },
+              {
+                "name": "Attachment part",
+                "amount": 3,
+                "components": [
+                  {
+                    "name": "Copper ingot",
+                    "amount": 6
+                  },
+                  {
+                    "name": "Silver ingot",
+                    "amount": 3
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "new-item-1766854525648",
+          "name": "Colt 1911",
+          "description": "Description here",
+          "stats": {},
+          "crafting": {
+            "direct": [
+              {
+                "name": "Weapon part",
+                "amount": 5,
+                "components": [
+                  {
+                    "name": "Iron ingot",
+                    "amount": 5
+                  },
+                  {
+                    "name": "Copper ingot",
+                    "amount": 5
+                  }
+                ]
+              },
+              {
+                "name": "Stabilizer",
+                "amount": 3,
+                "components": [
+                  {
+                    "name": "Iron ingot",
+                    "amount": 6
+                  },
+                  {
+                    "name": "Gold ingot",
+                    "amount": 3
+                  }
+                ]
+              },
+              {
+                "name": "Attachment part",
+                "amount": 3,
+                "components": [
+                  {
+                    "name": "Copper ingot",
+                    "amount": 6
+                  },
+                  {
+                    "name": "Silver ingot",
+                    "amount": 3
                   }
                 ]
               }
@@ -427,6 +986,248 @@
               }
             ]
           }
+        },
+        {
+          "id": "new-item-1766745437722",
+          "name": "M16 Carbine",
+          "description": "Description here",
+          "stats": {},
+          "crafting": {
+            "direct": [
+              {
+                "name": "Weapon part",
+                "amount": 29,
+                "components": [
+                  {
+                    "name": "Iron ingot",
+                    "amount": 29
+                  },
+                  {
+                    "name": "Copper ingot",
+                    "amount": 29
+                  }
+                ]
+              },
+              {
+                "name": "Stabilizer",
+                "amount": 16,
+                "components": [
+                  {
+                    "name": "Iron ingot",
+                    "amount": 32
+                  },
+                  {
+                    "name": "Gold ingot",
+                    "amount": 16
+                  }
+                ]
+              },
+              {
+                "name": "Attachment part",
+                "amount": 18,
+                "components": [
+                  {
+                    "name": "Copper ingot",
+                    "amount": 36
+                  },
+                  {
+                    "name": "Silver ingot",
+                    "amount": 18
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "new-item-1766854444555",
+          "name": "M16A2 auto",
+          "description": "Description here",
+          "stats": {},
+          "crafting": {
+            "direct": [
+              {
+                "name": "Weapon part",
+                "amount": 29,
+                "components": [
+                  {
+                    "name": "Iron ingot",
+                    "amount": 29
+                  },
+                  {
+                    "name": "Copper ingot",
+                    "amount": 29
+                  }
+                ]
+              },
+              {
+                "name": "Stabilizer",
+                "amount": 16,
+                "components": [
+                  {
+                    "name": "Iron ingot",
+                    "amount": 32
+                  },
+                  {
+                    "name": "Gold ingot",
+                    "amount": 16
+                  }
+                ]
+              },
+              {
+                "name": "Attachment part",
+                "amount": 18,
+                "components": [
+                  {
+                    "name": "Copper ingot",
+                    "amount": 36
+                  },
+                  {
+                    "name": "Silver ingot",
+                    "amount": 18
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "new-item-1766854394868",
+          "name": "SIG MCX",
+          "description": "Description here",
+          "stats": {},
+          "crafting": {
+            "direct": [
+              {
+                "name": "Weapon part",
+                "amount": 38,
+                "components": [
+                  {
+                    "name": "Iron ingot",
+                    "amount": 38
+                  },
+                  {
+                    "name": "Copper ingot",
+                    "amount": 38
+                  }
+                ]
+              },
+              {
+                "name": "Stabilizer",
+                "amount": 20,
+                "components": [
+                  {
+                    "name": "Iron ingot",
+                    "amount": 40
+                  },
+                  {
+                    "name": "Gold ingot",
+                    "amount": 20
+                  }
+                ]
+              },
+              {
+                "name": "Attachment part",
+                "amount": 23,
+                "components": [
+                  {
+                    "name": "Copper ingot",
+                    "amount": 46
+                  },
+                  {
+                    "name": "Silver ingot",
+                    "amount": 23
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "new-item-1766854354657",
+          "name": "Scar-H",
+          "description": "Description here",
+          "stats": {},
+          "crafting": {
+            "direct": [
+              {
+                "name": "Weapon part (HQ)",
+                "amount": 2,
+                "components": [
+                  {
+                    "name": "Weapon part",
+                    "amount": 6,
+                    "components": [
+                      {
+                        "name": "Iron ingot",
+                        "amount": 6
+                      },
+                      {
+                        "name": "Copper ingot",
+                        "amount": 6
+                      }
+                    ]
+                  },
+                  {
+                    "name": "Iron ingot",
+                    "amount": 30
+                  },
+                  {
+                    "name": "Copper ingot",
+                    "amount": 32
+                  }
+                ]
+              },
+              {
+                "name": "Stabilizer (HQ)",
+                "amount": 2,
+                "components": [
+                  {
+                    "name": "Stabilizer",
+                    "amount": 6,
+                    "components": [
+                      {
+                        "name": "Iron ingot",
+                        "amount": 12
+                      },
+                      {
+                        "name": "Gold ingot",
+                        "amount": 6
+                      }
+                    ]
+                  },
+                  {
+                    "name": "Polyester",
+                    "amount": 30
+                  }
+                ]
+              },
+              {
+                "name": "Attachment part (HQ)",
+                "amount": 3,
+                "components": [
+                  {
+                    "name": "Attachment part",
+                    "amount": 9,
+                    "components": [
+                      {
+                        "name": "Copper ingot",
+                        "amount": 18
+                      },
+                      {
+                        "name": "Silver ingot",
+                        "amount": 9
+                      }
+                    ]
+                  },
+                  {
+                    "name": "Wooden planks",
+                    "amount": 45
+                  }
+                ]
+              }
+            ]
+          }
         }
       ]
     },
@@ -470,6 +1271,252 @@
                   {
                     "name": "Polyester",
                     "amount": 6
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "new-item-1766853961202",
+          "name": "ZSh-5 Helmet",
+          "description": "Description here",
+          "stats": {},
+          "crafting": {
+            "direct": [
+              {
+                "name": "Iron plate",
+                "amount": 7,
+                "components": [
+                  {
+                    "name": "Iron ingot",
+                    "amount": 7
+                  },
+                  {
+                    "name": "Fabric",
+                    "amount": 7
+                  },
+                  {
+                    "name": "Polyester",
+                    "amount": 7
+                  }
+                ]
+              },
+              {
+                "name": "Cloth",
+                "amount": 10,
+                "components": [
+                  {
+                    "name": "Fabric",
+                    "amount": 10
+                  },
+                  {
+                    "name": "Polyester",
+                    "amount": 10
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "new-item-1766854034725",
+          "name": "SSh-68 Helmet",
+          "description": "Description here",
+          "stats": {},
+          "crafting": {
+            "direct": [
+              {
+                "name": "Iron plate",
+                "amount": 2,
+                "components": [
+                  {
+                    "name": "Iron ingot",
+                    "amount": 2
+                  },
+                  {
+                    "name": "Fabric",
+                    "amount": 2
+                  },
+                  {
+                    "name": "Polyester",
+                    "amount": 2
+                  }
+                ]
+              },
+              {
+                "name": "Cloth",
+                "amount": 2,
+                "components": [
+                  {
+                    "name": "Fabric",
+                    "amount": 2
+                  },
+                  {
+                    "name": "Polyester",
+                    "amount": 2
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "new-item-1766854106158",
+          "name": "PASGT Vest",
+          "description": "Description here",
+          "stats": {},
+          "crafting": {
+            "direct": [
+              {
+                "name": "Iron plate",
+                "amount": 10,
+                "components": [
+                  {
+                    "name": "Iron ingot",
+                    "amount": 10
+                  },
+                  {
+                    "name": "Fabric",
+                    "amount": 10
+                  },
+                  {
+                    "name": "Polyester",
+                    "amount": 10
+                  }
+                ]
+              },
+              {
+                "name": "Cloth",
+                "amount": 14,
+                "components": [
+                  {
+                    "name": "Fabric",
+                    "amount": 14
+                  },
+                  {
+                    "name": "Polyester",
+                    "amount": 14
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "new-item-1766854140454",
+          "name": "Mystery Ranch SATL Backpack",
+          "description": "Description here",
+          "stats": {},
+          "crafting": {
+            "direct": [
+              {
+                "name": "Cloth",
+                "amount": 32,
+                "components": [
+                  {
+                    "name": "Fabric",
+                    "amount": 32
+                  },
+                  {
+                    "name": "Polyester",
+                    "amount": 32
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "new-item-1766854168507",
+          "name": "IIFS Large Combat Field Pack",
+          "description": "Description here",
+          "stats": {},
+          "crafting": {
+            "direct": [
+              {
+                "name": "Cloth",
+                "amount": 32,
+                "components": [
+                  {
+                    "name": "Fabric",
+                    "amount": 32
+                  },
+                  {
+                    "name": "Polyester",
+                    "amount": 32
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "new-item-1766854224463",
+          "name": "M70 Backpack",
+          "description": "Description here",
+          "stats": {},
+          "crafting": {
+            "direct": [
+              {
+                "name": "Cloth",
+                "amount": 2,
+                "components": [
+                  {
+                    "name": "Fabric",
+                    "amount": 2
+                  },
+                  {
+                    "name": "Polyester",
+                    "amount": 2
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "new-item-1766854248558",
+          "name": "KLMK Coveralls",
+          "description": "Description here",
+          "stats": {},
+          "crafting": {
+            "direct": [
+              {
+                "name": "Cloth",
+                "amount": 20,
+                "components": [
+                  {
+                    "name": "Fabric",
+                    "amount": 20
+                  },
+                  {
+                    "name": "Polyester",
+                    "amount": 20
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "new-item-1766854272301",
+          "name": "CWU-27/P Pilot Coveralls",
+          "description": "Description here",
+          "stats": {},
+          "crafting": {
+            "direct": [
+              {
+                "name": "Cloth",
+                "amount": 20,
+                "components": [
+                  {
+                    "name": "Fabric",
+                    "amount": 20
+                  },
+                  {
+                    "name": "Polyester",
+                    "amount": 20
                   }
                 ]
               }
