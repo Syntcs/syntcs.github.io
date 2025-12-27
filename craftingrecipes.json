@@ -834,6 +834,132 @@
           },
           "icon": "https://i.imgur.com/i97yEgX.png",
           "image": "https://i.imgur.com/i97yEgX.png"
+        },
+        {
+          "id": "new-item-1766862405873",
+          "name": "UH-1H",
+          "description": "Description here",
+          "stats": {
+            "level": {
+              "value": 11,
+              "max": 13,
+              "unit": ""
+            }
+          },
+          "crafting": {
+            "direct": [
+              {
+                "name": "Mechanical component (HQ)",
+                "amount": 19,
+                "components": [
+                  {
+                    "name": "Mechanical component",
+                    "amount": 171,
+                    "components": [
+                      {
+                        "name": "Iron ingot",
+                        "amount": 342
+                      },
+                      {
+                        "name": "Copper ingot",
+                        "amount": 342
+                      }
+                    ]
+                  },
+                  {
+                    "name": "Gold ingot",
+                    "amount": 855
+                  }
+                ]
+              },
+              {
+                "name": "Interior part (HQ)",
+                "amount": 17,
+                "components": [
+                  {
+                    "name": "Interior part",
+                    "amount": 153,
+                    "components": [
+                      {
+                        "name": "Fabric",
+                        "amount": 306
+                      },
+                      {
+                        "name": "Polyester",
+                        "amount": 306
+                      }
+                    ]
+                  },
+                  {
+                    "name": "Wooden planks",
+                    "amount": 765
+                  }
+                ]
+              },
+              {
+                "name": "Engine part (HQ)",
+                "amount": 12,
+                "components": [
+                  {
+                    "name": "Engine Part",
+                    "amount": 108,
+                    "components": [
+                      {
+                        "name": "Iron ingot",
+                        "amount": 108
+                      },
+                      {
+                        "name": "Copper ingot",
+                        "amount": 108
+                      },
+                      {
+                        "name": "Canister (petrol)",
+                        "amount": 108
+                      }
+                    ]
+                  },
+                  {
+                    "name": "Copper ingot",
+                    "amount": 540
+                  },
+                  {
+                    "name": "Canister (petrol)",
+                    "amount": 540
+                  }
+                ]
+              },
+              {
+                "name": "Rotor (HQ)",
+                "amount": 30,
+                "components": [
+                  {
+                    "name": "Rotor",
+                    "amount": 270,
+                    "components": [
+                      {
+                        "name": "Charcoal",
+                        "amount": 270
+                      },
+                      {
+                        "name": "Polyester",
+                        "amount": 270
+                      }
+                    ]
+                  },
+                  {
+                    "name": "Silver ingot",
+                    "amount": 900
+                  }
+                ]
+              },
+              {
+                "name": "Special rotor",
+                "amount": 1
+              }
+            ]
+          },
+          "icon": "https://i.imgur.com/KZhK08z.png",
+          "image": "https://i.imgur.com/KZhK08z.png"
         }
       ]
     },
