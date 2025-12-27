@@ -2082,6 +2082,188 @@
           }
         }
       ]
+    },
+    {
+      "id": "attachment",
+      "name": "Attachment",
+      "items": [
+        {
+          "id": "new-item-1766861535069",
+          "name": "Reflex Scope",
+          "description": "Description here",
+          "stats": {
+            "level": {
+              "value": 2,
+              "max": 13,
+              "unit": ""
+            }
+          },
+          "crafting": {
+            "direct": [
+              {
+                "name": "Component",
+                "amount": 2,
+                "components": [
+                  {
+                    "name": "Iron ingot",
+                    "amount": 2
+                  },
+                  {
+                    "name": "Copper ingot",
+                    "amount": 2
+                  }
+                ]
+              },
+              {
+                "name": "Tempered glass",
+                "amount": 1,
+                "components": [
+                  {
+                    "name": "Glass",
+                    "amount": 2
+                  },
+                  {
+                    "name": "Polyester",
+                    "amount": 1
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "new-item-1766861577655",
+          "name": "EOTECH XPS3",
+          "description": "Description here",
+          "stats": {
+            "level": {
+              "value": 3,
+              "max": 13,
+              "unit": ""
+            }
+          },
+          "crafting": {
+            "direct": [
+              {
+                "name": "Component",
+                "amount": 2,
+                "components": [
+                  {
+                    "name": "Iron ingot",
+                    "amount": 2
+                  },
+                  {
+                    "name": "Copper ingot",
+                    "amount": 2
+                  }
+                ]
+              },
+              {
+                "name": "Tempered glass",
+                "amount": 1,
+                "components": [
+                  {
+                    "name": "Glass",
+                    "amount": 2
+                  },
+                  {
+                    "name": "Polyester",
+                    "amount": 1
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "new-item-1766861620178",
+          "name": "Elcan Spectre",
+          "description": "Description here",
+          "stats": {
+            "level": {
+              "value": 7,
+              "max": 13,
+              "unit": ""
+            }
+          },
+          "crafting": {
+            "direct": [
+              {
+                "name": "Component",
+                "amount": 5,
+                "components": [
+                  {
+                    "name": "Iron ingot",
+                    "amount": 5
+                  },
+                  {
+                    "name": "Copper ingot",
+                    "amount": 5
+                  }
+                ]
+              },
+              {
+                "name": "Tempered glass",
+                "amount": 2,
+                "components": [
+                  {
+                    "name": "Glass",
+                    "amount": 4
+                  },
+                  {
+                    "name": "Polyester",
+                    "amount": 2
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "new-item-1766861651127",
+          "name": "ART II Scope",
+          "description": "Description here",
+          "stats": {
+            "level": {
+              "value": 7,
+              "max": 13,
+              "unit": ""
+            }
+          },
+          "crafting": {
+            "direct": [
+              {
+                "name": "Component",
+                "amount": 2,
+                "components": [
+                  {
+                    "name": "Iron ingot",
+                    "amount": 2
+                  },
+                  {
+                    "name": "Copper ingot",
+                    "amount": 2
+                  }
+                ]
+              },
+              {
+                "name": "Tempered glass",
+                "amount": 1,
+                "components": [
+                  {
+                    "name": "Glass",
+                    "amount": 2
+                  },
+                  {
+                    "name": "Polyester",
+                    "amount": 1
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ]
     }
   ]
 }
