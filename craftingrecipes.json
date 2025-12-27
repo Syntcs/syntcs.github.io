@@ -115,7 +115,9 @@
                 ]
               }
             ]
-          }
+          },
+          "icon": "https://i.imgur.com/ilvQeEf.png",
+          "image": "https://i.imgur.com/ilvQeEf.png"
         },
         {
           "id": "new-item-1766853826822",
@@ -229,7 +231,9 @@
                 ]
               }
             ]
-          }
+          },
+          "icon": "https://i.imgur.com/TYE51gF.png",
+          "image": "https://i.imgur.com/TYE51gF.png"
         },
         {
           "id": "new-item-1766853914020",
@@ -285,7 +289,9 @@
                 ]
               }
             ]
-          }
+          },
+          "icon": "https://i.imgur.com/CxZ3KVf.png",
+          "image": "https://i.imgur.com/CxZ3KVf.png"
         }
       ]
     },
@@ -297,8 +303,8 @@
           "id": "new-item-1765571788389",
           "name": "Ural-4320 Transport Truck - Device",
           "description": "The Ural Device is a craftable-only auto-farmer truck, unavailable for direct purchase in shops. Unlike standard Ural-4320 variants (Fuel or Transport), it passively harvests resources like ingots, oil, or crops during loops without manual loading, maximizing efficiency for high-volume farming routes.",
-          "icon": "https://i.imgur.com/X2I5bOH.jpeg",
-          "image": "https://i.imgur.com/X2I5bOH.jpeg",
+          "icon": "https://i.imgur.com/2L3U1uM.png",
+          "image": "https://i.imgur.com/2L3U1uM.png",
           "stats": {
             "ore space": {
               "value": 108,
@@ -461,7 +467,9 @@
                 ]
               }
             ]
-          }
+          },
+          "icon": "https://i.imgur.com/jef4CqF.png",
+          "image": "https://i.imgur.com/jef4CqF.png"
         },
         {
           "id": "new-item-1766853611570",
@@ -551,7 +559,9 @@
                 ]
               }
             ]
-          }
+          },
+          "icon": "https://i.imgur.com/dASh8xf.png",
+          "image": "https://i.imgur.com/dASh8xf.png"
         },
         {
           "id": "new-item-1766853668685",
@@ -833,7 +843,9 @@
                 ]
               }
             ]
-          }
+          },
+          "icon": "https://static.wikia.nocookie.net/armedassault/images/d/d3/Reforger-icon-pm.png",
+          "image": "https://static.wikia.nocookie.net/armedassault/images/d/d3/Reforger-icon-pm.png"
         },
         {
           "id": "new-item-1766854557728",
@@ -885,7 +897,9 @@
                 ]
               }
             ]
-          }
+          },
+          "icon": "https://static.wikia.nocookie.net/armedassault/images/c/c0/Reforger-icon-m9.png",
+          "image": "https://static.wikia.nocookie.net/armedassault/images/c/c0/Reforger-icon-m9.png"
         },
         {
           "id": "new-item-1766854525648",
@@ -1041,7 +1055,9 @@
                 ]
               }
             ]
-          }
+          },
+          "icon": "https://static.wikia.nocookie.net/armedassault/images/c/c0/Reforger-icon-m16carbine.png",
+          "image": "https://static.wikia.nocookie.net/armedassault/images/c/c0/Reforger-icon-m16carbine.png"
         },
         {
           "id": "new-item-1766854444555",
@@ -1093,7 +1109,9 @@
                 ]
               }
             ]
-          }
+          },
+          "icon": "https://static.wikia.nocookie.net/armedassault/images/1/11/Reforger-icon-m16a2.png",
+          "image": "https://static.wikia.nocookie.net/armedassault/images/1/11/Reforger-icon-m16a2.png"
         },
         {
           "id": "new-item-1766854394868",
