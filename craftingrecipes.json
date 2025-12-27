@@ -9,7 +9,13 @@
           "id": "new-item-1766853718045",
           "name": "VW Rolf",
           "description": "Description here",
-          "stats": {},
+          "stats": {
+            "level": {
+              "value": 13,
+              "max": 7,
+              "unit": ""
+            }
+          },
           "crafting": {
             "direct": [
               {
@@ -65,7 +71,13 @@
           "id": "new-item-1766853757615",
           "name": "M1025 Light Armored Vehicle",
           "description": "Description here",
-          "stats": {},
+          "stats": {
+            "level": {
+              "value": 7,
+              "max": 13,
+              "unit": ""
+            }
+          },
           "crafting": {
             "direct": [
               {
@@ -123,7 +135,13 @@
           "id": "new-item-1766853826822",
           "name": "S1203 Minibus",
           "description": "Description here",
-          "stats": {},
+          "stats": {
+            "level": {
+              "value": 5,
+              "max": 13,
+              "unit": ""
+            }
+          },
           "crafting": {
             "direct": [
               {
@@ -181,7 +199,13 @@
           "id": "new-item-1766853872287",
           "name": "S105 Car",
           "description": "Description here",
-          "stats": {},
+          "stats": {
+            "level": {
+              "value": 4,
+              "max": 13,
+              "unit": ""
+            }
+          },
           "crafting": {
             "direct": [
               {
@@ -239,7 +263,13 @@
           "id": "new-item-1766853914020",
           "name": "M151A2 Off-road",
           "description": "Description here",
-          "stats": {},
+          "stats": {
+            "level": {
+              "value": 4,
+              "max": 13,
+              "unit": ""
+            }
+          },
           "crafting": {
             "direct": [
               {
@@ -383,7 +413,13 @@
           "id": "new-item-1766745346076",
           "name": "Ural-4320 Transport Truck - Canopy",
           "description": "Description here",
-          "stats": {},
+          "stats": {
+            "level": {
+              "value": 10,
+              "max": 13,
+              "unit": ""
+            }
+          },
           "crafting": {
             "direct": [
               {
@@ -475,7 +511,13 @@
           "id": "new-item-1766853611570",
           "name": "Ural-4320 Transport Truck",
           "description": "Description here",
-          "stats": {},
+          "stats": {
+            "level": {
+              "value": 9,
+              "max": 13,
+              "unit": ""
+            }
+          },
           "crafting": {
             "direct": [
               {
@@ -567,7 +609,13 @@
           "id": "new-item-1766853668685",
           "name": "Ural-4320 Fuel Truck",
           "description": "Description here",
-          "stats": {},
+          "stats": {
+            "level": {
+              "value": 13,
+              "max": 9,
+              "unit": ""
+            }
+          },
           "crafting": {
             "direct": [
               {
@@ -666,9 +714,9 @@
           "name": "Mi-8MT Transport Helicopter",
           "description": "Mi-8MT Transport Helicopter",
           "stats": {
-            "storage (Helicopter)": {
+            "level": {
               "value": 12,
-              "max": 12,
+              "max": 13,
               "unit": ""
             }
           },
@@ -797,7 +845,13 @@
           "id": "new-item-1766854614952",
           "name": "PM",
           "description": "Description here",
-          "stats": {},
+          "stats": {
+            "level": {
+              "value": 2,
+              "max": 13,
+              "unit": ""
+            }
+          },
           "crafting": {
             "direct": [
               {
@@ -851,7 +905,13 @@
           "id": "new-item-1766854557728",
           "name": "M9",
           "description": "Description here",
-          "stats": {},
+          "stats": {
+            "level": {
+              "value": 3,
+              "max": 13,
+              "unit": ""
+            }
+          },
           "crafting": {
             "direct": [
               {
@@ -905,7 +965,13 @@
           "id": "new-item-1766854525648",
           "name": "Colt 1911",
           "description": "Description here",
-          "stats": {},
+          "stats": {
+            "level": {
+              "value": 4,
+              "max": 13,
+              "unit": ""
+            }
+          },
           "crafting": {
             "direct": [
               {
@@ -957,7 +1023,13 @@
           "id": "new-item-1766745503899",
           "name": "MP5A2",
           "description": "Description here",
-          "stats": {},
+          "stats": {
+            "level": {
+              "value": 5,
+              "max": 13,
+              "unit": ""
+            }
+          },
           "crafting": {
             "direct": [
               {
@@ -1009,7 +1081,13 @@
           "id": "new-item-1766745437722",
           "name": "M16 Carbine",
           "description": "Description here",
-          "stats": {},
+          "stats": {
+            "level": {
+              "value": 6,
+              "max": 13,
+              "unit": ""
+            }
+          },
           "crafting": {
             "direct": [
               {
@@ -1063,7 +1141,13 @@
           "id": "new-item-1766854444555",
           "name": "M16A2 auto",
           "description": "Description here",
-          "stats": {},
+          "stats": {
+            "level": {
+              "value": 6,
+              "max": 13,
+              "unit": ""
+            }
+          },
           "crafting": {
             "direct": [
               {
@@ -1117,7 +1201,13 @@
           "id": "new-item-1766854394868",
           "name": "SIG MCX",
           "description": "Description here",
-          "stats": {},
+          "stats": {
+            "level": {
+              "value": 7,
+              "max": 13,
+              "unit": ""
+            }
+          },
           "crafting": {
             "direct": [
               {
@@ -1169,7 +1259,13 @@
           "id": "new-item-1766854354657",
           "name": "Scar-H",
           "description": "Description here",
-          "stats": {},
+          "stats": {
+            "level": {
+              "value": 10,
+              "max": 13,
+              "unit": ""
+            }
+          },
           "crafting": {
             "direct": [
               {
@@ -1261,7 +1357,13 @@
           "id": "new-item-1766745248425",
           "name": "6B2 Vest",
           "description": "Description here",
-          "stats": {},
+          "stats": {
+            "level": {
+              "value": 7,
+              "max": 13,
+              "unit": ""
+            }
+          },
           "crafting": {
             "direct": [
               {
@@ -1300,10 +1402,64 @@
           }
         },
         {
+          "id": "new-item-1766854106158",
+          "name": "PASGT Vest",
+          "description": "Description here",
+          "stats": {
+            "level": {
+              "value": 7,
+              "max": 13,
+              "unit": ""
+            }
+          },
+          "crafting": {
+            "direct": [
+              {
+                "name": "Iron plate",
+                "amount": 10,
+                "components": [
+                  {
+                    "name": "Iron ingot",
+                    "amount": 10
+                  },
+                  {
+                    "name": "Fabric",
+                    "amount": 10
+                  },
+                  {
+                    "name": "Polyester",
+                    "amount": 10
+                  }
+                ]
+              },
+              {
+                "name": "Cloth",
+                "amount": 14,
+                "components": [
+                  {
+                    "name": "Fabric",
+                    "amount": 14
+                  },
+                  {
+                    "name": "Polyester",
+                    "amount": 14
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
           "id": "new-item-1766853961202",
           "name": "ZSh-5 Helmet",
           "description": "Description here",
-          "stats": {},
+          "stats": {
+            "level": {
+              "value": 13,
+              "max": 6,
+              "unit": ""
+            }
+          },
           "crafting": {
             "direct": [
               {
@@ -1345,7 +1501,13 @@
           "id": "new-item-1766854034725",
           "name": "SSh-68 Helmet",
           "description": "Description here",
-          "stats": {},
+          "stats": {
+            "level": {
+              "value": 4,
+              "max": 13,
+              "unit": ""
+            }
+          },
           "crafting": {
             "direct": [
               {
@@ -1377,48 +1539,6 @@
                   {
                     "name": "Polyester",
                     "amount": 2
-                  }
-                ]
-              }
-            ]
-          }
-        },
-        {
-          "id": "new-item-1766854106158",
-          "name": "PASGT Vest",
-          "description": "Description here",
-          "stats": {},
-          "crafting": {
-            "direct": [
-              {
-                "name": "Iron plate",
-                "amount": 10,
-                "components": [
-                  {
-                    "name": "Iron ingot",
-                    "amount": 10
-                  },
-                  {
-                    "name": "Fabric",
-                    "amount": 10
-                  },
-                  {
-                    "name": "Polyester",
-                    "amount": 10
-                  }
-                ]
-              },
-              {
-                "name": "Cloth",
-                "amount": 14,
-                "components": [
-                  {
-                    "name": "Fabric",
-                    "amount": 14
-                  },
-                  {
-                    "name": "Polyester",
-                    "amount": 14
                   }
                 ]
               }
@@ -1429,7 +1549,13 @@
           "id": "new-item-1766854140454",
           "name": "Mystery Ranch SATL Backpack",
           "description": "Description here",
-          "stats": {},
+          "stats": {
+            "level": {
+              "value": 7,
+              "max": 13,
+              "unit": ""
+            }
+          },
           "crafting": {
             "direct": [
               {
@@ -1453,7 +1579,13 @@
           "id": "new-item-1766854168507",
           "name": "IIFS Large Combat Field Pack",
           "description": "Description here",
-          "stats": {},
+          "stats": {
+            "level": {
+              "value": 7,
+              "max": 13,
+              "unit": ""
+            }
+          },
           "crafting": {
             "direct": [
               {
@@ -1477,7 +1609,13 @@
           "id": "new-item-1766854224463",
           "name": "M70 Backpack",
           "description": "Description here",
-          "stats": {},
+          "stats": {
+            "level": {
+              "value": 5,
+              "max": 13,
+              "unit": ""
+            }
+          },
           "crafting": {
             "direct": [
               {
@@ -1501,7 +1639,13 @@
           "id": "new-item-1766854248558",
           "name": "KLMK Coveralls",
           "description": "Description here",
-          "stats": {},
+          "stats": {
+            "level": {
+              "value": 6,
+              "max": 13,
+              "unit": ""
+            }
+          },
           "crafting": {
             "direct": [
               {
@@ -1525,7 +1669,13 @@
           "id": "new-item-1766854272301",
           "name": "CWU-27/P Pilot Coveralls",
           "description": "Description here",
-          "stats": {},
+          "stats": {
+            "level": {
+              "value": 6,
+              "max": 13,
+              "unit": ""
+            }
+          },
           "crafting": {
             "direct": [
               {
