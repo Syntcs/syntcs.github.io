@@ -322,26 +322,6 @@
           },
           "icon": "https://i.imgur.com/CxZ3KVf.png",
           "image": "https://i.imgur.com/CxZ3KVf.png"
-        },
-        {
-          "id": "new-item-1766861196945",
-          "name": "New Item",
-          "description": "Description here",
-          "stats": {
-            "stat1": {
-              "value": 50,
-              "max": 100,
-              "unit": ""
-            }
-          },
-          "crafting": {
-            "direct": [
-              {
-                "name": "Material 1",
-                "amount": 10
-              }
-            ]
-          }
         }
       ]
     },
