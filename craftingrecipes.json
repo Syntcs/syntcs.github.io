@@ -18,7 +18,7 @@
             "Storage": {
               "value": 18,
               "max": 116,
-              "unit": "Ore"
+              "unit": " Ore"
             }
           },
           "crafting": {
@@ -154,7 +154,7 @@
             "Storage": {
               "value": 18,
               "max": 116,
-              "unit": "Ore"
+              "unit": " Ore"
             }
           },
           "crafting": {
@@ -223,7 +223,7 @@
             "Storage": {
               "value": 13,
               "max": 116,
-              "unit": "Ore"
+              "unit": " Ore"
             }
           },
           "crafting": {
@@ -292,7 +292,7 @@
             "Storage": {
               "value": 16,
               "max": 116,
-              "unit": "Ore"
+              "unit": " Ore"
             }
           },
           "crafting": {
@@ -361,15 +361,15 @@
           "icon": "https://i.imgur.com/2L3U1uM.png",
           "image": "https://i.imgur.com/2L3U1uM.png",
           "stats": {
-            "ore space": {
-              "value": 108,
-              "max": 125,
-              "unit": "unit"
+            "Level": {
+              "value": 13,
+              "max": 13,
+              "unit": ""
             },
             "Storage": {
               "value": 109,
               "max": 116,
-              "unit": "Ore"
+              "unit": " Ore"
             }
           },
           "crafting": {
@@ -452,7 +452,7 @@
             "Storage": {
               "value": 116,
               "max": 116,
-              "unit": "Ore"
+              "unit": " Ore"
             }
           },
           "crafting": {
@@ -555,7 +555,7 @@
             "Storage": {
               "value": 100,
               "max": 116,
-              "unit": "Ore"
+              "unit": " Ore"
             }
           },
           "crafting": {
@@ -658,7 +658,7 @@
             "Storage": {
               "value": 83,
               "max": 116,
-              "unit": "Canister"
+              "unit": " Canister"
             }
           },
           "crafting": {
@@ -767,7 +767,7 @@
             "Storage": {
               "value": 26,
               "max": 116,
-              "unit": "Ore"
+              "unit": " Ore"
             }
           },
           "crafting": {
@@ -898,7 +898,7 @@
             "Storage": {
               "value": 26,
               "max": 116,
-              "unit": "Ore"
+              "unit": " Ore"
             }
           },
           "crafting": {
