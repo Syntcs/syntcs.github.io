@@ -1,5 +1,5 @@
 {
-  "title": "Syntcs Elan Helper",
+  "title": "Elan Helper",
   "subtitle": "Not Affiliated with ELAN Life",
   "tools": [
     {
@@ -8,13 +8,6 @@
       "url": "craftingrecipes",
       "badge": "updated",
       "locked": false
-    },
-    {
-      "id": "weapon-compatibility",
-      "title": "Weapon Compatibility",
-      "url": "",
-      "badge": "coming-soon",
-      "locked": true
     },
     {
       "id": "server-status",
