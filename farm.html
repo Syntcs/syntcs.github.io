@@ -134,8 +134,30 @@
     <!-- Line Chart -->
     <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-md p-6 mb-6">
       <h3 class="text-lg font-semibold text-gray-800 dark:text-white mb-4">Drops Per Hour</h3>
-      <div class="h-72">
+      <div class="h-80">
         <canvas id="lineChart"></canvas>
+      </div>
+    </div>
+
+    <!-- Item Totals Summary -->
+    <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-md overflow-hidden mb-6">
+      <div class="p-6 border-b border-gray-200 dark:border-gray-700">
+        <h3 class="text-lg font-semibold text-gray-800 dark:text-white">Item Summary</h3>
+        <p class="text-sm text-gray-500 dark:text-gray-400">Total collected items breakdown</p>
+      </div>
+      <div class="overflow-x-auto">
+        <table class="w-full">
+          <thead class="bg-gray-50 dark:bg-gray-700/50">
+            <tr>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Item</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Total Count</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Percentage</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Distribution</th>
+            </tr>
+          </thead>
+          <tbody id="itemSummaryTable" class="divide-y divide-gray-200 dark:divide-gray-700">
+          </tbody>
+        </table>
       </div>
     </div>
 
@@ -257,7 +279,7 @@
       return { totalDrops, lastHourDrops, itemTotals };
     }
 
-    // Aggregate drops by hour for line chart
+    // Aggregate drops by hour for bar chart
     function aggregateByHour(drops) {
       const hourlyData = {};
       const items = new Set();
@@ -277,16 +299,16 @@
       const sortedHours = Object.keys(hourlyData).sort((a, b) => a - b);
       const labels = sortedHours.map(h => {
         const date = new Date(parseInt(h));
-        return date.toLocaleString('de-DE', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' });
+        return date.toLocaleString('de-DE', { day: '2-digit', month: '2-digit', hour: '2-digit' });
       });
 
       const datasets = Array.from(items).map(item => ({
         label: formatItemName(item),
         data: sortedHours.map(h => hourlyData[h][item] || 0),
+        backgroundColor: getItemColor(item),
         borderColor: getItemColor(item),
-        backgroundColor: getItemColor(item) + '40',
-        fill: true,
-        tension: 0.4
+        borderWidth: 1,
+        borderRadius: 4
       }));
 
       return { labels, datasets };
@@ -311,6 +333,9 @@
 
       // Update line chart
       updateLineChart(filteredDrops);
+
+      // Update item summary table
+      updateItemSummaryTable(stats.itemTotals);
 
       // Update table
       updateTable(filteredDrops.slice(-50).reverse());
@@ -365,7 +390,7 @@
       }
     }
 
-    // Update line chart
+    // Update bar chart
     function updateLineChart(drops) {
       const ctx = document.getElementById('lineChart').getContext('2d');
       const isDark = document.documentElement.classList.contains('dark');
@@ -385,7 +410,7 @@
         lineChart.update();
       } else {
         lineChart = new Chart(ctx, {
-          type: 'line',
+          type: 'bar',
           data: { labels, datasets },
           options: {
             responsive: true,
@@ -397,20 +422,32 @@
             plugins: {
               legend: {
                 labels: {
-                  color: isDark ? '#fff' : '#374151'
+                  color: isDark ? '#fff' : '#374151',
+                  usePointStyle: true,
+                  pointStyle: 'rectRounded'
                 }
+              },
+              tooltip: {
+                backgroundColor: isDark ? '#1F2937' : '#FFFFFF',
+                titleColor: isDark ? '#F9FAFB' : '#111827',
+                bodyColor: isDark ? '#D1D5DB' : '#4B5563',
+                borderColor: isDark ? '#374151' : '#E5E7EB',
+                borderWidth: 1,
+                padding: 12,
+                cornerRadius: 8
               }
             },
             scales: {
               x: {
-                grid: { color: gridColor },
+                stacked: true,
+                grid: { color: gridColor, display: false },
                 ticks: { color: textColor, maxRotation: 45 }
               },
               y: {
+                stacked: true,
                 grid: { color: gridColor },
                 ticks: { color: textColor },
-                beginAtZero: true,
-                stacked: true
+                beginAtZero: true
               }
             }
           }
@@ -421,7 +458,6 @@
     // Update table
     function updateTable(drops) {
       const tbody = document.getElementById('dropsTable');
-      const isDark = document.documentElement.classList.contains('dark');
 
       tbody.innerHTML = drops.map(d => `
         <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition">
@@ -438,6 +474,40 @@
           <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">${d.source}</td>
         </tr>
       `).join('');
+    }
+
+    // Update item summary table
+    function updateItemSummaryTable(itemTotals) {
+      const tbody = document.getElementById('itemSummaryTable');
+      const totalItems = Object.values(itemTotals).reduce((sum, count) => sum + count, 0);
+      
+      // Sort by count descending
+      const sortedItems = Object.entries(itemTotals).sort((a, b) => b[1] - a[1]);
+
+      tbody.innerHTML = sortedItems.map(([item, count]) => {
+        const percentage = totalItems > 0 ? ((count / totalItems) * 100).toFixed(1) : 0;
+        return `
+          <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition">
+            <td class="px-6 py-4 whitespace-nowrap">
+              <span class="inline-flex items-center gap-2">
+                <span class="w-3 h-3 rounded-full" style="background-color: ${getItemColor(item)}"></span>
+                <span class="text-sm font-medium text-gray-800 dark:text-white">${formatItemName(item)}</span>
+              </span>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap">
+              <span class="text-lg font-bold text-gray-800 dark:text-white">${count.toLocaleString()}</span>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap">
+              <span class="text-sm font-medium text-gray-600 dark:text-gray-300">${percentage}%</span>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap w-48">
+              <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5">
+                <div class="h-2.5 rounded-full transition-all duration-500" style="width: ${percentage}%; background-color: ${getItemColor(item)}"></div>
+              </div>
+            </td>
+          </tr>
+        `;
+      }).join('');
     }
 
     // Update item filter dropdown
