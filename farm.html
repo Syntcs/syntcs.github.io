@@ -1,1 +1,511 @@
-Hallo
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Guardian Farm Stats</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            primary: '#4A90E2',
+            'primary-dark': '#3A7BC8',
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+    body { font-family: 'Inter', sans-serif; }
+    .glass { backdrop-filter: blur(10px); }
+    .item-icon {
+      width: 24px;
+      height: 24px;
+      display: inline-block;
+      background-size: contain;
+      background-repeat: no-repeat;
+      vertical-align: middle;
+    }
+  </style>
+</head>
+<body class="bg-gray-100 dark:bg-gray-900 min-h-screen transition-colors duration-300">
+  <div class="container mx-auto px-4 py-6 max-w-7xl">
+    <!-- Header -->
+    <header class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
+      <div class="flex items-center gap-3">
+        <div class="w-12 h-12 bg-primary rounded-xl flex items-center justify-center shadow-lg">
+          <svg class="w-7 h-7 text-white" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/>
+          </svg>
+        </div>
+        <div>
+          <h1 class="text-2xl font-bold text-gray-800 dark:text-white">Guardian Farm Stats</h1>
+          <div id="status" class="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
+            <span class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
+            <span>Online since <span id="onlineSince">--</span></span>
+          </div>
+        </div>
+      </div>
+      <div class="flex items-center gap-3">
+        <span id="lastUpdate" class="text-xs text-gray-500 dark:text-gray-400">Last update: --</span>
+        <button id="themeToggle" class="p-2 rounded-lg bg-white dark:bg-gray-800 shadow-md hover:shadow-lg transition-all">
+          <svg id="sunIcon" class="w-5 h-5 text-gray-700 dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/>
+          </svg>
+          <svg id="moonIcon" class="w-5 h-5 text-yellow-400 hidden dark:block" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M21.752 15.002A9.718 9.718 0 0118 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 003 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 009.002-5.998z"/>
+          </svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- Filters -->
+    <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-md p-4 mb-6">
+      <div class="flex flex-col sm:flex-row gap-4">
+        <div class="flex-1">
+          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Item Filter</label>
+          <select id="itemFilter" class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-800 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent transition">
+            <option value="all">All Items</option>
+          </select>
+        </div>
+        <div class="flex-1">
+          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Time Range</label>
+          <div class="flex gap-2">
+            <button data-range="24h" class="time-filter flex-1 px-4 py-2 rounded-lg bg-primary text-white font-medium transition hover:bg-primary-dark">24h</button>
+            <button data-range="7d" class="time-filter flex-1 px-4 py-2 rounded-lg bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 font-medium transition hover:bg-gray-300 dark:hover:bg-gray-600">7d</button>
+            <button data-range="all" class="time-filter flex-1 px-4 py-2 rounded-lg bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 font-medium transition hover:bg-gray-300 dark:hover:bg-gray-600">All</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Overview Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+      <!-- Total Drops -->
+      <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-md p-6">
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400">Total Drops</h3>
+          <div class="w-10 h-10 bg-blue-100 dark:bg-blue-900/30 rounded-xl flex items-center justify-center">
+            <svg class="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
+            </svg>
+          </div>
+        </div>
+        <p id="totalDrops" class="text-3xl font-bold text-gray-800 dark:text-white">--</p>
+        <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">items collected</p>
+      </div>
+
+      <!-- Last Hour -->
+      <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-md p-6">
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400">Last Hour</h3>
+          <div class="w-10 h-10 bg-green-100 dark:bg-green-900/30 rounded-xl flex items-center justify-center">
+            <svg class="w-5 h-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+          </div>
+        </div>
+        <p id="lastHourDrops" class="text-3xl font-bold text-gray-800 dark:text-white">--</p>
+        <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">items this hour</p>
+      </div>
+
+      <!-- Top Item Pie Chart -->
+      <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-md p-6">
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400">Top Items</h3>
+          <div class="w-10 h-10 bg-purple-100 dark:bg-purple-900/30 rounded-xl flex items-center justify-center">
+            <svg class="w-5 h-5 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z"/>
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z"/>
+            </svg>
+          </div>
+        </div>
+        <div class="h-32">
+          <canvas id="pieChart"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- Line Chart -->
+    <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-md p-6 mb-6">
+      <h3 class="text-lg font-semibold text-gray-800 dark:text-white mb-4">Drops Per Hour</h3>
+      <div class="h-72">
+        <canvas id="lineChart"></canvas>
+      </div>
+    </div>
+
+    <!-- Drops Table -->
+    <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-md overflow-hidden">
+      <div class="p-6 border-b border-gray-200 dark:border-gray-700">
+        <h3 class="text-lg font-semibold text-gray-800 dark:text-white">Latest Drops</h3>
+        <p class="text-sm text-gray-500 dark:text-gray-400">Last 50 recorded drops</p>
+      </div>
+      <div class="overflow-x-auto">
+        <table class="w-full">
+          <thead class="bg-gray-50 dark:bg-gray-700/50">
+            <tr>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Time</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Item</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Count</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Source</th>
+            </tr>
+          </thead>
+          <tbody id="dropsTable" class="divide-y divide-gray-200 dark:divide-gray-700">
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="mt-8 text-center text-sm text-gray-500 dark:text-gray-400">
+      <p>Auto-refreshes every 30 seconds • Data from <span id="serverName">--</span></p>
+    </footer>
+  </div>
+
+  <script>
+    // State
+    let rawData = null;
+    let filteredDrops = [];
+    let currentTimeRange = '24h';
+    let currentItemFilter = 'all';
+    let pieChart = null;
+    let lineChart = null;
+
+    // Item colors
+    const itemColors = {
+      prismarine_shard: '#5BB5C4',
+      prismarine_crystals: '#7ED4A6',
+      cod: '#C4A55B',
+      chest: '#8B6914',
+      default: '#888888'
+    };
+
+    // Format item name
+    function formatItemName(item) {
+      return item.split('_').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+    }
+
+    // Format timestamp to DD.MM.YYYY HH:mm
+    function formatTime(timestamp) {
+      return new Date(timestamp).toLocaleString('de-DE', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+      });
+    }
+
+    // Format duration
+    function formatDuration(ms) {
+      const seconds = Math.floor(ms / 1000);
+      const minutes = Math.floor(seconds / 60);
+      const hours = Math.floor(minutes / 60);
+      const days = Math.floor(hours / 24);
+      
+      if (days > 0) return `${days}d ${hours % 24}h`;
+      if (hours > 0) return `${hours}h ${minutes % 60}m`;
+      if (minutes > 0) return `${minutes}m`;
+      return `${seconds}s`;
+    }
+
+    // Get color for item
+    function getItemColor(item) {
+      return itemColors[item] || itemColors.default;
+    }
+
+    // Filter drops by time range and item
+    function filterDrops(drops) {
+      const now = Date.now();
+      let filtered = [...drops];
+
+      // Time filter
+      if (currentTimeRange === '24h') {
+        filtered = filtered.filter(d => now - d.time < 24 * 60 * 60 * 1000);
+      } else if (currentTimeRange === '7d') {
+        filtered = filtered.filter(d => now - d.time < 7 * 24 * 60 * 60 * 1000);
+      }
+
+      // Item filter
+      if (currentItemFilter !== 'all') {
+        filtered = filtered.filter(d => d.item === currentItemFilter);
+      }
+
+      return filtered;
+    }
+
+    // Calculate stats
+    function calculateStats(drops) {
+      const totalDrops = drops.reduce((sum, d) => sum + d.count, 0);
+      
+      const now = Date.now();
+      const lastHourDrops = drops
+        .filter(d => now - d.time < 60 * 60 * 1000)
+        .reduce((sum, d) => sum + d.count, 0);
+
+      // Item totals for pie chart
+      const itemTotals = {};
+      drops.forEach(d => {
+        itemTotals[d.item] = (itemTotals[d.item] || 0) + d.count;
+      });
+
+      return { totalDrops, lastHourDrops, itemTotals };
+    }
+
+    // Aggregate drops by hour for line chart
+    function aggregateByHour(drops) {
+      const hourlyData = {};
+      const items = new Set();
+
+      drops.forEach(d => {
+        const hour = new Date(d.time);
+        hour.setMinutes(0, 0, 0);
+        const key = hour.getTime();
+        
+        if (!hourlyData[key]) {
+          hourlyData[key] = {};
+        }
+        hourlyData[key][d.item] = (hourlyData[key][d.item] || 0) + d.count;
+        items.add(d.item);
+      });
+
+      const sortedHours = Object.keys(hourlyData).sort((a, b) => a - b);
+      const labels = sortedHours.map(h => {
+        const date = new Date(parseInt(h));
+        return date.toLocaleString('de-DE', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' });
+      });
+
+      const datasets = Array.from(items).map(item => ({
+        label: formatItemName(item),
+        data: sortedHours.map(h => hourlyData[h][item] || 0),
+        borderColor: getItemColor(item),
+        backgroundColor: getItemColor(item) + '40',
+        fill: true,
+        tension: 0.4
+      }));
+
+      return { labels, datasets };
+    }
+
+    // Update UI
+    function updateUI() {
+      if (!rawData) return;
+
+      filteredDrops = filterDrops(rawData.drops);
+      const stats = calculateStats(filteredDrops);
+
+      // Update cards
+      document.getElementById('totalDrops').textContent = stats.totalDrops.toLocaleString();
+      document.getElementById('lastHourDrops').textContent = stats.lastHourDrops.toLocaleString();
+      document.getElementById('onlineSince').textContent = formatTime(rawData.meta.createdAt);
+      document.getElementById('serverName').textContent = rawData.meta.server;
+      document.getElementById('lastUpdate').textContent = `Last update: ${formatTime(Date.now())}`;
+
+      // Update pie chart
+      updatePieChart(stats.itemTotals);
+
+      // Update line chart
+      updateLineChart(filteredDrops);
+
+      // Update table
+      updateTable(filteredDrops.slice(-50).reverse());
+
+      // Update item filter options
+      updateItemFilter(rawData.drops);
+    }
+
+    // Update pie chart
+    function updatePieChart(itemTotals) {
+      const ctx = document.getElementById('pieChart').getContext('2d');
+      const isDark = document.documentElement.classList.contains('dark');
+
+      const labels = Object.keys(itemTotals).map(formatItemName);
+      const data = Object.values(itemTotals);
+      const colors = Object.keys(itemTotals).map(getItemColor);
+
+      if (pieChart) {
+        pieChart.data.labels = labels;
+        pieChart.data.datasets[0].data = data;
+        pieChart.data.datasets[0].backgroundColor = colors;
+        pieChart.options.plugins.legend.labels.color = isDark ? '#fff' : '#374151';
+        pieChart.update();
+      } else {
+        pieChart = new Chart(ctx, {
+          type: 'doughnut',
+          data: {
+            labels,
+            datasets: [{
+              data,
+              backgroundColor: colors,
+              borderWidth: 0
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: {
+                position: 'right',
+                labels: {
+                  boxWidth: 12,
+                  padding: 8,
+                  font: { size: 10 },
+                  color: isDark ? '#fff' : '#374151'
+                }
+              }
+            },
+            cutout: '60%'
+          }
+        });
+      }
+    }
+
+    // Update line chart
+    function updateLineChart(drops) {
+      const ctx = document.getElementById('lineChart').getContext('2d');
+      const isDark = document.documentElement.classList.contains('dark');
+      const { labels, datasets } = aggregateByHour(drops);
+
+      const gridColor = isDark ? '#374151' : '#E5E7EB';
+      const textColor = isDark ? '#9CA3AF' : '#6B7280';
+
+      if (lineChart) {
+        lineChart.data.labels = labels;
+        lineChart.data.datasets = datasets;
+        lineChart.options.scales.x.grid.color = gridColor;
+        lineChart.options.scales.y.grid.color = gridColor;
+        lineChart.options.scales.x.ticks.color = textColor;
+        lineChart.options.scales.y.ticks.color = textColor;
+        lineChart.options.plugins.legend.labels.color = isDark ? '#fff' : '#374151';
+        lineChart.update();
+      } else {
+        lineChart = new Chart(ctx, {
+          type: 'line',
+          data: { labels, datasets },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            interaction: {
+              mode: 'index',
+              intersect: false
+            },
+            plugins: {
+              legend: {
+                labels: {
+                  color: isDark ? '#fff' : '#374151'
+                }
+              }
+            },
+            scales: {
+              x: {
+                grid: { color: gridColor },
+                ticks: { color: textColor, maxRotation: 45 }
+              },
+              y: {
+                grid: { color: gridColor },
+                ticks: { color: textColor },
+                beginAtZero: true,
+                stacked: true
+              }
+            }
+          }
+        });
+      }
+    }
+
+    // Update table
+    function updateTable(drops) {
+      const tbody = document.getElementById('dropsTable');
+      const isDark = document.documentElement.classList.contains('dark');
+
+      tbody.innerHTML = drops.map(d => `
+        <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition">
+          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-300">${formatTime(d.time)}</td>
+          <td class="px-6 py-4 whitespace-nowrap">
+            <span class="inline-flex items-center gap-2">
+              <span class="w-3 h-3 rounded-full" style="background-color: ${getItemColor(d.item)}"></span>
+              <span class="text-sm font-medium text-gray-800 dark:text-white">${formatItemName(d.item)}</span>
+            </span>
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap">
+            <span class="px-2 py-1 text-sm font-semibold rounded-lg bg-primary/10 text-primary">${d.count}</span>
+          </td>
+          <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">${d.source}</td>
+        </tr>
+      `).join('');
+    }
+
+    // Update item filter dropdown
+    function updateItemFilter(drops) {
+      const select = document.getElementById('itemFilter');
+      const items = [...new Set(drops.map(d => d.item))].sort();
+      const currentValue = select.value;
+
+      select.innerHTML = '<option value="all">All Items</option>' + 
+        items.map(item => `<option value="${item}">${formatItemName(item)}</option>`).join('');
+      
+      select.value = currentValue;
+    }
+
+    // Load data
+    async function loadData() {
+      try {
+        const response = await fetch('drops.json');
+        if (!response.ok) throw new Error('Failed to load data');
+        rawData = await response.json();
+        updateUI();
+      } catch (error) {
+        console.error('Error loading data:', error);
+      }
+    }
+
+    // Theme toggle
+    function toggleTheme() {
+      document.documentElement.classList.toggle('dark');
+      localStorage.setItem('theme', document.documentElement.classList.contains('dark') ? 'dark' : 'light');
+      updateUI();
+    }
+
+    // Initialize theme
+    function initTheme() {
+      if (localStorage.getItem('theme') === 'dark' || 
+          (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        document.documentElement.classList.add('dark');
+      }
+    }
+
+    // Event listeners
+    document.getElementById('themeToggle').addEventListener('click', toggleTheme);
+
+    document.getElementById('itemFilter').addEventListener('change', (e) => {
+      currentItemFilter = e.target.value;
+      updateUI();
+    });
+
+    document.querySelectorAll('.time-filter').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        document.querySelectorAll('.time-filter').forEach(b => {
+          b.classList.remove('bg-primary', 'text-white');
+          b.classList.add('bg-gray-200', 'dark:bg-gray-700', 'text-gray-700', 'dark:text-gray-300');
+        });
+        e.target.classList.remove('bg-gray-200', 'dark:bg-gray-700', 'text-gray-700', 'dark:text-gray-300');
+        e.target.classList.add('bg-primary', 'text-white');
+        currentTimeRange = e.target.dataset.range;
+        updateUI();
+      });
+    });
+
+    // Initialize
+    initTheme();
+    loadData();
+
+    // Auto-refresh every 30 seconds
+    setInterval(loadData, 30000);
+  </script>
+</body>
+</html>
