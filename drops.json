@@ -41109,6 +41109,24 @@
       "item": "cod",
       "count": 1,
       "source": "itemDrop"
+    },
+    {
+      "time": 1768867262525,
+      "item": "prismarine_shard",
+      "count": 2,
+      "source": "itemDrop"
+    },
+    {
+      "time": 1768867262838,
+      "item": "cod",
+      "count": 1,
+      "source": "itemDrop"
+    },
+    {
+      "time": 1768867266971,
+      "item": "prismarine_shard",
+      "count": 1,
+      "source": "itemDrop"
     }
   ]
 }
