@@ -54,6 +54,13 @@
           "label": "t-spawn",
           "x": 25.3,
           "y": 42.5
+        },
+        {
+          "id": "shortsmoke",
+          "name": ".",
+          "label": ".",
+          "x": 84.7,
+          "y": 20.8
         }
       ],
       "targetPoints": [
@@ -63,6 +70,13 @@
           "label": "win",
           "x": 64.3,
           "y": 46.5
+        },
+        {
+          "id": "shortjk",
+          "name": ".",
+          "label": ".",
+          "x": 47.6,
+          "y": 38.5
         }
       ],
       "lineups": [
@@ -74,6 +88,54 @@
               "type": "image",
               "url": "https://placehold.co/400",
               "description": "https://placehold.co/400"
+            }
+          ]
+        },
+        {
+          "from": "shortsmoke",
+          "to": "shortjk",
+          "media": [
+            {
+              "type": "image",
+              "url": "https://placehold.co/600x400",
+              "description": "jump throw"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "test2",
+      "name": "test2",
+      "previewImage": "public/images/maps/mirage.png",
+      "overlayImage": "public/images/maps/mirage_preview.jpg",
+      "startPoints": [
+        {
+          "id": "s",
+          "name": "s",
+          "label": "s",
+          "x": 31.4,
+          "y": 39.3
+        }
+      ],
+      "targetPoints": [
+        {
+          "id": "s",
+          "name": "s",
+          "label": "s",
+          "x": 88.1,
+          "y": 43
+        }
+      ],
+      "lineups": [
+        {
+          "from": "s",
+          "to": "s",
+          "media": [
+            {
+              "type": "image",
+              "url": "https://placehold.co/600x400",
+              "description": "s"
             }
           ]
         }
