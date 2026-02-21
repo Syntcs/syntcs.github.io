@@ -12,19 +12,20 @@
         }
 
         :root {
-            --bg-primary: #0f0f1a;
-            --bg-secondary: #1a1a2e;
-            --bg-tertiary: #252540;
-            --text-primary: #f5f5f5;
-            --text-secondary: #b0b0b0;
-            --accent-green: #4ade80;
-            --accent-orange: #fb923c;
-            --border-color: #2d2d44;
+            --bg-primary: #0d1117;
+            --bg-secondary: #161b22;
+            --bg-tertiary: #1c2128;
+            --text-primary: #e6edf3;
+            --text-secondary: #8b949e;
+            --accent-green: #3fb950;
+            --accent-orange: #f78166;
+            --accent-blue: #58a6ff;
+            --border-color: #30363d;
         }
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+            background: var(--bg-primary);
             color: var(--text-primary);
             min-height: 100vh;
             line-height: 1.6;
@@ -38,8 +39,7 @@
 
         /* Header */
         .site-header {
-            background: rgba(26, 26, 46, 0.8);
-            backdrop-filter: blur(10px);
+            background: var(--bg-secondary);
             padding: 20px 0;
             border-bottom: 1px solid var(--border-color);
             position: sticky;
@@ -56,28 +56,25 @@
         .logo {
             font-size: 28px;
             font-weight: 700;
-            background: linear-gradient(135deg, var(--accent-green), var(--accent-orange));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            color: var(--text-primary);
+            letter-spacing: -0.5px;
         }
 
         .back-btn {
             background: var(--bg-tertiary);
             border: 1px solid var(--border-color);
             color: var(--text-primary);
-            padding: 10px 20px;
-            border-radius: 8px;
+            padding: 8px 16px;
+            border-radius: 6px;
             cursor: pointer;
             font-size: 14px;
-            transition: all 0.3s;
+            transition: all 0.2s;
             display: none;
         }
 
         .back-btn:hover {
-            background: var(--accent-green);
-            border-color: var(--accent-green);
-            transform: translateY(-2px);
+            background: var(--border-color);
+            border-color: var(--text-secondary);
         }
 
         .back-btn.visible {
@@ -115,9 +112,9 @@
         }
 
         .map-card:hover {
-            transform: translateY(-8px);
-            border-color: var(--accent-green);
-            box-shadow: 0 12px 40px rgba(74, 222, 128, 0.2);
+            transform: translateY(-4px);
+            border-color: var(--accent-blue);
+            box-shadow: 0 8px 24px rgba(88, 166, 255, 0.15);
         }
 
         .map-image {
@@ -432,10 +429,12 @@
         // Load lineups from JSON
         async function loadLineups() {
             try {
+                console.log('[v0] Loading lineups.json...');
                 const response = await fetch('lineups.json');
                 lineupsData = await response.json();
+                console.log('[v0] Lineups loaded:', lineupsData);
             } catch (error) {
-                console.error('Error loading lineups:', error);
+                console.error('[v0] Error loading lineups:', error);
             }
         }
 
@@ -486,14 +485,20 @@
 
         // Render interactive map with points
         function renderMapCanvas(mapId) {
+            console.log('[v0] Rendering map canvas for:', mapId);
             const canvas = document.getElementById('map-canvas');
             canvas.style.backgroundImage = `url('public/images/maps/${mapId}.jpg')`;
             canvas.innerHTML = '';
 
             const mapData = lineupsData.maps.find(m => m.id === mapId);
-            if (!mapData) return;
+            console.log('[v0] Map data found:', mapData);
+            if (!mapData) {
+                console.error('[v0] No map data found for:', mapId);
+                return;
+            }
 
             // Render start points
+            console.log('[v0] Rendering start points:', mapData.startPoints.length);
             mapData.startPoints.forEach(point => {
                 const pointEl = createMapPoint(point, 'start');
                 pointEl.onclick = () => selectStartPoint(point);
@@ -501,6 +506,7 @@
             });
 
             // Render target points (hidden initially)
+            console.log('[v0] Rendering target points:', mapData.targetPoints.length);
             mapData.targetPoints.forEach(point => {
                 const pointEl = createMapPoint(point, 'target');
                 pointEl.onclick = () => selectTargetPoint(point);
