@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CS2 Lineups Editor</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0a0e14 0%, #121820 50%, #0d1117 100%);
+            color: #e6edf3;
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            color: #ffffff;
+            text-shadow: 
+                0 0 10px rgba(255, 255, 255, 0.3),
+                0 0 20px rgba(255, 255, 255, 0.15);
+            margin-bottom: 0.75rem;
+            letter-spacing: 2px;
+            font-weight: 700;
+        }
+
+        .subtitle {
+            color: #8b949e;
+            font-size: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 1rem;
+        }
+
+        .nav-link {
+            background-color: rgba(33, 38, 45, 0.8);
+            color: #e6edf3;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(4px);
+        }
+
+        .nav-link:hover {
+            background-color: rgba(48, 54, 61, 0.9);
+            border-color: rgba(255, 255, 255, 0.25);
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.1);
+            transform: translateY(-1px);
+        }
+
+        .editor-section {
+            background: linear-gradient(145deg, rgba(22, 27, 34, 0.95), rgba(13, 17, 23, 0.98));
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 
+                0 4px 20px rgba(0, 0, 0, 0.3),
+                0 0 30px rgba(255, 255, 255, 0.02);
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            color: #f0f6fc;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .section-title::before {
+            content: "//";
+            color: #58a6ff;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #8b949e;
+            font-size: 0.9rem;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 0.75rem;
+            background: rgba(13, 17, 23, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            color: #e6edf3;
+            font-size: 1rem;
+            font-family: inherit;
+            transition: all 0.3s ease;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #58a6ff;
+            box-shadow: 0 0 10px rgba(88, 166, 255, 0.2);
+        }
+
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #f0f6fc 0%, #c9d1d9 100%);
+            color: #0d1117;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            letter-spacing: 0.5px;
+        }
+
+        .btn:hover {
+            background: linear-gradient(135deg, #ffffff 0%, #e6edf3 100%);
+            box-shadow: 0 4px 15px rgba(255, 255, 255, 0.15);
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: rgba(33, 38, 45, 0.8);
+            color: #e6edf3;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(48, 54, 61, 0.9);
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.1);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #f85149 0%, #da3633 100%);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: linear-gradient(135deg, #ff6b6b 0%, #f85149 100%);
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .map-list {
+            list-style: none;
+        }
+
+        .map-item {
+            background: rgba(13, 17, 23, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .map-item:hover {
+            border-color: rgba(255, 255, 255, 0.25);
+            transform: translateX(5px);
+        }
+
+        .map-item.active {
+            border-color: #58a6ff;
+            background: rgba(88, 166, 255, 0.1);
+        }
+
+        .lineup-list {
+            list-style: none;
+        }
+
+        .lineup-item {
+            background: rgba(13, 17, 23, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 0.75rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .media-list {
+            list-style: none;
+            margin-top: 1rem;
+        }
+
+        .media-item {
+            background: rgba(13, 17, 23, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 6px;
+            padding: 0.75rem;
+            margin-bottom: 0.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.9rem;
+        }
+
+        .json-output {
+            background: rgba(13, 17, 23, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 1.5rem;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 0.85rem;
+            line-height: 1.6;
+            overflow-x: auto;
+            white-space: pre-wrap;
+            word-break: break-word;
+            max-height: 500px;
+            overflow-y: auto;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            .grid-2 {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>CS2 LINEUPS EDITOR</h1>
+            <p class="subtitle">Verwalte Maps, Punkte und Lineups für deine CS2 Lineup-Seite</p>
+            <div class="nav-links">
+                <a href="index.html" class="nav-link">← Zurück zur Hauptseite</a>
+                <button class="nav-link" onclick="loadFromFile()">JSON hochladen</button>
+                <button class="nav-link" onclick="downloadJSON()">JSON herunterladen</button>
+            </div>
+        </header>
+
+        <div class="editor-section">
+            <h2 class="section-title">Maps verwalten</h2>
+            <div class="grid-2">
+                <div>
+                    <div class="form-group">
+                        <label>Map ID</label>
+                        <input type="text" id="map-id" placeholder="z.B. dust2">
+                    </div>
+                    <div class="form-group">
+                        <label>Map Name</label>
+                        <input type="text" id="map-name" placeholder="z.B. Dust 2">
+                    </div>
+                    <button class="btn" onclick="addMap()">Map hinzufügen</button>
+                </div>
+                <div>
+                    <label>Vorhandene Maps</label>
+                    <ul class="map-list" id="map-list"></ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="editor-section" id="points-section" style="display: none;">
+            <h2 class="section-title">Punkte verwalten</h2>
+            <p style="margin-bottom: 1rem; color: #8b949e;">Map: <strong id="current-map-name"></strong></p>
+            
+            <div class="grid-2">
+                <div>
+                    <h3 style="margin-bottom: 1rem; color: #3fb950;">Startpunkte (grün)</h3>
+                    <div class="form-group">
+                        <label>Punkt ID</label>
+                        <input type="text" id="start-id" placeholder="z.B. t-spawn">
+                    </div>
+                    <div class="form-group">
+                        <label>Punkt Name</label>
+                        <input type="text" id="start-name" placeholder="z.B. T-Spawn">
+                    </div>
+                    <div class="form-group">
+                        <label>Label</label>
+                        <input type="text" id="start-label" placeholder="z.B. T">
+                    </div>
+                    <div class="grid-2">
+                        <div class="form-group">
+                            <label>X Position (%)</label>
+                            <input type="number" id="start-x" placeholder="15" min="0" max="100">
+                        </div>
+                        <div class="form-group">
+                            <label>Y Position (%)</label>
+                            <input type="number" id="start-y" placeholder="80" min="0" max="100">
+                        </div>
+                    </div>
+                    <button class="btn" onclick="addStartPoint()">Startpunkt hinzufügen</button>
+                    <div id="start-points-list" style="margin-top: 1rem;"></div>
+                </div>
+
+                <div>
+                    <h3 style="margin-bottom: 1rem; color: #f78166;">Zielpunkte (orange)</h3>
+                    <div class="form-group">
+                        <label>Punkt ID</label>
+                        <input type="text" id="target-id" placeholder="z.B. a-site">
+                    </div>
+                    <div class="form-group">
+                        <label>Punkt Name</label>
+                        <input type="text" id="target-name" placeholder="z.B. A-Site">
+                    </div>
+                    <div class="form-group">
+                        <label>Label</label>
+                        <input type="text" id="target-label" placeholder="z.B. A">
+                    </div>
+                    <div class="grid-2">
+                        <div class="form-group">
+                            <label>X Position (%)</label>
+                            <input type="number" id="target-x" placeholder="75" min="0" max="100">
+                        </div>
+                        <div class="form-group">
+                            <label>Y Position (%)</label>
+                            <input type="number" id="target-y" placeholder="20" min="0" max="100">
+                        </div>
+                    </div>
+                    <button class="btn" onclick="addTargetPoint()">Zielpunkt hinzufügen</button>
+                    <div id="target-points-list" style="margin-top: 1rem;"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="editor-section" id="lineups-section" style="display: none;">
+            <h2 class="section-title">Lineups verwalten</h2>
+            <p style="margin-bottom: 1rem; color: #8b949e;">Map: <strong id="lineup-map-name"></strong></p>
+            
+            <div class="form-group">
+                <label>Von (Startpunkt)</label>
+                <select id="lineup-from"></select>
+            </div>
+            <div class="form-group">
+                <label>Nach (Zielpunkt)</label>
+                <select id="lineup-to"></select>
+            </div>
+
+            <h3 style="margin: 1.5rem 0 1rem; color: #58a6ff;">Medien hinzufügen</h3>
+            <div class="form-group">
+                <label>Medien-Typ</label>
+                <select id="media-type">
+                    <option value="image">Bild</option>
+                    <option value="video">Video</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>URL</label>
+                <input type="text" id="media-url" placeholder="https://...">
+            </div>
+            <div class="form-group">
+                <label>Beschreibung</label>
+                <textarea id="media-description" placeholder="Beschreibung des Lineups..."></textarea>
+            </div>
+            <button class="btn-secondary btn" onclick="addMedia()">Medium hinzufügen</button>
+
+            <div id="current-media-list"></div>
+
+            <div class="btn-group">
+                <button class="btn" onclick="saveLineup()">Lineup speichern</button>
+            </div>
+
+            <div style="margin-top: 2rem;">
+                <label>Vorhandene Lineups</label>
+                <ul class="lineup-list" id="existing-lineups"></ul>
+            </div>
+        </div>
+
+        <div class="editor-section">
+            <h2 class="section-title">JSON Ausgabe</h2>
+            <div class="json-output" id="json-output"></div>
+            <div class="btn-group">
+                <button class="btn" onclick="copyJSON()">JSON kopieren</button>
+                <button class="btn" onclick="downloadJSON()">JSON herunterladen</button>
+            </div>
+        </div>
+    </div>
+
+    <input type="file" id="file-input" accept=".json" style="display: none;" onchange="handleFileUpload(event)">
+
+    <script>
+        let editorData = { maps: [] };
+        let currentMapIndex = -1;
+        let currentLineupMedia = [];
+
+        // Load existing lineups.json
+        async function loadExistingData() {
+            try {
+                const response = await fetch('lineups.json');
+                editorData = await response.json();
+                renderMapList();
+                updateJSON();
+            } catch (error) {
+                console.log('No existing data found, starting fresh');
+            }
+        }
+
+        // Add new map
+        function addMap() {
+            const id = document.getElementById('map-id').value.trim();
+            const name = document.getElementById('map-name').value.trim();
+
+            if (!id || !name) {
+                alert('Bitte Map ID und Name eingeben');
+                return;
+            }
+
+            const existingMap = editorData.maps.find(m => m.id === id);
+            if (existingMap) {
+                alert('Map ID existiert bereits');
+                return;
+            }
+
+            editorData.maps.push({
+                id: id,
+                name: name,
+                startPoints: [],
+                targetPoints: [],
+                lineups: []
+            });
+
+            document.getElementById('map-id').value = '';
+            document.getElementById('map-name').value = '';
+            
+            renderMapList();
+            updateJSON();
+        }
+
+        // Render map list
+        function renderMapList() {
+            const list = document.getElementById('map-list');
+            list.innerHTML = '';
+
+            editorData.maps.forEach((map, index) => {
+                const li = document.createElement('li');
+                li.className = 'map-item';
+                if (index === currentMapIndex) li.classList.add('active');
+                li.innerHTML = `
+                    <strong>${map.name}</strong> (${map.id})
+                    <br>
+                    <small>${map.startPoints.length} Start, ${map.targetPoints.length} Ziel, ${map.lineups.length} Lineups</small>
+                `;
+                li.onclick = () => selectMap(index);
+                list.appendChild(li);
+            });
+        }
+
+        // Select map
+        function selectMap(index) {
+            currentMapIndex = index;
+            renderMapList();
+            document.getElementById('points-section').style.display = 'block';
+            document.getElementById('lineups-section').style.display = 'block';
+            
+            const map = editorData.maps[index];
+            document.getElementById('current-map-name').textContent = map.name;
+            document.getElementById('lineup-map-name').textContent = map.name;
+            
+            renderPoints();
+            renderLineupSelects();
+            renderExistingLineups();
+        }
+
+        // Add start point
+        function addStartPoint() {
+            if (currentMapIndex === -1) return;
+
+            const point = {
+                id: document.getElementById('start-id').value.trim(),
+                name: document.getElementById('start-name').value.trim(),
+                label: document.getElementById('start-label').value.trim(),
+                x: parseFloat(document.getElementById('start-x').value),
+                y: parseFloat(document.getElementById('start-y').value)
+            };
+
+            if (!point.id || !point.name || isNaN(point.x) || isNaN(point.y)) {
+                alert('Bitte alle Felder ausfüllen');
+                return;
+            }
+
+            editorData.maps[currentMapIndex].startPoints.push(point);
+            
+            document.getElementById('start-id').value = '';
+            document.getElementById('start-name').value = '';
+            document.getElementById('start-label').value = '';
+            document.getElementById('start-x').value = '';
+            document.getElementById('start-y').value = '';
+            
+            renderPoints();
+            renderLineupSelects();
+            updateJSON();
+        }
+
+        // Add target point
+        function addTargetPoint() {
+            if (currentMapIndex === -1) return;
+
+            const point = {
+                id: document.getElementById('target-id').value.trim(),
+                name: document.getElementById('target-name').value.trim(),
+                label: document.getElementById('target-label').value.trim(),
+                x: parseFloat(document.getElementById('target-x').value),
+                y: parseFloat(document.getElementById('target-y').value)
+            };
+
+            if (!point.id || !point.name || isNaN(point.x) || isNaN(point.y)) {
+                alert('Bitte alle Felder ausfüllen');
+                return;
+            }
+
+            editorData.maps[currentMapIndex].targetPoints.push(point);
+            
+            document.getElementById('target-id').value = '';
+            document.getElementById('target-name').value = '';
+            document.getElementById('target-label').value = '';
+            document.getElementById('target-x').value = '';
+            document.getElementById('target-y').value = '';
+            
+            renderPoints();
+            renderLineupSelects();
+            updateJSON();
+        }
+
+        // Render points
+        function renderPoints() {
+            const map = editorData.maps[currentMapIndex];
+            
+            const startList = document.getElementById('start-points-list');
+            startList.innerHTML = '<ul class="lineup-list">' + 
+                map.startPoints.map((p, i) => `
+                    <li class="lineup-item">
+                        <span>${p.name} (${p.id})</span>
+                        <button class="btn-danger btn" style="padding: 0.25rem 0.75rem; font-size: 0.85rem;" onclick="deleteStartPoint(${i})">Löschen</button>
+                    </li>
+                `).join('') + '</ul>';
+
+            const targetList = document.getElementById('target-points-list');
+            targetList.innerHTML = '<ul class="lineup-list">' + 
+                map.targetPoints.map((p, i) => `
+                    <li class="lineup-item">
+                        <span>${p.name} (${p.id})</span>
+                        <button class="btn-danger btn" style="padding: 0.25rem 0.75rem; font-size: 0.85rem;" onclick="deleteTargetPoint(${i})">Löschen</button>
+                    </li>
+                `).join('') + '</ul>';
+        }
+
+        // Delete points
+        function deleteStartPoint(index) {
+            editorData.maps[currentMapIndex].startPoints.splice(index, 1);
+            renderPoints();
+            renderLineupSelects();
+            updateJSON();
+        }
+
+        function deleteTargetPoint(index) {
+            editorData.maps[currentMapIndex].targetPoints.splice(index, 1);
+            renderPoints();
+            renderLineupSelects();
+            updateJSON();
+        }
+
+        // Render lineup selects
+        function renderLineupSelects() {
+            const map = editorData.maps[currentMapIndex];
+            
+            const fromSelect = document.getElementById('lineup-from');
+            fromSelect.innerHTML = '<option value="">-- Startpunkt wählen --</option>' +
+                map.startPoints.map(p => `<option value="${p.id}">${p.name}</option>`).join('');
+
+            const toSelect = document.getElementById('lineup-to');
+            toSelect.innerHTML = '<option value="">-- Zielpunkt wählen --</option>' +
+                map.targetPoints.map(p => `<option value="${p.id}">${p.name}</option>`).join('');
+        }
+
+        // Add media
+        function addMedia() {
+            const type = document.getElementById('media-type').value;
+            const url = document.getElementById('media-url').value.trim();
+            const description = document.getElementById('media-description').value.trim();
+
+            if (!url || !description) {
+                alert('Bitte URL und Beschreibung eingeben');
+                return;
+            }
+
+            currentLineupMedia.push({ type, url, description });
+            
+            document.getElementById('media-url').value = '';
+            document.getElementById('media-description').value = '';
+            
+            renderCurrentMedia();
+        }
+
+        // Render current media
+        function renderCurrentMedia() {
+            const list = document.getElementById('current-media-list');
+            list.innerHTML = '<ul class="media-list">' + 
+                currentLineupMedia.map((m, i) => `
+                    <li class="media-item">
+                        <span><strong>${m.type}</strong>: ${m.description}</span>
+                        <button class="btn-danger btn" style="padding: 0.25rem 0.5rem; font-size: 0.75rem;" onclick="deleteMedia(${i})">X</button>
+                    </li>
+                `).join('') + '</ul>';
+        }
+
+        // Delete media
+        function deleteMedia(index) {
+            currentLineupMedia.splice(index, 1);
+            renderCurrentMedia();
+        }
+
+        // Save lineup
+        function saveLineup() {
+            const from = document.getElementById('lineup-from').value;
+            const to = document.getElementById('lineup-to').value;
+
+            if (!from || !to) {
+                alert('Bitte Start- und Zielpunkt wählen');
+                return;
+            }
+
+            if (currentLineupMedia.length === 0) {
+                alert('Bitte mindestens ein Medium hinzufügen');
+                return;
+            }
+
+            const map = editorData.maps[currentMapIndex];
+            const existingIndex = map.lineups.findIndex(l => l.from === from && l.to === to);
+
+            const lineup = {
+                from: from,
+                to: to,
+                media: [...currentLineupMedia]
+            };
+
+            if (existingIndex !== -1) {
+                map.lineups[existingIndex] = lineup;
+            } else {
+                map.lineups.push(lineup);
+            }
+
+            document.getElementById('lineup-from').value = '';
+            document.getElementById('lineup-to').value = '';
+            currentLineupMedia = [];
+            renderCurrentMedia();
+            renderExistingLineups();
+            updateJSON();
+            
+            alert('Lineup gespeichert!');
+        }
+
+        // Render existing lineups
+        function renderExistingLineups() {
+            const map = editorData.maps[currentMapIndex];
+            const list = document.getElementById('existing-lineups');
+            
+            list.innerHTML = map.lineups.map((lineup, i) => {
+                const fromPoint = map.startPoints.find(p => p.id === lineup.from);
+                const toPoint = map.targetPoints.find(p => p.id === lineup.to);
+                return `
+                    <li class="lineup-item">
+                        <span>${fromPoint?.name || lineup.from} → ${toPoint?.name || lineup.to} (${lineup.media.length} Medien)</span>
+                        <button class="btn-danger btn" style="padding: 0.5rem 1rem;" onclick="deleteLineup(${i})">Löschen</button>
+                    </li>
+                `;
+            }).join('');
+        }
+
+        // Delete lineup
+        function deleteLineup(index) {
+            if (confirm('Lineup wirklich löschen?')) {
+                editorData.maps[currentMapIndex].lineups.splice(index, 1);
+                renderExistingLineups();
+                updateJSON();
+            }
+        }
+
+        // Update JSON output
+        function updateJSON() {
+            document.getElementById('json-output').textContent = JSON.stringify(editorData, null, 2);
+        }
+
+        // Copy JSON
+        function copyJSON() {
+            const json = JSON.stringify(editorData, null, 2);
+            navigator.clipboard.writeText(json).then(() => {
+                alert('JSON in Zwischenablage kopiert!');
+            });
+        }
+
+        // Download JSON
+        function downloadJSON() {
+            const json = JSON.stringify(editorData, null, 2);
+            const blob = new Blob([json], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'lineups.json';
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        // Load from file
+        function loadFromFile() {
+            document.getElementById('file-input').click();
+        }
+
+        // Handle file upload
+        function handleFileUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                try {
+                    editorData = JSON.parse(e.target.result);
+                    currentMapIndex = -1;
+                    renderMapList();
+                    updateJSON();
+                    alert('JSON erfolgreich geladen!');
+                } catch (error) {
+                    alert('Fehler beim Laden der JSON-Datei');
+                }
+            };
+            reader.readAsText(file);
+        }
+
+        // Initialize
+        loadExistingData();
+    </script>
+</body>
+</html>
