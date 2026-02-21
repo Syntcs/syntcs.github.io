@@ -252,6 +252,39 @@
             margin-top: 1rem;
         }
 
+        .preview-point {
+            position: absolute;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+        }
+
+        .preview-point.start {
+            background: #3fb950;
+            color: #0d1117;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .preview-point.target {
+            background: #f78166;
+            color: #0d1117;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .preview-point:hover {
+            transform: translate(-50%, -50%) scale(1.2);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
+        }
+
         @media (max-width: 768px) {
             .grid-2 {
                 grid-template-columns: 1fr;
@@ -265,7 +298,7 @@
             <h1>CS2 LINEUPS EDITOR</h1>
             <p class="subtitle">Verwalte Maps, Punkte und Lineups für deine CS2 Lineup-Seite</p>
             <div class="nav-links">
-                <a href="lineups.html" class="nav-link">← Zurück zur Hauptseite</a>
+                <a href="index.html" class="nav-link">← Zurück zur Hauptseite</a>
                 <button class="nav-link" onclick="loadFromFile()">JSON hochladen</button>
                 <button class="nav-link" onclick="downloadJSON()">JSON herunterladen</button>
             </div>
@@ -296,6 +329,31 @@
             <h2 class="section-title">Punkte verwalten</h2>
             <p style="margin-bottom: 1rem; color: #8b949e;">Map: <strong id="current-map-name"></strong></p>
             
+            <div style="margin-bottom: 2rem;">
+                <h3 style="margin-bottom: 1rem; color: #58a6ff;">Map Vorschau - Klicke um Punkte zu platzieren</h3>
+                <div style="margin-bottom: 1rem;">
+                    <label style="display: inline; margin-right: 1rem;">
+                        <input type="radio" name="point-type" value="start" checked> Startpunkt (grün)
+                    </label>
+                    <label style="display: inline;">
+                        <input type="radio" name="point-type" value="target"> Zielpunkt (orange)
+                    </label>
+                </div>
+                <div style="position: relative; max-width: 800px; margin: 0 auto;">
+                    <div id="map-preview-canvas" style="
+                        width: 100%;
+                        aspect-ratio: 1;
+                        background-color: rgba(13, 17, 23, 0.8);
+                        background-size: cover;
+                        background-position: center;
+                        border: 2px solid rgba(255, 255, 255, 0.1);
+                        border-radius: 8px;
+                        position: relative;
+                        cursor: crosshair;
+                    "></div>
+                </div>
+            </div>
+
             <div class="grid-2">
                 <div>
                     <h3 style="margin-bottom: 1rem; color: #3fb950;">Startpunkte (grün)</h3>
@@ -313,12 +371,12 @@
                     </div>
                     <div class="grid-2">
                         <div class="form-group">
-                            <label>X Position (%)</label>
-                            <input type="number" id="start-x" placeholder="15" min="0" max="100">
+                            <label>X Position (%) - Auto</label>
+                            <input type="number" id="start-x" placeholder="15" min="0" max="100" readonly>
                         </div>
                         <div class="form-group">
-                            <label>Y Position (%)</label>
-                            <input type="number" id="start-y" placeholder="80" min="0" max="100">
+                            <label>Y Position (%) - Auto</label>
+                            <input type="number" id="start-y" placeholder="80" min="0" max="100" readonly>
                         </div>
                     </div>
                     <button class="btn" onclick="addStartPoint()">Startpunkt hinzufügen</button>
@@ -341,12 +399,12 @@
                     </div>
                     <div class="grid-2">
                         <div class="form-group">
-                            <label>X Position (%)</label>
-                            <input type="number" id="target-x" placeholder="75" min="0" max="100">
+                            <label>X Position (%) - Auto</label>
+                            <input type="number" id="target-x" placeholder="75" min="0" max="100" readonly>
                         </div>
                         <div class="form-group">
-                            <label>Y Position (%)</label>
-                            <input type="number" id="target-y" placeholder="20" min="0" max="100">
+                            <label>Y Position (%) - Auto</label>
+                            <input type="number" id="target-y" placeholder="20" min="0" max="100" readonly>
                         </div>
                     </div>
                     <button class="btn" onclick="addTargetPoint()">Zielpunkt hinzufügen</button>
@@ -488,9 +546,83 @@
             document.getElementById('current-map-name').textContent = map.name;
             document.getElementById('lineup-map-name').textContent = map.name;
             
+            // Set up map preview
+            const preview = document.getElementById('map-preview-canvas');
+            preview.style.backgroundImage = `url('public/images/maps/${map.id}.jpg')`;
+            
+            // Add click handler
+            preview.onclick = handleMapClick;
+            
             renderPoints();
+            renderMapPreview();
             renderLineupSelects();
             renderExistingLineups();
+        }
+
+        // Handle map click
+        function handleMapClick(e) {
+            if (currentMapIndex === -1) return;
+            
+            const rect = e.target.getBoundingClientRect();
+            const x = ((e.clientX - rect.left) / rect.width * 100).toFixed(1);
+            const y = ((e.clientY - rect.top) / rect.height * 100).toFixed(1);
+            
+            const pointType = document.querySelector('input[name="point-type"]:checked').value;
+            
+            if (pointType === 'start') {
+                document.getElementById('start-x').value = x;
+                document.getElementById('start-y').value = y;
+            } else {
+                document.getElementById('target-x').value = x;
+                document.getElementById('target-y').value = y;
+            }
+        }
+
+        // Render map preview with points
+        function renderMapPreview() {
+            if (currentMapIndex === -1) return;
+            
+            const map = editorData.maps[currentMapIndex];
+            const preview = document.getElementById('map-preview-canvas');
+            
+            // Remove old points
+            preview.querySelectorAll('.preview-point').forEach(el => el.remove());
+            
+            // Render start points
+            map.startPoints.forEach(point => {
+                const pointEl = document.createElement('div');
+                pointEl.className = 'preview-point start';
+                pointEl.style.left = `${point.x}%`;
+                pointEl.style.top = `${point.y}%`;
+                pointEl.textContent = point.label || point.id.substring(0, 2).toUpperCase();
+                pointEl.title = point.name;
+                pointEl.onclick = (e) => {
+                    e.stopPropagation();
+                    if (confirm(`Startpunkt "${point.name}" löschen?`)) {
+                        const idx = map.startPoints.indexOf(point);
+                        deleteStartPoint(idx);
+                    }
+                };
+                preview.appendChild(pointEl);
+            });
+            
+            // Render target points
+            map.targetPoints.forEach(point => {
+                const pointEl = document.createElement('div');
+                pointEl.className = 'preview-point target';
+                pointEl.style.left = `${point.x}%`;
+                pointEl.style.top = `${point.y}%`;
+                pointEl.textContent = point.label || point.id.substring(0, 2).toUpperCase();
+                pointEl.title = point.name;
+                pointEl.onclick = (e) => {
+                    e.stopPropagation();
+                    if (confirm(`Zielpunkt "${point.name}" löschen?`)) {
+                        const idx = map.targetPoints.indexOf(point);
+                        deleteTargetPoint(idx);
+                    }
+                };
+                preview.appendChild(pointEl);
+            });
         }
 
         // Add start point
@@ -506,7 +638,7 @@
             };
 
             if (!point.id || !point.name || isNaN(point.x) || isNaN(point.y)) {
-                alert('Bitte alle Felder ausfüllen');
+                alert('Bitte alle Felder ausfüllen (klicke auf die Map für X/Y)');
                 return;
             }
 
@@ -519,6 +651,7 @@
             document.getElementById('start-y').value = '';
             
             renderPoints();
+            renderMapPreview();
             renderLineupSelects();
             updateJSON();
         }
@@ -536,7 +669,7 @@
             };
 
             if (!point.id || !point.name || isNaN(point.x) || isNaN(point.y)) {
-                alert('Bitte alle Felder ausfüllen');
+                alert('Bitte alle Felder ausfüllen (klicke auf die Map für X/Y)');
                 return;
             }
 
@@ -549,6 +682,7 @@
             document.getElementById('target-y').value = '';
             
             renderPoints();
+            renderMapPreview();
             renderLineupSelects();
             updateJSON();
         }
@@ -580,6 +714,7 @@
         function deleteStartPoint(index) {
             editorData.maps[currentMapIndex].startPoints.splice(index, 1);
             renderPoints();
+            renderMapPreview();
             renderLineupSelects();
             updateJSON();
         }
@@ -587,6 +722,7 @@
         function deleteTargetPoint(index) {
             editorData.maps[currentMapIndex].targetPoints.splice(index, 1);
             renderPoints();
+            renderMapPreview();
             renderLineupSelects();
             updateJSON();
         }
