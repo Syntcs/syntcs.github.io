@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="de">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -296,47 +296,55 @@
     <div class="container">
         <header>
             <h1>CS2 LINEUPS EDITOR</h1>
-            <p class="subtitle">Verwalte Maps, Punkte und Lineups für deine CS2 Lineup-Seite</p>
+            <p class="subtitle">Manage maps, points, and lineups for your CS2 Lineup site</p>
             <div class="nav-links">
-                <a href="index.html" class="nav-link">← Zurück zur Hauptseite</a>
-                <button class="nav-link" onclick="loadFromFile()">JSON hochladen</button>
-                <button class="nav-link" onclick="downloadJSON()">JSON herunterladen</button>
+                <a href="index.html" class="nav-link">← Back to Main Page</a>
+                <button class="nav-link" onclick="loadFromFile()">Upload JSON</button>
+                <button class="nav-link" onclick="downloadJSON()">Download JSON</button>
             </div>
         </header>
 
         <div class="editor-section">
-            <h2 class="section-title">Maps verwalten</h2>
+            <h2 class="section-title">Manage Maps</h2>
             <div class="grid-2">
                 <div>
                     <div class="form-group">
                         <label>Map ID</label>
-                        <input type="text" id="map-id" placeholder="z.B. dust2">
+                        <input type="text" id="map-id" placeholder="e.g. dust2">
                     </div>
                     <div class="form-group">
                         <label>Map Name</label>
-                        <input type="text" id="map-name" placeholder="z.B. Dust 2">
+                        <input type="text" id="map-name" placeholder="e.g. Dust 2">
                     </div>
-                    <button class="btn" onclick="addMap()">Map hinzufügen</button>
+                    <div class="form-group">
+                        <label>Preview Image URL (for map grid)</label>
+                        <input type="text" id="map-preview-url" placeholder="public/images/maps/dust2.jpg">
+                    </div>
+                    <div class="form-group">
+                        <label>Overlay Image URL (for interactive map)</label>
+                        <input type="text" id="map-overlay-url" placeholder="public/images/maps/dust2.jpg">
+                    </div>
+                    <button class="btn" onclick="addMap()">Add Map</button>
                 </div>
                 <div>
-                    <label>Vorhandene Maps</label>
+                    <label>Existing Maps</label>
                     <ul class="map-list" id="map-list"></ul>
                 </div>
             </div>
         </div>
 
         <div class="editor-section" id="points-section" style="display: none;">
-            <h2 class="section-title">Punkte verwalten</h2>
+            <h2 class="section-title">Manage Points</h2>
             <p style="margin-bottom: 1rem; color: #8b949e;">Map: <strong id="current-map-name"></strong></p>
             
             <div style="margin-bottom: 2rem;">
-                <h3 style="margin-bottom: 1rem; color: #58a6ff;">Map Vorschau - Klicke um Punkte zu platzieren</h3>
+                <h3 style="margin-bottom: 1rem; color: #58a6ff;">Map Preview - Click to Place Points</h3>
                 <div style="margin-bottom: 1rem;">
                     <label style="display: inline; margin-right: 1rem;">
-                        <input type="radio" name="point-type" value="start" checked> Startpunkt (grün)
+                        <input type="radio" name="point-type" value="start" checked> Start Point (green)
                     </label>
                     <label style="display: inline;">
-                        <input type="radio" name="point-type" value="target"> Zielpunkt (orange)
+                        <input type="radio" name="point-type" value="target"> Target Point (orange)
                     </label>
                 </div>
                 <div style="position: relative; max-width: 800px; margin: 0 auto;">
@@ -356,18 +364,18 @@
 
             <div class="grid-2">
                 <div>
-                    <h3 style="margin-bottom: 1rem; color: #3fb950;">Startpunkte (grün)</h3>
+                    <h3 style="margin-bottom: 1rem; color: #3fb950;">Start Points (green)</h3>
                     <div class="form-group">
-                        <label>Punkt ID</label>
-                        <input type="text" id="start-id" placeholder="z.B. t-spawn">
+                        <label>Point ID</label>
+                        <input type="text" id="start-id" placeholder="e.g. t-spawn">
                     </div>
                     <div class="form-group">
-                        <label>Punkt Name</label>
-                        <input type="text" id="start-name" placeholder="z.B. T-Spawn">
+                        <label>Point Name</label>
+                        <input type="text" id="start-name" placeholder="e.g. T-Spawn">
                     </div>
                     <div class="form-group">
                         <label>Label</label>
-                        <input type="text" id="start-label" placeholder="z.B. T">
+                        <input type="text" id="start-label" placeholder="e.g. T">
                     </div>
                     <div class="grid-2">
                         <div class="form-group">
@@ -379,23 +387,23 @@
                             <input type="number" id="start-y" placeholder="80" min="0" max="100" readonly>
                         </div>
                     </div>
-                    <button class="btn" onclick="addStartPoint()">Startpunkt hinzufügen</button>
+                    <button class="btn" onclick="addStartPoint()">Add Start Point</button>
                     <div id="start-points-list" style="margin-top: 1rem;"></div>
                 </div>
 
                 <div>
-                    <h3 style="margin-bottom: 1rem; color: #f78166;">Zielpunkte (orange)</h3>
+                    <h3 style="margin-bottom: 1rem; color: #f78166;">Target Points (orange)</h3>
                     <div class="form-group">
-                        <label>Punkt ID</label>
-                        <input type="text" id="target-id" placeholder="z.B. a-site">
+                        <label>Point ID</label>
+                        <input type="text" id="target-id" placeholder="e.g. a-site">
                     </div>
                     <div class="form-group">
-                        <label>Punkt Name</label>
-                        <input type="text" id="target-name" placeholder="z.B. A-Site">
+                        <label>Point Name</label>
+                        <input type="text" id="target-name" placeholder="e.g. A-Site">
                     </div>
                     <div class="form-group">
                         <label>Label</label>
-                        <input type="text" id="target-label" placeholder="z.B. A">
+                        <input type="text" id="target-label" placeholder="e.g. A">
                     </div>
                     <div class="grid-2">
                         <div class="form-group">
@@ -407,30 +415,30 @@
                             <input type="number" id="target-y" placeholder="20" min="0" max="100" readonly>
                         </div>
                     </div>
-                    <button class="btn" onclick="addTargetPoint()">Zielpunkt hinzufügen</button>
+                    <button class="btn" onclick="addTargetPoint()">Add Target Point</button>
                     <div id="target-points-list" style="margin-top: 1rem;"></div>
                 </div>
             </div>
         </div>
 
         <div class="editor-section" id="lineups-section" style="display: none;">
-            <h2 class="section-title">Lineups verwalten</h2>
+            <h2 class="section-title">Manage Lineups</h2>
             <p style="margin-bottom: 1rem; color: #8b949e;">Map: <strong id="lineup-map-name"></strong></p>
             
             <div class="form-group">
-                <label>Von (Startpunkt)</label>
+                <label>From (Start Point)</label>
                 <select id="lineup-from"></select>
             </div>
             <div class="form-group">
-                <label>Nach (Zielpunkt)</label>
+                <label>To (Target Point)</label>
                 <select id="lineup-to"></select>
             </div>
 
-            <h3 style="margin: 1.5rem 0 1rem; color: #58a6ff;">Medien hinzufügen</h3>
+            <h3 style="margin: 1.5rem 0 1rem; color: #58a6ff;">Add Media</h3>
             <div class="form-group">
-                <label>Medien-Typ</label>
+                <label>Media Type</label>
                 <select id="media-type">
-                    <option value="image">Bild</option>
+                    <option value="image">Image</option>
                     <option value="video">Video</option>
                 </select>
             </div>
@@ -439,29 +447,29 @@
                 <input type="text" id="media-url" placeholder="https://...">
             </div>
             <div class="form-group">
-                <label>Beschreibung</label>
-                <textarea id="media-description" placeholder="Beschreibung des Lineups..."></textarea>
+                <label>Description</label>
+                <textarea id="media-description" placeholder="Lineup description..."></textarea>
             </div>
-            <button class="btn-secondary btn" onclick="addMedia()">Medium hinzufügen</button>
+            <button class="btn-secondary btn" onclick="addMedia()">Add Media</button>
 
             <div id="current-media-list"></div>
 
             <div class="btn-group">
-                <button class="btn" onclick="saveLineup()">Lineup speichern</button>
+                <button class="btn" onclick="saveLineup()">Save Lineup</button>
             </div>
 
             <div style="margin-top: 2rem;">
-                <label>Vorhandene Lineups</label>
+                <label>Existing Lineups</label>
                 <ul class="lineup-list" id="existing-lineups"></ul>
             </div>
         </div>
 
         <div class="editor-section">
-            <h2 class="section-title">JSON Ausgabe</h2>
+            <h2 class="section-title">JSON Output</h2>
             <div class="json-output" id="json-output"></div>
             <div class="btn-group">
-                <button class="btn" onclick="copyJSON()">JSON kopieren</button>
-                <button class="btn" onclick="downloadJSON()">JSON herunterladen</button>
+                <button class="btn" onclick="copyJSON()">Copy JSON</button>
+                <button class="btn" onclick="downloadJSON()">Download JSON</button>
             </div>
         </div>
     </div>
@@ -489,21 +497,25 @@
         function addMap() {
             const id = document.getElementById('map-id').value.trim();
             const name = document.getElementById('map-name').value.trim();
+            const previewImage = document.getElementById('map-preview-url').value.trim();
+            const overlayImage = document.getElementById('map-overlay-url').value.trim();
 
             if (!id || !name) {
-                alert('Bitte Map ID und Name eingeben');
+                alert('Please enter Map ID and Name');
                 return;
             }
 
             const existingMap = editorData.maps.find(m => m.id === id);
             if (existingMap) {
-                alert('Map ID existiert bereits');
+                alert('Map ID already exists');
                 return;
             }
 
             editorData.maps.push({
                 id: id,
                 name: name,
+                previewImage: previewImage || `public/images/maps/${id}.jpg`,
+                overlayImage: overlayImage || `public/images/maps/${id}.jpg`,
                 startPoints: [],
                 targetPoints: [],
                 lineups: []
@@ -511,6 +523,8 @@
 
             document.getElementById('map-id').value = '';
             document.getElementById('map-name').value = '';
+            document.getElementById('map-preview-url').value = '';
+            document.getElementById('map-overlay-url').value = '';
             
             renderMapList();
             updateJSON();
@@ -526,13 +540,34 @@
                 li.className = 'map-item';
                 if (index === currentMapIndex) li.classList.add('active');
                 li.innerHTML = `
-                    <strong>${map.name}</strong> (${map.id})
-                    <br>
-                    <small>${map.startPoints.length} Start, ${map.targetPoints.length} Ziel, ${map.lineups.length} Lineups</small>
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <div style="flex: 1;" onclick="selectMap(${index})">
+                            <strong>${map.name}</strong> (${map.id})
+                            <br>
+                            <small>${map.startPoints.length} Start, ${map.targetPoints.length} Target, ${map.lineups.length} Lineups</small>
+                        </div>
+                        <button class="btn-danger btn" style="padding: 0.5rem; font-size: 0.8rem;" onclick="event.stopPropagation(); deleteMap(${index})">Delete</button>
+                    </div>
                 `;
-                li.onclick = () => selectMap(index);
                 list.appendChild(li);
             });
+        }
+
+        // Delete map
+        function deleteMap(index) {
+            const map = editorData.maps[index];
+            if (confirm(`Delete map "${map.name}"? This will remove all points and lineups.`)) {
+                editorData.maps.splice(index, 1);
+                if (currentMapIndex === index) {
+                    currentMapIndex = -1;
+                    document.getElementById('points-section').style.display = 'none';
+                    document.getElementById('lineups-section').style.display = 'none';
+                } else if (currentMapIndex > index) {
+                    currentMapIndex--;
+                }
+                renderMapList();
+                updateJSON();
+            }
         }
 
         // Select map
