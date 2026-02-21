@@ -4,15 +4,57 @@
       "id": "dust2",
       "name": "Dust 2",
       "startPoints": [
-        { "id": "t-spawn", "name": "T-Spawn", "label": "T", "x": 15, "y": 80 },
-        { "id": "long", "name": "Long", "label": "L", "x": 30, "y": 40 },
-        { "id": "short", "name": "Short", "label": "S", "x": 60, "y": 30 },
-        { "id": "mid", "name": "Mid", "label": "M", "x": 45, "y": 60 }
+        {
+          "id": "t-spawn",
+          "name": "T-Spawn",
+          "label": "T",
+          "x": 15,
+          "y": 80
+        },
+        {
+          "id": "long",
+          "name": "Long",
+          "label": "L",
+          "x": 30,
+          "y": 40
+        },
+        {
+          "id": "short",
+          "name": "Short",
+          "label": "S",
+          "x": 60,
+          "y": 30
+        },
+        {
+          "id": "mid",
+          "name": "Mid",
+          "label": "M",
+          "x": 45,
+          "y": 60
+        }
       ],
       "targetPoints": [
-        { "id": "a-site", "name": "A-Site", "label": "A", "x": 75, "y": 20 },
-        { "id": "b-site", "name": "B-Site", "label": "B", "x": 85, "y": 75 },
-        { "id": "ct-spawn", "name": "CT-Spawn", "label": "CT", "x": 90, "y": 50 }
+        {
+          "id": "a-site",
+          "name": "A-Site",
+          "label": "A",
+          "x": 75,
+          "y": 20
+        },
+        {
+          "id": "b-site",
+          "name": "B-Site",
+          "label": "B",
+          "x": 85,
+          "y": 75
+        },
+        {
+          "id": "ct-spawn",
+          "name": "CT-Spawn",
+          "label": "CT",
+          "x": 90,
+          "y": 50
+        }
       ],
       "lineups": [
         {
@@ -69,14 +111,50 @@
       "id": "mirage",
       "name": "Mirage",
       "startPoints": [
-        { "id": "t-spawn", "name": "T-Spawn", "label": "T", "x": 15, "y": 80 },
-        { "id": "palace", "name": "Palace", "label": "P", "x": 40, "y": 35 },
-        { "id": "apartments", "name": "Apartments", "label": "AP", "x": 25, "y": 50 }
+        {
+          "id": "t-spawn",
+          "name": "T-Spawn",
+          "label": "T",
+          "x": 15,
+          "y": 80
+        },
+        {
+          "id": "palace",
+          "name": "Palace",
+          "label": "P",
+          "x": 40,
+          "y": 35
+        },
+        {
+          "id": "apartments",
+          "name": "Apartments",
+          "label": "AP",
+          "x": 25,
+          "y": 50
+        }
       ],
       "targetPoints": [
-        { "id": "a-site", "name": "A-Site", "label": "A", "x": 75, "y": 40 },
-        { "id": "b-site", "name": "B-Site", "label": "B", "x": 80, "y": 75 },
-        { "id": "jungle", "name": "Jungle", "label": "J", "x": 60, "y": 60 }
+        {
+          "id": "a-site",
+          "name": "A-Site",
+          "label": "A",
+          "x": 75,
+          "y": 40
+        },
+        {
+          "id": "b-site",
+          "name": "B-Site",
+          "label": "B",
+          "x": 80,
+          "y": 75
+        },
+        {
+          "id": "jungle",
+          "name": "Jungle",
+          "label": "J",
+          "x": 60,
+          "y": 60
+        }
       ],
       "lineups": [
         {
@@ -96,12 +174,36 @@
       "id": "inferno",
       "name": "Inferno",
       "startPoints": [
-        { "id": "t-spawn", "name": "T-Spawn", "label": "T", "x": 15, "y": 80 },
-        { "id": "banana", "name": "Banana", "label": "BN", "x": 30, "y": 85 }
+        {
+          "id": "t-spawn",
+          "name": "T-Spawn",
+          "label": "T",
+          "x": 15,
+          "y": 80
+        },
+        {
+          "id": "banana",
+          "name": "Banana",
+          "label": "BN",
+          "x": 30,
+          "y": 85
+        }
       ],
       "targetPoints": [
-        { "id": "a-site", "name": "A-Site", "label": "A", "x": 75, "y": 40 },
-        { "id": "b-site", "name": "B-Site", "label": "B", "x": 80, "y": 90 }
+        {
+          "id": "a-site",
+          "name": "A-Site",
+          "label": "A",
+          "x": 75,
+          "y": 40
+        },
+        {
+          "id": "b-site",
+          "name": "B-Site",
+          "label": "B",
+          "x": 80,
+          "y": 90
+        }
       ],
       "lineups": []
     },
@@ -109,12 +211,36 @@
       "id": "nuke",
       "name": "Nuke",
       "startPoints": [
-        { "id": "t-spawn", "name": "T-Spawn", "label": "T", "x": 15, "y": 80 },
-        { "id": "outside", "name": "Outside", "label": "O", "x": 45, "y": 60 }
+        {
+          "id": "t-spawn",
+          "name": "T-Spawn",
+          "label": "T",
+          "x": 15,
+          "y": 80
+        },
+        {
+          "id": "outside",
+          "name": "Outside",
+          "label": "O",
+          "x": 45,
+          "y": 60
+        }
       ],
       "targetPoints": [
-        { "id": "a-site", "name": "A-Site", "label": "A", "x": 75, "y": 40 },
-        { "id": "b-site", "name": "B-Site", "label": "B", "x": 75, "y": 80 }
+        {
+          "id": "a-site",
+          "name": "A-Site",
+          "label": "A",
+          "x": 75,
+          "y": 40
+        },
+        {
+          "id": "b-site",
+          "name": "B-Site",
+          "label": "B",
+          "x": 75,
+          "y": 80
+        }
       ],
       "lineups": []
     },
@@ -122,12 +248,36 @@
       "id": "ancient",
       "name": "Ancient",
       "startPoints": [
-        { "id": "t-spawn", "name": "T-Spawn", "label": "T", "x": 15, "y": 80 },
-        { "id": "mid", "name": "Mid", "label": "M", "x": 45, "y": 60 }
+        {
+          "id": "t-spawn",
+          "name": "T-Spawn",
+          "label": "T",
+          "x": 15,
+          "y": 80
+        },
+        {
+          "id": "mid",
+          "name": "Mid",
+          "label": "M",
+          "x": 45,
+          "y": 60
+        }
       ],
       "targetPoints": [
-        { "id": "a-site", "name": "A-Site", "label": "A", "x": 75, "y": 40 },
-        { "id": "b-site", "name": "B-Site", "label": "B", "x": 80, "y": 75 }
+        {
+          "id": "a-site",
+          "name": "A-Site",
+          "label": "A",
+          "x": 75,
+          "y": 40
+        },
+        {
+          "id": "b-site",
+          "name": "B-Site",
+          "label": "B",
+          "x": 80,
+          "y": 75
+        }
       ],
       "lineups": []
     },
@@ -135,12 +285,36 @@
       "id": "anubis",
       "name": "Anubis",
       "startPoints": [
-        { "id": "t-spawn", "name": "T-Spawn", "label": "T", "x": 15, "y": 80 },
-        { "id": "mid", "name": "Mid", "label": "M", "x": 45, "y": 60 }
+        {
+          "id": "t-spawn",
+          "name": "T-Spawn",
+          "label": "T",
+          "x": 15,
+          "y": 80
+        },
+        {
+          "id": "mid",
+          "name": "Mid",
+          "label": "M",
+          "x": 45,
+          "y": 60
+        }
       ],
       "targetPoints": [
-        { "id": "a-site", "name": "A-Site", "label": "A", "x": 75, "y": 40 },
-        { "id": "b-site", "name": "B-Site", "label": "B", "x": 80, "y": 75 }
+        {
+          "id": "a-site",
+          "name": "A-Site",
+          "label": "A",
+          "x": 75,
+          "y": 40
+        },
+        {
+          "id": "b-site",
+          "name": "B-Site",
+          "label": "B",
+          "x": 80,
+          "y": 75
+        }
       ],
       "lineups": []
     },
@@ -148,12 +322,36 @@
       "id": "vertigo",
       "name": "Vertigo",
       "startPoints": [
-        { "id": "t-spawn", "name": "T-Spawn", "label": "T", "x": 15, "y": 80 },
-        { "id": "ramp", "name": "Ramp", "label": "R", "x": 45, "y": 70 }
+        {
+          "id": "t-spawn",
+          "name": "T-Spawn",
+          "label": "T",
+          "x": 15,
+          "y": 80
+        },
+        {
+          "id": "ramp",
+          "name": "Ramp",
+          "label": "R",
+          "x": 45,
+          "y": 70
+        }
       ],
       "targetPoints": [
-        { "id": "a-site", "name": "A-Site", "label": "A", "x": 75, "y": 40 },
-        { "id": "b-site", "name": "B-Site", "label": "B", "x": 75, "y": 85 }
+        {
+          "id": "a-site",
+          "name": "A-Site",
+          "label": "A",
+          "x": 75,
+          "y": 40
+        },
+        {
+          "id": "b-site",
+          "name": "B-Site",
+          "label": "B",
+          "x": 75,
+          "y": 85
+        }
       ],
       "lineups": []
     },
@@ -161,14 +359,73 @@
       "id": "overpass",
       "name": "Overpass",
       "startPoints": [
-        { "id": "t-spawn", "name": "T-Spawn", "label": "T", "x": 15, "y": 80 },
-        { "id": "connector", "name": "Connector", "label": "C", "x": 45, "y": 60 }
+        {
+          "id": "t-spawn",
+          "name": "T-Spawn",
+          "label": "T",
+          "x": 15,
+          "y": 80
+        },
+        {
+          "id": "connector",
+          "name": "Connector",
+          "label": "C",
+          "x": 45,
+          "y": 60
+        }
       ],
       "targetPoints": [
-        { "id": "a-site", "name": "A-Site", "label": "A", "x": 75, "y": 40 },
-        { "id": "b-site", "name": "B-Site", "label": "B", "x": 80, "y": 75 }
+        {
+          "id": "a-site",
+          "name": "A-Site",
+          "label": "A",
+          "x": 75,
+          "y": 40
+        },
+        {
+          "id": "b-site",
+          "name": "B-Site",
+          "label": "B",
+          "x": 80,
+          "y": 75
+        }
       ],
       "lineups": []
+    },
+    {
+      "id": "test",
+      "name": "test",
+      "startPoints": [
+        {
+          "id": "t",
+          "name": "t",
+          "label": "t",
+          "x": 22.6,
+          "y": 12.3
+        }
+      ],
+      "targetPoints": [
+        {
+          "id": "ct",
+          "name": "ct",
+          "label": "ct",
+          "x": 68.9,
+          "y": 58.7
+        }
+      ],
+      "lineups": [
+        {
+          "from": "t",
+          "to": "ct",
+          "media": [
+            {
+              "type": "image",
+              "url": "https://placehold.co/600x400",
+              "description": "test"
+            }
+          ]
+        }
+      ]
     }
   ]
 }
