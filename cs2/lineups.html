@@ -24,9 +24,9 @@
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            background: var(--bg-primary);
-            color: var(--text-primary);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0a0e14 0%, #121820 50%, #0d1117 100%);
+            color: #e6edf3;
             min-height: 100vh;
             line-height: 1.6;
         }
@@ -56,25 +56,42 @@
         .logo {
             font-size: 28px;
             font-weight: 700;
-            color: var(--text-primary);
-            letter-spacing: -0.5px;
+            color: #ffffff;
+            text-shadow: 
+                0 0 10px rgba(255, 255, 255, 0.3),
+                0 0 20px rgba(255, 255, 255, 0.15),
+                0 0 40px rgba(255, 255, 255, 0.05);
+            letter-spacing: 2px;
+            animation: subtleGlow 4s ease-in-out infinite;
+        }
+
+        @keyframes subtleGlow {
+            0%, 100% { 
+                text-shadow: 0 0 10px rgba(255, 255, 255, 0.3), 0 0 20px rgba(255, 255, 255, 0.15); 
+            }
+            50% { 
+                text-shadow: 0 0 15px rgba(255, 255, 255, 0.4), 0 0 30px rgba(255, 255, 255, 0.2); 
+            }
         }
 
         .back-btn {
-            background: var(--bg-tertiary);
-            border: 1px solid var(--border-color);
-            color: var(--text-primary);
-            padding: 8px 16px;
-            border-radius: 6px;
+            background-color: rgba(33, 38, 45, 0.8);
+            color: #e6edf3;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
             cursor: pointer;
             font-size: 14px;
-            transition: all 0.2s;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(4px);
             display: none;
         }
 
         .back-btn:hover {
-            background: var(--border-color);
-            border-color: var(--text-secondary);
+            background-color: rgba(48, 54, 61, 0.9);
+            border-color: rgba(255, 255, 255, 0.25);
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.1);
+            transform: translateY(-1px);
         }
 
         .back-btn.visible {
@@ -101,20 +118,27 @@
         }
 
         .map-card {
-            background: var(--bg-secondary);
-            border: 1px solid var(--border-color);
+            background: linear-gradient(145deg, rgba(22, 27, 34, 0.95), rgba(13, 17, 23, 0.98));
+            border: 1px solid rgba(255, 255, 255, 0.08);
             border-radius: 12px;
             overflow: hidden;
             cursor: pointer;
             transition: all 0.3s ease;
             text-decoration: none;
             color: inherit;
+            box-shadow: 
+                0 4px 20px rgba(0, 0, 0, 0.3),
+                0 0 30px rgba(255, 255, 255, 0.02),
+                inset 0 1px 0 rgba(255, 255, 255, 0.05);
         }
 
         .map-card:hover {
             transform: translateY(-4px);
-            border-color: var(--accent-blue);
-            box-shadow: 0 8px 24px rgba(88, 166, 255, 0.15);
+            border-color: rgba(255, 255, 255, 0.15);
+            box-shadow: 
+                0 4px 25px rgba(0, 0, 0, 0.4),
+                0 0 40px rgba(255, 255, 255, 0.04),
+                inset 0 1px 0 rgba(255, 255, 255, 0.08);
         }
 
         .map-image {
@@ -177,10 +201,14 @@
         .interactive-map-container {
             max-width: 1000px;
             margin: 0 auto 40px;
-            background: var(--bg-secondary);
-            border: 1px solid var(--border-color);
+            background: linear-gradient(145deg, rgba(22, 27, 34, 0.95), rgba(13, 17, 23, 0.98));
+            border: 1px solid rgba(255, 255, 255, 0.08);
             border-radius: 12px;
             padding: 20px;
+            box-shadow: 
+                0 4px 20px rgba(0, 0, 0, 0.3),
+                0 0 30px rgba(255, 255, 255, 0.02),
+                inset 0 1px 0 rgba(255, 255, 255, 0.05);
         }
 
         .map-canvas-wrapper {
@@ -527,6 +555,7 @@
 
         // Select start point
         function selectStartPoint(point) {
+            console.log('[v0] Selected start point:', point);
             selectedStart = point;
             selectedTarget = null;
 
@@ -536,9 +565,21 @@
             });
             document.querySelector(`.map-point.start[data-id="${point.id}"]`).classList.add('selected');
 
-            // Show target points
+            // Show only target points that have lineups
+            const mapData = lineupsData.maps.find(m => m.id === currentMap);
+            const availableTargets = mapData.lineups
+                .filter(l => l.from === point.id)
+                .map(l => l.to);
+            
+            console.log('[v0] Available targets for', point.id, ':', availableTargets);
+
             document.querySelectorAll('.map-point.target').forEach(el => {
-                el.classList.add('visible');
+                const targetId = el.dataset.id;
+                if (availableTargets.includes(targetId)) {
+                    el.classList.add('visible');
+                } else {
+                    el.classList.remove('visible');
+                }
             });
 
             document.getElementById('map-instructions').textContent = 'Wähle jetzt einen Zielpunkt (orange) aus';
@@ -562,15 +603,23 @@
 
         // Show lineup results
         function showLineupResults() {
+            console.log('[v0] Showing lineup results for:', selectedStart.id, '->', selectedTarget.id);
             const mapData = lineupsData.maps.find(m => m.id === currentMap);
-            if (!mapData) return;
+            if (!mapData) {
+                console.error('[v0] No map data found');
+                return;
+            }
 
             const lineup = mapData.lineups.find(l => 
                 l.from === selectedStart.id && l.to === selectedTarget.id
             );
 
-            if (!lineup) {
-                alert('Kein Lineup für diese Kombination gefunden');
+            console.log('[v0] Lineup found:', lineup);
+
+            if (!lineup || !lineup.media || lineup.media.length === 0) {
+                console.warn('[v0] No lineup or media found for this combination');
+                document.getElementById('lineup-results').classList.remove('visible');
+                document.getElementById('map-instructions').textContent = 'Kein Lineup für diese Kombination verfügbar';
                 return;
             }
 
