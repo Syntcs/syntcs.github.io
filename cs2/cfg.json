@@ -1,22 +1,38 @@
 {
-  "maps": [
+  "title": "syntcs | CS2 CONFIG",
+  "subtitle": "Click any copy button to copy commands to clipboard",
+  "sections": [
     {
-      "id": "mirage",
-      "name": "Mirage",
-      "previewImage": "pic/mirage_pre.jpg",
-      "overlayImage": "/pic/mirage_map.png",
-      "startPoints": [],
-      "targetPoints": [],
-      "lineups": []
+      "name": "Crosshair",
+      "commands": [
+        "CSGO-LUfiJ-pUELG-6GCpP-MpkNN-ERNMB",
+        "cl_crosshairsize 1.45;",
+        "cl_crosshairgap -2;",
+        "cl_crosshairgap_useweaponvalue false;",
+        "cl_crosshairthickness 0.5;",
+        "cl_crosshair_drawoutline true;",
+        "cl_crosshaircolor 5;",
+        "cl_crosshairstyle 4;",
+        "cl_crosshair_sniper_width 1;"
+      ]
     },
     {
-      "id": "test",
-      "name": "test",
-      "previewImage": "https://placehold.co/600x400",
-      "overlayImage": "https://placehold.co/600x400",
-      "startPoints": [],
-      "targetPoints": [],
-      "lineups": []
+      "name": "Viewmodel",
+      "commands": [
+        "viewmodel_presetpos 0;",
+        "viewmodel_offset_x 2.5;",
+        "viewmodel_offset_y 0;",
+        "viewmodel_offset_z -1.5;",
+        "viewmodel_fov 68;",
+        "cl_prefer_lefthanded 0;"
+      ]
+    },
+    {
+      "name": "Mouse & Sensitivity",
+      "commands": [
+        "sensitivity 0.48;",
+        "zoom_sensitivity_ratio 1.0;"
+      ]
     }
   ]
 }
