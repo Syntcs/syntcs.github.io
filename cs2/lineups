@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CS2 Lineups - Smoke Lineup Tool</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-primary: #0f0f1a;
+            --bg-secondary: #1a1a2e;
+            --bg-tertiary: #252540;
+            --text-primary: #f5f5f5;
+            --text-secondary: #b0b0b0;
+            --accent-green: #4ade80;
+            --accent-orange: #fb923c;
+            --border-color: #2d2d44;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+            color: var(--text-primary);
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header */
+        .site-header {
+            background: rgba(26, 26, 46, 0.8);
+            backdrop-filter: blur(10px);
+            padding: 20px 0;
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--accent-green), var(--accent-orange));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .back-btn {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s;
+            display: none;
+        }
+
+        .back-btn:hover {
+            background: var(--accent-green);
+            border-color: var(--accent-green);
+            transform: translateY(-2px);
+        }
+
+        .back-btn.visible {
+            display: block;
+        }
+
+        /* Home View */
+        #home-view {
+            padding: 60px 0;
+        }
+
+        .page-title {
+            font-size: 36px;
+            text-align: center;
+            margin-bottom: 50px;
+            font-weight: 700;
+        }
+
+        .map-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+
+        .map-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .map-card:hover {
+            transform: translateY(-8px);
+            border-color: var(--accent-green);
+            box-shadow: 0 12px 40px rgba(74, 222, 128, 0.2);
+        }
+
+        .map-image {
+            width: 100%;
+            height: 200px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .map-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s;
+        }
+
+        .map-card:hover .map-image img {
+            transform: scale(1.1);
+        }
+
+        .map-name {
+            padding: 20px;
+            font-size: 20px;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        /* Map View */
+        #map-view {
+            display: none;
+            padding: 40px 0;
+        }
+
+        #map-view.active {
+            display: block;
+        }
+
+        .map-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .map-title {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .map-instructions {
+            color: var(--text-secondary);
+            font-size: 16px;
+        }
+
+        .map-instructions.highlight {
+            color: var(--accent-orange);
+            font-weight: 600;
+        }
+
+        /* Interactive Map Container */
+        .interactive-map-container {
+            max-width: 1000px;
+            margin: 0 auto 40px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 20px;
+        }
+
+        .map-canvas-wrapper {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 1;
+            background: var(--bg-tertiary);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .map-canvas {
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+
+        .map-point {
+            position: absolute;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            border: 3px solid;
+            cursor: pointer;
+            transform: translate(-50%, -50%);
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .map-point.start {
+            background: var(--accent-green);
+            border-color: var(--accent-green);
+            box-shadow: 0 0 20px rgba(74, 222, 128, 0.6);
+        }
+
+        .map-point.target {
+            background: var(--accent-orange);
+            border-color: var(--accent-orange);
+            box-shadow: 0 0 20px rgba(251, 146, 60, 0.6);
+            display: none;
+        }
+
+        .map-point.target.visible {
+            display: flex;
+        }
+
+        .map-point:hover {
+            transform: translate(-50%, -50%) scale(1.3);
+        }
+
+        .map-point.selected {
+            width: 32px;
+            height: 32px;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: translate(-50%, -50%) scale(1);
+            }
+            50% {
+                transform: translate(-50%, -50%) scale(1.2);
+            }
+        }
+
+        /* Lineup Results */
+        .lineup-results {
+            max-width: 1000px;
+            margin: 0 auto;
+            display: none;
+        }
+
+        .lineup-results.visible {
+            display: block;
+        }
+
+        .lineup-header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+        }
+
+        .lineup-header h3 {
+            font-size: 24px;
+            margin-bottom: 10px;
+            color: var(--accent-green);
+        }
+
+        .lineup-route {
+            font-size: 18px;
+            color: var(--text-secondary);
+        }
+
+        .lineup-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+        }
+
+        .lineup-item {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: all 0.3s;
+        }
+
+        .lineup-item:hover {
+            transform: translateY(-4px);
+            border-color: var(--accent-green);
+        }
+
+        .lineup-media {
+            width: 100%;
+            height: 250px;
+            overflow: hidden;
+            background: var(--bg-tertiary);
+        }
+
+        .lineup-media img,
+        .lineup-media video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .lineup-description {
+            padding: 20px;
+        }
+
+        .lineup-description h4 {
+            font-size: 18px;
+            margin-bottom: 10px;
+            color: var(--accent-orange);
+        }
+
+        .lineup-description p {
+            color: var(--text-secondary);
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        /* Footer */
+        .site-footer {
+            text-align: center;
+            padding: 30px 0;
+            border-top: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            margin-top: 60px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .page-title {
+                font-size: 28px;
+            }
+
+            .map-grid {
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+                gap: 16px;
+            }
+
+            .map-title {
+                font-size: 24px;
+            }
+
+            .lineup-content {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="site-header">
+        <div class="container">
+            <div class="header-content">
+                <h1 class="logo">CS2 Lineups</h1>
+                <button id="back-btn" class="back-btn">Zurück zur Map-Auswahl</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Home View - Map Selection -->
+    <div id="home-view">
+        <main class="container">
+            <h2 class="page-title">Wähle eine Map</h2>
+            <div class="map-grid" id="map-grid"></div>
+        </main>
+    </div>
+
+    <!-- Map View - Interactive Lineup Viewer -->
+    <div id="map-view">
+        <main class="container">
+            <div class="map-header">
+                <h2 class="map-title" id="current-map-title"></h2>
+                <p class="map-instructions" id="map-instructions">Wähle einen Startpunkt (grün) aus</p>
+            </div>
+
+            <div class="interactive-map-container">
+                <div class="map-canvas-wrapper">
+                    <div class="map-canvas" id="map-canvas"></div>
+                </div>
+            </div>
+
+            <div class="lineup-results" id="lineup-results">
+                <div class="lineup-header">
+                    <h3>Lineup gefunden</h3>
+                    <p class="lineup-route" id="lineup-route"></p>
+                </div>
+                <div class="lineup-content" id="lineup-content"></div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+        <div class="container">
+            <p>&copy; 2024 CS2 Lineups - Alle Rechte vorbehalten</p>
+        </div>
+    </footer>
+
+    <script>
+        // Global state
+        let lineupsData = null;
+        let currentMap = null;
+        let selectedStart = null;
+        let selectedTarget = null;
+
+        // Initialize app
+        async function init() {
+            await loadLineups();
+            renderMapGrid();
+            setupEventListeners();
+        }
+
+        // Load lineups from JSON
+        async function loadLineups() {
+            try {
+                const response = await fetch('lineups.json');
+                lineupsData = await response.json();
+            } catch (error) {
+                console.error('Error loading lineups:', error);
+            }
+        }
+
+        // Render map grid on home page
+        function renderMapGrid() {
+            const grid = document.getElementById('map-grid');
+            const maps = [
+                { id: 'dust2', name: 'Dust 2' },
+                { id: 'mirage', name: 'Mirage' },
+                { id: 'inferno', name: 'Inferno' },
+                { id: 'nuke', name: 'Nuke' },
+                { id: 'ancient', name: 'Ancient' },
+                { id: 'anubis', name: 'Anubis' },
+                { id: 'vertigo', name: 'Vertigo' },
+                { id: 'overpass', name: 'Overpass' }
+            ];
+
+            maps.forEach(map => {
+                const card = document.createElement('div');
+                card.className = 'map-card';
+                card.onclick = () => openMap(map.id, map.name);
+                card.innerHTML = `
+                    <div class="map-image">
+                        <img src="public/images/maps/${map.id}.jpg" alt="${map.name}">
+                    </div>
+                    <h3 class="map-name">${map.name}</h3>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        // Open map view
+        function openMap(mapId, mapName) {
+            currentMap = mapId;
+            selectedStart = null;
+            selectedTarget = null;
+
+            document.getElementById('home-view').style.display = 'none';
+            document.getElementById('map-view').classList.add('active');
+            document.getElementById('back-btn').classList.add('visible');
+            document.getElementById('current-map-title').textContent = mapName;
+            document.getElementById('map-instructions').textContent = 'Wähle einen Startpunkt (grün) aus';
+            document.getElementById('map-instructions').classList.remove('highlight');
+            document.getElementById('lineup-results').classList.remove('visible');
+
+            renderMapCanvas(mapId);
+        }
+
+        // Render interactive map with points
+        function renderMapCanvas(mapId) {
+            const canvas = document.getElementById('map-canvas');
+            canvas.style.backgroundImage = `url('public/images/maps/${mapId}.jpg')`;
+            canvas.innerHTML = '';
+
+            const mapData = lineupsData.maps.find(m => m.id === mapId);
+            if (!mapData) return;
+
+            // Render start points
+            mapData.startPoints.forEach(point => {
+                const pointEl = createMapPoint(point, 'start');
+                pointEl.onclick = () => selectStartPoint(point);
+                canvas.appendChild(pointEl);
+            });
+
+            // Render target points (hidden initially)
+            mapData.targetPoints.forEach(point => {
+                const pointEl = createMapPoint(point, 'target');
+                pointEl.onclick = () => selectTargetPoint(point);
+                canvas.appendChild(pointEl);
+            });
+        }
+
+        // Create map point element
+        function createMapPoint(point, type) {
+            const pointEl = document.createElement('div');
+            pointEl.className = `map-point ${type}`;
+            pointEl.style.left = `${point.x}%`;
+            pointEl.style.top = `${point.y}%`;
+            pointEl.dataset.id = point.id;
+            pointEl.textContent = point.label;
+            return pointEl;
+        }
+
+        // Select start point
+        function selectStartPoint(point) {
+            selectedStart = point;
+            selectedTarget = null;
+
+            // Update UI
+            document.querySelectorAll('.map-point.start').forEach(el => {
+                el.classList.remove('selected');
+            });
+            document.querySelector(`.map-point.start[data-id="${point.id}"]`).classList.add('selected');
+
+            // Show target points
+            document.querySelectorAll('.map-point.target').forEach(el => {
+                el.classList.add('visible');
+            });
+
+            document.getElementById('map-instructions').textContent = 'Wähle jetzt einen Zielpunkt (orange) aus';
+            document.getElementById('map-instructions').classList.add('highlight');
+            document.getElementById('lineup-results').classList.remove('visible');
+        }
+
+        // Select target point
+        function selectTargetPoint(point) {
+            selectedTarget = point;
+
+            // Update UI
+            document.querySelectorAll('.map-point.target').forEach(el => {
+                el.classList.remove('selected');
+            });
+            document.querySelector(`.map-point.target[data-id="${point.id}"]`).classList.add('selected');
+
+            document.getElementById('map-instructions').textContent = 'Lineup wird angezeigt';
+            showLineupResults();
+        }
+
+        // Show lineup results
+        function showLineupResults() {
+            const mapData = lineupsData.maps.find(m => m.id === currentMap);
+            if (!mapData) return;
+
+            const lineup = mapData.lineups.find(l => 
+                l.from === selectedStart.id && l.to === selectedTarget.id
+            );
+
+            if (!lineup) {
+                alert('Kein Lineup für diese Kombination gefunden');
+                return;
+            }
+
+            document.getElementById('lineup-route').textContent = 
+                `Von ${selectedStart.name} nach ${selectedTarget.name}`;
+
+            const content = document.getElementById('lineup-content');
+            content.innerHTML = '';
+
+            lineup.media.forEach((item, index) => {
+                const itemEl = document.createElement('div');
+                itemEl.className = 'lineup-item';
+
+                let mediaHtml = '';
+                if (item.type === 'image') {
+                    mediaHtml = `<img src="${item.url}" alt="${item.description}">`;
+                } else if (item.type === 'video') {
+                    mediaHtml = `<video controls><source src="${item.url}" type="video/mp4"></video>`;
+                }
+
+                itemEl.innerHTML = `
+                    <div class="lineup-media">
+                        ${mediaHtml}
+                    </div>
+                    <div class="lineup-description">
+                        <h4>Schritt ${index + 1}</h4>
+                        <p>${item.description}</p>
+                    </div>
+                `;
+
+                content.appendChild(itemEl);
+            });
+
+            document.getElementById('lineup-results').classList.add('visible');
+        }
+
+        // Setup event listeners
+        function setupEventListeners() {
+            document.getElementById('back-btn').onclick = () => {
+                document.getElementById('home-view').style.display = 'block';
+                document.getElementById('map-view').classList.remove('active');
+                document.getElementById('back-btn').classList.remove('visible');
+                currentMap = null;
+                selectedStart = null;
+                selectedTarget = null;
+            };
+        }
+
+        // Start app
+        init();
+    </script>
+</body>
+</html>
