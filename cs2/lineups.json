@@ -1,152 +1,174 @@
 {
-  "dust2": {
-    "name": "Dust 2",
-    "startPoints": [
-      { "id": "t-spawn", "name": "T-Spawn", "x": 100, "y": 400 },
-      { "id": "long", "name": "Long", "x": 200, "y": 200 },
-      { "id": "short", "name": "Short", "x": 400, "y": 150 },
-      { "id": "mid", "name": "Mid", "x": 300, "y": 300 }
-    ],
-    "targetPoints": [
-      { "id": "a-site", "name": "A-Site", "x": 500, "y": 100 },
-      { "id": "b-site", "name": "B-Site", "x": 600, "y": 500 },
-      { "id": "ct-spawn", "name": "CT-Spawn", "x": 650, "y": 300 }
-    ],
-    "lineups": {
-      "t-spawn_a-site": {
-        "images": [
-          "https://via.placeholder.com/600x400/1a1a2e/4ade80?text=T-Spawn+zu+A-Site+Position",
-          "https://via.placeholder.com/600x400/1a1a2e/4ade80?text=Crosshair+Platzierung"
-        ],
-        "videos": [
-          "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
-        ]
-      },
-      "t-spawn_b-site": {
-        "images": [
-          "https://via.placeholder.com/600x400/1a1a2e/fb923c?text=T-Spawn+zu+B-Site",
-          "https://via.placeholder.com/600x400/1a1a2e/fb923c?text=Aim+Position"
-        ],
-        "videos": []
-      },
-      "long_a-site": {
-        "images": [
-          "https://via.placeholder.com/600x400/1a1a2e/4ade80?text=Long+zu+A-Site"
-        ],
-        "videos": [
-          "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4"
-        ]
-      }
+  "maps": [
+    {
+      "id": "dust2",
+      "name": "Dust 2",
+      "startPoints": [
+        { "id": "t-spawn", "name": "T-Spawn", "label": "T", "x": 15, "y": 80 },
+        { "id": "long", "name": "Long", "label": "L", "x": 30, "y": 40 },
+        { "id": "short", "name": "Short", "label": "S", "x": 60, "y": 30 },
+        { "id": "mid", "name": "Mid", "label": "M", "x": 45, "y": 60 }
+      ],
+      "targetPoints": [
+        { "id": "a-site", "name": "A-Site", "label": "A", "x": 75, "y": 20 },
+        { "id": "b-site", "name": "B-Site", "label": "B", "x": 85, "y": 75 },
+        { "id": "ct-spawn", "name": "CT-Spawn", "label": "CT", "x": 90, "y": 50 }
+      ],
+      "lineups": [
+        {
+          "from": "t-spawn",
+          "to": "a-site",
+          "media": [
+            {
+              "type": "image",
+              "url": "https://via.placeholder.com/600x400/1a1a2e/4ade80?text=T-Spawn+zu+A-Site+Position",
+              "description": "Stelle dich an diese Position am T-Spawn"
+            },
+            {
+              "type": "image",
+              "url": "https://via.placeholder.com/600x400/1a1a2e/4ade80?text=Crosshair+Platzierung",
+              "description": "Richte dein Fadenkreuz auf diese Markierung"
+            },
+            {
+              "type": "video",
+              "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+              "description": "Video: Komplette Smoke-Ausführung"
+            }
+          ]
+        },
+        {
+          "from": "t-spawn",
+          "to": "b-site",
+          "media": [
+            {
+              "type": "image",
+              "url": "https://via.placeholder.com/600x400/1a1a2e/fb923c?text=T-Spawn+zu+B-Site",
+              "description": "Position für B-Site Smoke vom T-Spawn"
+            }
+          ]
+        },
+        {
+          "from": "long",
+          "to": "a-site",
+          "media": [
+            {
+              "type": "image",
+              "url": "https://via.placeholder.com/600x400/1a1a2e/4ade80?text=Long+zu+A-Site",
+              "description": "Smoke von Long auf A-Site"
+            },
+            {
+              "type": "video",
+              "url": "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
+              "description": "Video Tutorial für diesen Lineup"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "mirage",
+      "name": "Mirage",
+      "startPoints": [
+        { "id": "t-spawn", "name": "T-Spawn", "label": "T", "x": 15, "y": 80 },
+        { "id": "palace", "name": "Palace", "label": "P", "x": 40, "y": 35 },
+        { "id": "apartments", "name": "Apartments", "label": "AP", "x": 25, "y": 50 }
+      ],
+      "targetPoints": [
+        { "id": "a-site", "name": "A-Site", "label": "A", "x": 75, "y": 40 },
+        { "id": "b-site", "name": "B-Site", "label": "B", "x": 80, "y": 75 },
+        { "id": "jungle", "name": "Jungle", "label": "J", "x": 60, "y": 60 }
+      ],
+      "lineups": [
+        {
+          "from": "palace",
+          "to": "a-site",
+          "media": [
+            {
+              "type": "image",
+              "url": "https://via.placeholder.com/600x400/1a1a2e/4ade80?text=Palace+zu+A-Site",
+              "description": "Standard Palace Smoke auf A-Site"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "inferno",
+      "name": "Inferno",
+      "startPoints": [
+        { "id": "t-spawn", "name": "T-Spawn", "label": "T", "x": 15, "y": 80 },
+        { "id": "banana", "name": "Banana", "label": "BN", "x": 30, "y": 85 }
+      ],
+      "targetPoints": [
+        { "id": "a-site", "name": "A-Site", "label": "A", "x": 75, "y": 40 },
+        { "id": "b-site", "name": "B-Site", "label": "B", "x": 80, "y": 90 }
+      ],
+      "lineups": []
+    },
+    {
+      "id": "nuke",
+      "name": "Nuke",
+      "startPoints": [
+        { "id": "t-spawn", "name": "T-Spawn", "label": "T", "x": 15, "y": 80 },
+        { "id": "outside", "name": "Outside", "label": "O", "x": 45, "y": 60 }
+      ],
+      "targetPoints": [
+        { "id": "a-site", "name": "A-Site", "label": "A", "x": 75, "y": 40 },
+        { "id": "b-site", "name": "B-Site", "label": "B", "x": 75, "y": 80 }
+      ],
+      "lineups": []
+    },
+    {
+      "id": "ancient",
+      "name": "Ancient",
+      "startPoints": [
+        { "id": "t-spawn", "name": "T-Spawn", "label": "T", "x": 15, "y": 80 },
+        { "id": "mid", "name": "Mid", "label": "M", "x": 45, "y": 60 }
+      ],
+      "targetPoints": [
+        { "id": "a-site", "name": "A-Site", "label": "A", "x": 75, "y": 40 },
+        { "id": "b-site", "name": "B-Site", "label": "B", "x": 80, "y": 75 }
+      ],
+      "lineups": []
+    },
+    {
+      "id": "anubis",
+      "name": "Anubis",
+      "startPoints": [
+        { "id": "t-spawn", "name": "T-Spawn", "label": "T", "x": 15, "y": 80 },
+        { "id": "mid", "name": "Mid", "label": "M", "x": 45, "y": 60 }
+      ],
+      "targetPoints": [
+        { "id": "a-site", "name": "A-Site", "label": "A", "x": 75, "y": 40 },
+        { "id": "b-site", "name": "B-Site", "label": "B", "x": 80, "y": 75 }
+      ],
+      "lineups": []
+    },
+    {
+      "id": "vertigo",
+      "name": "Vertigo",
+      "startPoints": [
+        { "id": "t-spawn", "name": "T-Spawn", "label": "T", "x": 15, "y": 80 },
+        { "id": "ramp", "name": "Ramp", "label": "R", "x": 45, "y": 70 }
+      ],
+      "targetPoints": [
+        { "id": "a-site", "name": "A-Site", "label": "A", "x": 75, "y": 40 },
+        { "id": "b-site", "name": "B-Site", "label": "B", "x": 75, "y": 85 }
+      ],
+      "lineups": []
+    },
+    {
+      "id": "overpass",
+      "name": "Overpass",
+      "startPoints": [
+        { "id": "t-spawn", "name": "T-Spawn", "label": "T", "x": 15, "y": 80 },
+        { "id": "connector", "name": "Connector", "label": "C", "x": 45, "y": 60 }
+      ],
+      "targetPoints": [
+        { "id": "a-site", "name": "A-Site", "label": "A", "x": 75, "y": 40 },
+        { "id": "b-site", "name": "B-Site", "label": "B", "x": 80, "y": 75 }
+      ],
+      "lineups": []
     }
-  },
-  "mirage": {
-    "name": "Mirage",
-    "startPoints": [
-      { "id": "t-spawn", "name": "T-Spawn", "x": 100, "y": 400 },
-      { "id": "palace", "name": "Palace", "x": 250, "y": 200 },
-      { "id": "apartments", "name": "Apartments", "x": 150, "y": 250 }
-    ],
-    "targetPoints": [
-      { "id": "a-site", "name": "A-Site", "x": 500, "y": 200 },
-      { "id": "b-site", "name": "B-Site", "x": 550, "y": 500 },
-      { "id": "jungle", "name": "Jungle", "x": 400, "y": 300 }
-    ],
-    "lineups": {
-      "t-spawn_a-site": {
-        "images": [
-          "https://via.placeholder.com/600x400/1a1a2e/4ade80?text=Mirage+T-Spawn+A"
-        ],
-        "videos": []
-      },
-      "palace_a-site": {
-        "images": [
-          "https://via.placeholder.com/600x400/1a1a2e/4ade80?text=Palace+zu+A-Site+1",
-          "https://via.placeholder.com/600x400/1a1a2e/4ade80?text=Palace+zu+A-Site+2"
-        ],
-        "videos": [
-          "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4"
-        ]
-      }
-    }
-  },
-  "inferno": {
-    "name": "Inferno",
-    "startPoints": [
-      { "id": "t-spawn", "name": "T-Spawn", "x": 100, "y": 400 },
-      { "id": "banana", "name": "Banana", "x": 200, "y": 500 },
-      { "id": "apartments", "name": "Apartments", "x": 250, "y": 250 }
-    ],
-    "targetPoints": [
-      { "id": "a-site", "name": "A-Site", "x": 500, "y": 200 },
-      { "id": "b-site", "name": "B-Site", "x": 550, "y": 550 }
-    ],
-    "lineups": {
-      "banana_b-site": {
-        "images": [
-          "https://via.placeholder.com/600x400/1a1a2e/fb923c?text=Banana+B-Site"
-        ],
-        "videos": []
-      }
-    }
-  },
-  "nuke": {
-    "name": "Nuke",
-    "startPoints": [
-      { "id": "t-spawn", "name": "T-Spawn", "x": 100, "y": 400 },
-      { "id": "outside", "name": "Outside", "x": 300, "y": 300 }
-    ],
-    "targetPoints": [
-      { "id": "a-site", "name": "A-Site", "x": 500, "y": 200 },
-      { "id": "b-site", "name": "B-Site", "x": 500, "y": 400 }
-    ],
-    "lineups": {}
-  },
-  "ancient": {
-    "name": "Ancient",
-    "startPoints": [
-      { "id": "t-spawn", "name": "T-Spawn", "x": 100, "y": 400 },
-      { "id": "mid", "name": "Mid", "x": 300, "y": 300 }
-    ],
-    "targetPoints": [
-      { "id": "a-site", "name": "A-Site", "x": 500, "y": 200 },
-      { "id": "b-site", "name": "B-Site", "x": 550, "y": 500 }
-    ],
-    "lineups": {}
-  },
-  "anubis": {
-    "name": "Anubis",
-    "startPoints": [
-      { "id": "t-spawn", "name": "T-Spawn", "x": 100, "y": 400 },
-      { "id": "mid", "name": "Mid", "x": 300, "y": 300 }
-    ],
-    "targetPoints": [
-      { "id": "a-site", "name": "A-Site", "x": 500, "y": 200 },
-      { "id": "b-site", "name": "B-Site", "x": 550, "y": 500 }
-    ],
-    "lineups": {}
-  },
-  "vertigo": {
-    "name": "Vertigo",
-    "startPoints": [
-      { "id": "t-spawn", "name": "T-Spawn", "x": 100, "y": 400 },
-      { "id": "ramp", "name": "Ramp", "x": 300, "y": 350 }
-    ],
-    "targetPoints": [
-      { "id": "a-site", "name": "A-Site", "x": 500, "y": 200 },
-      { "id": "b-site", "name": "B-Site", "x": 500, "y": 450 }
-    ],
-    "lineups": {}
-  },
-  "overpass": {
-    "name": "Overpass",
-    "startPoints": [
-      { "id": "t-spawn", "name": "T-Spawn", "x": 100, "y": 400 },
-      { "id": "connector", "name": "Connector", "x": 300, "y": 300 }
-    ],
-    "targetPoints": [
-      { "id": "a-site", "name": "A-Site", "x": 500, "y": 200 },
-      { "id": "b-site", "name": "B-Site", "x": 550, "y": 500 }
-    ],
-    "lineups": {}
-  }
+  ]
 }
