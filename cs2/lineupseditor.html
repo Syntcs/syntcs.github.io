@@ -583,7 +583,8 @@
             
             // Set up map preview
             const preview = document.getElementById('map-preview-canvas');
-            preview.style.backgroundImage = `url('public/images/maps/${map.id}.jpg')`;
+            const imgUrl = map.overlayImage || map.previewImage || `public/images/maps/${map.id}.jpg`;
+            preview.style.backgroundImage = `url(${imgUrl})`;
             
             // Add click handler
             preview.onclick = handleMapClick;
