@@ -30,17 +30,17 @@
           "media": [
             {
               "type": "image",
-              "url": "cs2/public/images/maps/mirage/1loc.jpg",
+              "url": "public/images/maps/mirage/1loc.jpg",
               "description": "Jump throw"
             },
             {
               "type": "image",
-              "url": "cs2/public/images/maps/mirage/1cros.jpg",
+              "url": "public/images/maps/mirage/1cros.jpg",
               "description": "Jump throw"
             },
             {
               "type": "image",
-              "url": "cs2/public/images/maps/mirage/1dis.jpg",
+              "url": "public/images/maps/mirage/1dis.jpg",
               "description": "Jump throw"
             }
           ]
