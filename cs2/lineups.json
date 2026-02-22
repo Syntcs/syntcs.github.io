@@ -1,141 +1,47 @@
 {
   "maps": [
     {
-      "id": "test",
-      "name": "test",
-      "previewImage": "https://placehold.co/600x400",
-      "overlayImage": "https://placehold.co/600x400",
+      "id": "mirage",
+      "name": "Mirage",
+      "previewImage": "public/images/maps/mirage_preview.jpg",
+      "overlayImage": "public/images/maps/mirage.png",
       "startPoints": [
         {
-          "id": "test1",
-          "name": "test1",
-          "label": "test1",
-          "x": 20.1,
-          "y": 41.5
+          "id": "near-t-spawn",
+          "name": "T-Spawn",
+          "label": "‎",
+          "x": 85.3,
+          "y": 20.5
         }
       ],
       "targetPoints": [
         {
-          "id": "test2",
-          "name": "test2",
-          "label": "test2",
-          "x": 72,
-          "y": 76.8
+          "id": "short",
+          "name": "Short",
+          "label": "‎",
+          "x": 48.1,
+          "y": 35.9
         }
       ],
       "lineups": [
         {
-          "from": "test1",
-          "to": "test2",
+          "from": "near-t-spawn",
+          "to": "short",
           "media": [
             {
               "type": "image",
-              "url": "https://placehold.co/500x500",
-              "description": "500x500"
+              "url": "cs2/public/images/maps/mirage/1loc.jpg",
+              "description": "Jump throw"
             },
             {
               "type": "image",
-              "url": "https://placehold.co/1000x1000",
-              "description": "https://placehold.co/1000x1000"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "mirage",
-      "name": "Mirage",
-      "previewImage": "https://images.gamebanana.com/img/ss/mods/6939cff026ad7.jpg",
-      "overlayImage": "https://static.wikia.nocookie.net/cswikia/images/1/10/De_mirage_radar.png/revision/latest?cb=20180928185436",
-      "startPoints": [
-        {
-          "id": "t-spawn",
-          "name": "t-spawn",
-          "label": "t-spawn",
-          "x": 25.3,
-          "y": 42.5
-        },
-        {
-          "id": "shortsmoke",
-          "name": ".",
-          "label": ".",
-          "x": 84.7,
-          "y": 20.8
-        }
-      ],
-      "targetPoints": [
-        {
-          "id": "win",
-          "name": "win",
-          "label": "win",
-          "x": 64.3,
-          "y": 46.5
-        },
-        {
-          "id": "shortjk",
-          "name": ".",
-          "label": ".",
-          "x": 47.6,
-          "y": 38.5
-        }
-      ],
-      "lineups": [
-        {
-          "from": "t-spawn",
-          "to": "win",
-          "media": [
+              "url": "cs2/public/images/maps/mirage/1cros.jpg",
+              "description": "Jump throw"
+            },
             {
               "type": "image",
-              "url": "https://placehold.co/400",
-              "description": "https://placehold.co/400"
-            }
-          ]
-        },
-        {
-          "from": "shortsmoke",
-          "to": "shortjk",
-          "media": [
-            {
-              "type": "image",
-              "url": "https://placehold.co/600x400",
-              "description": "jump throw"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "test2",
-      "name": "test2",
-      "previewImage": "public/images/maps/mirage.png",
-      "overlayImage": "public/images/maps/mirage_preview.jpg",
-      "startPoints": [
-        {
-          "id": "s",
-          "name": "s",
-          "label": "s",
-          "x": 31.4,
-          "y": 39.3
-        }
-      ],
-      "targetPoints": [
-        {
-          "id": "s",
-          "name": "s",
-          "label": "s",
-          "x": 88.1,
-          "y": 43
-        }
-      ],
-      "lineups": [
-        {
-          "from": "s",
-          "to": "s",
-          "media": [
-            {
-              "type": "image",
-              "url": "https://placehold.co/600x400",
-              "description": "s"
+              "url": "cs2/public/images/maps/mirage/1dis.jpg",
+              "description": "Jump throw"
             }
           ]
         }
