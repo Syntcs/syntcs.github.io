@@ -12,6 +12,13 @@
           "label": "‎",
           "x": 85.3,
           "y": 20.5
+        },
+        {
+          "id": "t-spawn",
+          "name": "T-Spawn",
+          "label": "‎",
+          "x": 91.2,
+          "y": 32.8
         }
       ],
       "targetPoints": [
@@ -21,6 +28,13 @@
           "label": "‎",
           "x": 48.1,
           "y": 35.9
+        },
+        {
+          "id": "con",
+          "name": "Connector",
+          "label": "‎",
+          "x": 50.2,
+          "y": 49.5
         }
       ],
       "lineups": [
@@ -41,6 +55,27 @@
             {
               "type": "image",
               "url": "public/images/maps/mirage/1dis.jpg",
+              "description": "Jump throw"
+            }
+          ]
+        },
+        {
+          "from": "t-spawn",
+          "to": "con",
+          "media": [
+            {
+              "type": "image",
+              "url": "public/images/maps/mirage/2loc.jpg",
+              "description": "Jump throw"
+            },
+            {
+              "type": "image",
+              "url": "public/images/maps/mirage/2cros.jpg",
+              "description": "Jump throw"
+            },
+            {
+              "type": "image",
+              "url": "public/images/maps/mirage/2dis.jpg",
               "description": "Jump throw"
             }
           ]
