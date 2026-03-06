@@ -179,7 +179,7 @@
 
         .map-header {
             text-align: center;
-            margin-bottom: 40px;
+            margin-bottom: 24px;
         }
 
         .map-title {
@@ -194,9 +194,66 @@
         }
 
         .map-instructions.highlight {
-            color: var(--accent-orange);
+            color: var(--accent-green);
             font-weight: 600;
         }
+
+        /* Category filter bar */
+        .category-bar {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 16px;
+        }
+
+        .category-btn {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 16px;
+            border-radius: 20px;
+            border: 1px solid rgba(255,255,255,0.12);
+            background: rgba(22, 27, 34, 0.85);
+            color: var(--text-secondary);
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            user-select: none;
+            letter-spacing: 0.3px;
+        }
+
+        .category-btn:hover {
+            border-color: rgba(255,255,255,0.28);
+            color: var(--text-primary);
+        }
+
+        .category-btn.active {
+            color: #0d1117;
+            border-color: transparent;
+        }
+
+        .category-btn.active.cat-smoke  { background: #58a6ff; color: #0d1117; }
+        .category-btn.active.cat-flash  { background: #f0e060; color: #0d1117; }
+        .category-btn.active.cat-molotov{ background: #f85149; color: #ffffff; }
+        .category-btn.active.cat-he     { background: #3fb950; color: #0d1117; }
+        .category-btn.active.cat-all    { background: #e6edf3; color: #0d1117; }
+
+        .cat-dot {
+            width: 9px;
+            height: 9px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .cat-smoke   .cat-dot { background: #58a6ff; }
+        .cat-flash   .cat-dot { background: #f0e060; }
+        .cat-molotov .cat-dot { background: #f85149; }
+        .cat-he      .cat-dot { background: #3fb950; }
+        .cat-all     .cat-dot { background: #e6edf3; }
+
+        .category-btn.active .cat-dot { background: rgba(0,0,0,0.35); }
 
         /* Interactive Map Container */
         .interactive-map-container {
@@ -243,23 +300,25 @@
             justify-content: center;
             font-size: 12px;
             font-weight: 700;
-            z-index: 2; /* above route line */
+            z-index: 2;
         }
 
-        .map-point.start {
-            background: var(--accent-green);
-            border-color: var(--accent-green);
-            box-shadow: 0 0 20px rgba(74, 222, 128, 0.6);
-        }
-
+        /* TARGET = orange, shown first (step 1) */
         .map-point.target {
             background: var(--accent-orange);
             border-color: var(--accent-orange);
-            box-shadow: 0 0 20px rgba(251, 146, 60, 0.6);
+            box-shadow: 0 0 20px rgba(247, 129, 102, 0.6);
+        }
+
+        /* START = green, hidden until target is selected (step 2) */
+        .map-point.start {
+            background: var(--accent-green);
+            border-color: var(--accent-green);
+            box-shadow: 0 0 20px rgba(63, 185, 80, 0.6);
             display: none;
         }
 
-        .map-point.target.visible {
+        .map-point.start.visible {
             display: flex;
         }
 
@@ -267,7 +326,6 @@
             transform: translate(-50%, -50%);
         }
 
-        /* Selected marker: static (no bounce) */
         .map-point.selected {
             width: 24px;
             height: 24px;
@@ -278,7 +336,7 @@
                 0 0 36px rgba(63,185,80,0.45);
         }
 
-        /* Route line between selected points */
+        /* Route line */
         .route-line {
             position: absolute;
             left: 0;
@@ -384,22 +442,10 @@
 
         /* Responsive */
         @media (max-width: 768px) {
-            .page-title {
-                font-size: 28px;
-            }
-
-            .map-grid {
-                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-                gap: 16px;
-            }
-
-            .map-title {
-                font-size: 24px;
-            }
-
-            .lineup-content {
-                grid-template-columns: 1fr;
-            }
+            .page-title { font-size: 28px; }
+            .map-grid { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px; }
+            .map-title { font-size: 24px; }
+            .lineup-content { grid-template-columns: 1fr; }
         }
     </style>
 </head>
@@ -427,7 +473,26 @@
         <main class="container">
             <div class="map-header">
                 <h2 class="map-title" id="current-map-title"></h2>
-                <p class="map-instructions" id="map-instructions">Select a start point (green)</p>
+                <p class="map-instructions" id="map-instructions">Select a target (orange)</p>
+            </div>
+
+            <!-- Category filter bar -->
+            <div class="category-bar" id="category-bar">
+                <button class="category-btn cat-all active" data-cat="all" onclick="toggleCategory('all')">
+                    <span class="cat-dot"></span> All
+                </button>
+                <button class="category-btn cat-smoke" data-cat="smoke" onclick="toggleCategory('smoke')">
+                    <span class="cat-dot"></span> Smoke
+                </button>
+                <button class="category-btn cat-flash" data-cat="flash" onclick="toggleCategory('flash')">
+                    <span class="cat-dot"></span> Flash
+                </button>
+                <button class="category-btn cat-molotov" data-cat="molotov" onclick="toggleCategory('molotov')">
+                    <span class="cat-dot"></span> Molotov
+                </button>
+                <button class="category-btn cat-he" data-cat="he" onclick="toggleCategory('he')">
+                    <span class="cat-dot"></span> HE Grenade
+                </button>
             </div>
 
             <div class="interactive-map-container">
@@ -457,42 +522,75 @@
         // Global state
         let lineupsData = null;
         let currentMap = null;
-        let selectedStart = null;
         let selectedTarget = null;
+        let selectedStart = null;
+        // activeCategories: set of enabled categories. Empty set = "all"
+        let activeCategories = new Set(); // empty = all shown
 
-        // Initialize app
+        // ── Category filter ──────────────────────────────────────────────────────
+        function toggleCategory(cat) {
+            if (cat === 'all') {
+                // Reset to all
+                activeCategories.clear();
+                document.querySelectorAll('.category-btn').forEach(btn => btn.classList.remove('active'));
+                document.querySelector('.category-btn.cat-all').classList.add('active');
+            } else {
+                // Deactivate "All" button
+                document.querySelector('.category-btn.cat-all').classList.remove('active');
+
+                const btn = document.querySelector(`.category-btn[data-cat="${cat}"]`);
+                if (activeCategories.has(cat)) {
+                    activeCategories.delete(cat);
+                    btn.classList.remove('active');
+                } else {
+                    activeCategories.add(cat);
+                    btn.classList.add('active');
+                }
+
+                // If nothing selected -> back to "All"
+                if (activeCategories.size === 0) {
+                    document.querySelector('.category-btn.cat-all').classList.add('active');
+                }
+            }
+
+            // Re-render map points for current state
+            if (currentMap) {
+                resetMapState();
+            }
+        }
+
+        function isLineupVisible(lineup) {
+            if (activeCategories.size === 0) return true;
+            return activeCategories.has(lineup.type || 'smoke');
+        }
+
+        // ── Init ─────────────────────────────────────────────────────────────────
         async function init() {
             await loadLineups();
             renderMapGrid();
             setupEventListeners();
         }
 
-        // Load lineups from JSON
         async function loadLineups() {
             try {
-                console.log('[v0] Loading lineups.json...');
                 const response = await fetch('lineups.json');
                 lineupsData = await response.json();
-                console.log('[v0] Lineups loaded:', lineupsData);
             } catch (error) {
                 console.error('[v0] Error loading lineups:', error);
             }
         }
 
-        // Render map grid on home page
+        // ── Home ─────────────────────────────────────────────────────────────────
         function renderMapGrid() {
             const grid = document.getElementById('map-grid');
             grid.innerHTML = '';
-
             if (!lineupsData || !lineupsData.maps) return;
 
             lineupsData.maps.forEach(map => {
                 const card = document.createElement('div');
                 card.className = 'map-card';
                 card.onclick = () => openMap(map.id, map.name);
-
                 const imageUrl = map.previewImage || `public/images/maps/${map.id}.jpg`;
-
                 card.innerHTML = `
                     <div class="map-image">
                         <img src="${imageUrl}" alt="${map.name}">
@@ -503,23 +601,38 @@
             });
         }
 
-        // Open map view
+        // ── Open map ─────────────────────────────────────────────────────────────
         function openMap(mapId, mapName) {
             currentMap = mapId;
-            selectedStart = null;
             selectedTarget = null;
+            selectedStart = null;
 
             document.getElementById('home-view').style.display = 'none';
             document.getElementById('map-view').classList.add('active');
             document.getElementById('back-btn').classList.add('visible');
             document.getElementById('current-map-title').textContent = mapName;
-            document.getElementById('map-instructions').textContent = 'Select a start point (green)';
-            document.getElementById('map-instructions').classList.remove('highlight');
+            setInstruction('Select a target (orange)', false);
             document.getElementById('lineup-results').classList.remove('visible');
 
             renderMapCanvas(mapId);
         }
 
+        function setInstruction(text, highlight) {
+            const el = document.getElementById('map-instructions');
+            el.textContent = text;
+            el.classList.toggle('highlight', highlight);
+        }
+
+        // ── Reset map to step 1 (target selection) ───────────────────────────────
+        function resetMapState() {
+            selectedTarget = null;
+            selectedStart = null;
+            setInstruction('Select a target (orange)', false);
+            document.getElementById('lineup-results').classList.remove('visible');
+            renderMapCanvas(currentMap);
+        }
+
+        // ── Route line ───────────────────────────────────────────────────────────
         function updateRouteLine() {
             const line = document.getElementById('route-line');
             if (!line) return;
@@ -529,149 +642,122 @@
                 return;
             }
 
-            const x1 = selectedStart.x, y1 = selectedStart.y;
-            const x2 = selectedTarget.x, y2 = selectedTarget.y;
-
-            const dx = x2 - x1;
-            const dy = y2 - y1;
-
+            const x1 = selectedTarget.x, y1 = selectedTarget.y;
+            const x2 = selectedStart.x,  y2 = selectedStart.y;
+            const dx = x2 - x1, dy = y2 - y1;
             const length = Math.sqrt(dx * dx + dy * dy);
             const angle = Math.atan2(dy, dx) * 180 / Math.PI;
 
-            line.style.left = x1 + '%';
-            line.style.top = y1 + '%';
+            line.style.left  = x1 + '%';
+            line.style.top   = y1 + '%';
             line.style.width = length + '%';
             line.style.transform = `rotate(${angle}deg)`;
             line.classList.remove('hidden');
         }
 
-        // Render interactive map with points
+        // ── Render canvas ─────────────────────────────────────────────────────────
         function renderMapCanvas(mapId) {
-            console.log('[v0] Rendering map canvas for:', mapId);
             const canvas = document.getElementById('map-canvas');
-
             const mapData = lineupsData.maps.find(m => m.id === mapId);
-            console.log('[v0] Map data found:', mapData);
-            if (!mapData) {
-                console.error('[v0] No map data found for:', mapId);
-                return;
-            }
+            if (!mapData) return;
 
             const overlayImage = mapData.overlayImage || `public/images/maps/${mapId}.jpg`;
             canvas.style.backgroundImage = `url('${overlayImage}')`;
             canvas.innerHTML = '';
 
-            // Add route line element (behind points)
+            // Route line
             canvas.insertAdjacentHTML('beforeend', '<div id="route-line" class="route-line hidden"></div>');
 
-            // Render start points
-            console.log('[v0] Rendering start points:', mapData.startPoints.length);
+            // Determine which targets have lineups for the active category filter
+            const visibleTargetIds = new Set(
+                mapData.lineups
+                    .filter(l => isLineupVisible(l))
+                    .map(l => l.to)
+            );
+
+            // STEP 1: Show target points (orange) that have lineups matching the current filter
+            mapData.targetPoints.forEach(point => {
+                if (!visibleTargetIds.has(point.id)) return;
+                const pointEl = createMapPoint(point, 'target');
+                pointEl.onclick = () => selectTargetPoint(point);
+                canvas.appendChild(pointEl);
+            });
+
+            // STEP 2: Start points (green) hidden initially
             mapData.startPoints.forEach(point => {
                 const pointEl = createMapPoint(point, 'start');
                 pointEl.onclick = () => selectStartPoint(point);
                 canvas.appendChild(pointEl);
             });
 
-            // Render target points (hidden initially)
-            console.log('[v0] Rendering target points:', mapData.targetPoints.length);
-            mapData.targetPoints.forEach(point => {
-                const pointEl = createMapPoint(point, 'target');
-                pointEl.onclick = () => selectTargetPoint(point);
-                canvas.appendChild(pointEl);
-            });
-
-            // Ensure line is hidden on fresh render
             updateRouteLine();
         }
 
-        // Create map point element
         function createMapPoint(point, type) {
             const pointEl = document.createElement('div');
             pointEl.className = `map-point ${type}`;
             pointEl.style.left = `${point.x}%`;
-            pointEl.style.top = `${point.y}%`;
+            pointEl.style.top  = `${point.y}%`;
             pointEl.dataset.id = point.id;
             pointEl.textContent = point.label;
             return pointEl;
         }
 
-        // Select start point
-        function selectStartPoint(point) {
-            console.log('[v0] Selected start point:', point);
-            selectedStart = point;
-            selectedTarget = null;
+        // ── Step 1: Select target (orange) ───────────────────────────────────────
+        function selectTargetPoint(point) {
+            selectedTarget = point;
+            selectedStart  = null;
 
-            // Update UI
-            document.querySelectorAll('.map-point.start').forEach(el => {
-                el.classList.remove('selected');
-            });
-            document.querySelector(`.map-point.start[data-id="${point.id}"]`).classList.add('selected');
+            // Highlight selected target
+            document.querySelectorAll('.map-point.target').forEach(el => el.classList.remove('selected'));
+            document.querySelector(`.map-point.target[data-id="${point.id}"]`).classList.add('selected');
 
-            // Also clear any previous target selection styling
-            document.querySelectorAll('.map-point.target').forEach(el => {
-                el.classList.remove('selected');
-            });
+            // Clear any previous start selection
+            document.querySelectorAll('.map-point.start').forEach(el => el.classList.remove('selected'));
 
-            // Show only target points that have lineups
+            // Show only start points that have a matching lineup (and match category filter)
             const mapData = lineupsData.maps.find(m => m.id === currentMap);
-            const availableTargets = mapData.lineups
-                .filter(l => l.from === point.id)
-                .map(l => l.to);
+            const availableStarts = mapData.lineups
+                .filter(l => l.to === point.id && isLineupVisible(l))
+                .map(l => l.from);
 
-            console.log('[v0] Available targets for', point.id, ':', availableTargets);
-
-            document.querySelectorAll('.map-point.target').forEach(el => {
-                const targetId = el.dataset.id;
-                if (availableTargets.includes(targetId)) {
+            document.querySelectorAll('.map-point.start').forEach(el => {
+                if (availableStarts.includes(el.dataset.id)) {
                     el.classList.add('visible');
                 } else {
                     el.classList.remove('visible');
                 }
             });
 
-            document.getElementById('map-instructions').textContent = 'Now select a target point (orange)';
-            document.getElementById('map-instructions').classList.add('highlight');
+            setInstruction('Now select your position (green)', true);
             document.getElementById('lineup-results').classList.remove('visible');
-
-            // Update line (will hide because target is null)
             updateRouteLine();
         }
 
-        // Select target point
-        function selectTargetPoint(point) {
-            selectedTarget = point;
+        // ── Step 2: Select start (green) ─────────────────────────────────────────
+        function selectStartPoint(point) {
+            selectedStart = point;
 
-            // Update UI
-            document.querySelectorAll('.map-point.target').forEach(el => {
-                el.classList.remove('selected');
-            });
-            document.querySelector(`.map-point.target[data-id="${point.id}"]`).classList.add('selected');
+            document.querySelectorAll('.map-point.start').forEach(el => el.classList.remove('selected'));
+            document.querySelector(`.map-point.start[data-id="${point.id}"]`).classList.add('selected');
 
-            document.getElementById('map-instructions').textContent = 'Lineup displayed';
-
+            setInstruction('Lineup displayed', false);
             updateRouteLine();
             showLineupResults();
         }
 
-        // Show lineup results
+        // ── Show lineup results ───────────────────────────────────────────────────
         function showLineupResults() {
-            console.log('[v0] Showing lineup results for:', selectedStart.id, '->', selectedTarget.id);
             const mapData = lineupsData.maps.find(m => m.id === currentMap);
-            if (!mapData) {
-                console.error('[v0] No map data found');
-                return;
-            }
+            if (!mapData) return;
 
             const lineup = mapData.lineups.find(l =>
                 l.from === selectedStart.id && l.to === selectedTarget.id
             );
 
-            console.log('[v0] Lineup found:', lineup);
-
             if (!lineup || !lineup.media || lineup.media.length === 0) {
-                console.warn('[v0] No lineup or media found for this combination');
                 document.getElementById('lineup-results').classList.remove('visible');
-                document.getElementById('map-instructions').textContent = 'No lineup available for this combination';
+                setInstruction('No lineup available for this combination', false);
                 return;
             }
 
@@ -693,34 +779,30 @@
                 }
 
                 itemEl.innerHTML = `
-                    <div class="lineup-media">
-                        ${mediaHtml}
-                    </div>
+                    <div class="lineup-media">${mediaHtml}</div>
                     <div class="lineup-description">
                         <h4>Step ${index + 1}</h4>
                         <p>${item.description}</p>
                     </div>
                 `;
-
                 content.appendChild(itemEl);
             });
 
             document.getElementById('lineup-results').classList.add('visible');
         }
 
-        // Setup event listeners
+        // ── Event listeners ───────────────────────────────────────────────────────
         function setupEventListeners() {
             document.getElementById('back-btn').onclick = () => {
                 document.getElementById('home-view').style.display = 'block';
                 document.getElementById('map-view').classList.remove('active');
                 document.getElementById('back-btn').classList.remove('visible');
-                currentMap = null;
-                selectedStart = null;
+                currentMap    = null;
                 selectedTarget = null;
+                selectedStart  = null;
             };
         }
 
-        // Start app
         init();
     </script>
 </body>
