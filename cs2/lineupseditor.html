@@ -427,12 +427,21 @@
             <p style="margin-bottom: 1rem; color: #8b949e;">Map: <strong id="lineup-map-name"></strong></p>
             
             <div class="form-group">
-                <label>From (Start Point)</label>
+                <label>To (Target Point) — Ziel zuerst wählen</label>
+                <select id="lineup-to"></select>
+            </div>
+            <div class="form-group">
+                <label>From (Start Point) — danach Standort wählen</label>
                 <select id="lineup-from"></select>
             </div>
             <div class="form-group">
-                <label>To (Target Point)</label>
-                <select id="lineup-to"></select>
+                <label>Grenade Type</label>
+                <select id="lineup-type">
+                    <option value="smoke">Smoke</option>
+                    <option value="flash">Flash</option>
+                    <option value="molotov">Molotov</option>
+                    <option value="he">HE Grenade</option>
+                </select>
             </div>
 
             <h3 style="margin: 1.5rem 0 1rem; color: #58a6ff;">Add Media</h3>
@@ -818,6 +827,7 @@
         function saveLineup() {
             const from = document.getElementById('lineup-from').value;
             const to = document.getElementById('lineup-to').value;
+            const type = document.getElementById('lineup-type').value;
 
             if (!from || !to) {
                 alert('Bitte Start- und Zielpunkt wählen');
@@ -835,6 +845,7 @@
             const lineup = {
                 from: from,
                 to: to,
+                type: type,
                 media: [...currentLineupMedia]
             };
 
@@ -862,9 +873,10 @@
             list.innerHTML = map.lineups.map((lineup, i) => {
                 const fromPoint = map.startPoints.find(p => p.id === lineup.from);
                 const toPoint = map.targetPoints.find(p => p.id === lineup.to);
+                const typeLabel = lineup.type ? `[${lineup.type}]` : '';
                 return `
                     <li class="lineup-item">
-                        <span>${fromPoint?.name || lineup.from} → ${toPoint?.name || lineup.to} (${lineup.media.length} Medien)</span>
+                        <span>${typeLabel} ${toPoint?.name || lineup.to} ← ${fromPoint?.name || lineup.from} (${lineup.media.length} Medien)</span>
                         <button class="btn-danger btn" style="padding: 0.5rem 1rem;" onclick="deleteLineup(${i})">Löschen</button>
                     </li>
                 `;
