@@ -1,38 +1,24 @@
 {
-  "title": "CS2 CONFIG",
-  "subtitle": "Click any copy button to copy commands to clipboard",
-  "sections": [
+  "title": "syntcs",
+  "subtitle": "CS2 Tools & Resources",
+  "cards": [
     {
-      "name": "Crosshair",
-      "commands": [
-        "CSGO-LUfiJ-pUELG-6GCpP-MpkNN-ERNMB",
-        "cl_crosshairsize 1.45;",
-        "cl_crosshairgap -2;",
-        "cl_crosshairgap_useweaponvalue false;",
-        "cl_crosshairthickness 0.5;",
-        "cl_crosshair_drawoutline true;",
-        "cl_crosshaircolor 5;",
-        "cl_crosshairstyle 4;",
-        "cl_crosshair_sniper_width 1;"
-      ]
+      "id": "lineups",
+      "title": "Lineups",
+      "description": "Smoke, Flash & Molotov lineups for every map",
+      "url": "lineups.html",
+      "badge": "",
+      "badgeColor": "green",
+      "enabled": true
     },
     {
-      "name": "Viewmodel",
-      "commands": [
-        "viewmodel_presetpos 0;",
-        "viewmodel_offset_x 2.5;",
-        "viewmodel_offset_y 0;",
-        "viewmodel_offset_z -1.5;",
-        "viewmodel_fov 68;",
-        "cl_prefer_lefthanded 0;"
-      ]
-    },
-    {
-      "name": "Mouse & Sensitivity",
-      "commands": [
-        "sensitivity 0.48;",
-        "zoom_sensitivity_ratio 1.0;"
-      ]
+      "id": "editor",
+      "title": "Lineup Editor",
+      "description": "Add and manage lineups, maps and media",
+      "url": "lineupseditor.html",
+      "badge": "EDITOR",
+      "badgeColor": "blue",
+      "enabled": true
     }
   ]
 }
