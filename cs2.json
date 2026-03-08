@@ -1,23 +1,23 @@
 {
   "title": "syntcs",
-  "subtitle": "CS2 Tools & Resources",
+  "subtitle": "CS2 Tools",
   "cards": [
     {
       "id": "lineups",
       "title": "Lineups",
       "description": "Smoke, Flash & Molotov lineups for every map",
-      "url": "lineups.html",
+      "url": "cs2/lineups",
       "badge": "",
       "badgeColor": "green",
       "enabled": true
     },
     {
-      "id": "editor",
-      "title": "Lineup Editor",
-      "description": "Add and manage lineups, maps and media",
-      "url": "lineupseditor.html",
-      "badge": "EDITOR",
-      "badgeColor": "blue",
+      "id": "syntcs-config-1772959341492",
+      "title": "Syntcs config",
+      "description": "Syntcs's CS2 configs",
+      "url": "cs2/cfg",
+      "badge": "",
+      "badgeColor": "green",
       "enabled": true
     }
   ]
