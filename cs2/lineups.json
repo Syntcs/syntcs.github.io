@@ -19,6 +19,20 @@
           "label": "‎",
           "x": 91.2,
           "y": 32.8
+        },
+        {
+          "id": "backalley",
+          "name": "Back Alley",
+          "label": "‎",
+          "x": 50.4,
+          "y": 22
+        },
+        {
+          "id": "tv",
+          "name": "TV",
+          "label": "‎",
+          "x": 72.8,
+          "y": 20.5
         }
       ],
       "targetPoints": [
@@ -35,6 +49,13 @@
           "label": "‎",
           "x": 50.2,
           "y": 49.5
+        },
+        {
+          "id": "edward",
+          "name": "Edward",
+          "label": "‎",
+          "x": 34.1,
+          "y": 24.3
         }
       ],
       "lineups": [
@@ -76,6 +97,65 @@
             {
               "type": "image",
               "url": "public/images/maps/mirage/2dis.jpg",
+              "description": "Jump throw"
+            }
+          ]
+        },
+        {
+          "from": "backalley",
+          "to": "edward",
+          "type": "smoke",
+          "media": [
+            {
+              "type": "image",
+              "url": "public/images/maps/mirage/3.1.jpg",
+              "description": "Left click throw"
+            },
+            {
+              "type": "image",
+              "url": "public/images/maps/mirage/3.2.jpg",
+              "description": "Left click throw"
+            },
+            {
+              "type": "image",
+              "url": "public/images/maps/mirage/3.3.jpg",
+              "description": "Left click throw"
+            },
+            {
+              "type": "image",
+              "url": "public/images/maps/mirage/3.4.jpg",
+              "description": "Left click throw"
+            },
+            {
+              "type": "image",
+              "url": "public/images/maps/mirage/3.5.jpg",
+              "description": "Left click throw"
+            }
+          ]
+        },
+        {
+          "from": "tv",
+          "to": "edward",
+          "type": "smoke",
+          "media": [
+            {
+              "type": "image",
+              "url": "public/images/maps/mirage/4.1.jpg",
+              "description": "Jump throw"
+            },
+            {
+              "type": "image",
+              "url": "public/images/maps/mirage/4.2.jpg",
+              "description": "Jump throw"
+            },
+            {
+              "type": "image",
+              "url": "public/images/maps/mirage/4.3.jpg",
+              "description": "Jump throw"
+            },
+            {
+              "type": "image",
+              "url": "public/images/maps/mirage/4.4.jpg",
               "description": "Jump throw"
             }
           ]
