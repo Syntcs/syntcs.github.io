@@ -33,6 +33,13 @@
           "label": "‎",
           "x": 72.8,
           "y": 20.5
+        },
+        {
+          "id": "backalleytrash",
+          "name": "Back Alley Trash",
+          "label": "‎",
+          "x": 59.8,
+          "y": 26
         }
       ],
       "targetPoints": [
@@ -56,6 +63,13 @@
           "label": "‎",
           "x": 34.1,
           "y": 24.3
+        },
+        {
+          "id": "arch",
+          "name": "Arch",
+          "label": "‎",
+          "x": 34.1,
+          "y": 29.6
         }
       ],
       "lineups": [
@@ -157,6 +171,60 @@
               "type": "image",
               "url": "public/images/maps/mirage/4.4.jpg",
               "description": "Jump throw"
+            }
+          ]
+        },
+        {
+          "from": "backalley",
+          "to": "arch",
+          "type": "smoke",
+          "media": [
+            {
+              "type": "image",
+              "url": "public/images/maps/mirage/5.1.jpg",
+              "description": "Crouch + Left click throw"
+            },
+            {
+              "type": "image",
+              "url": "public/images/maps/mirage/5.2.jpg",
+              "description": "Crouch + Left click throw"
+            },
+            {
+              "type": "image",
+              "url": "public/images/maps/mirage/5.3.jpg",
+              "description": "Crouch + Left click throw"
+            },
+            {
+              "type": "image",
+              "url": "public/images/maps/mirage/5.4.jpg",
+              "description": "Crouch + Left click throw"
+            }
+          ]
+        },
+        {
+          "from": "backalleytrash",
+          "to": "arch",
+          "type": "smoke",
+          "media": [
+            {
+              "type": "image",
+              "url": "public/images/maps/mirage/6.1.jpg",
+              "description": "Left click throw"
+            },
+            {
+              "type": "image",
+              "url": "public/images/maps/mirage/6.2.jpg",
+              "description": "Left click throw"
+            },
+            {
+              "type": "image",
+              "url": "public/images/maps/mirage/6.3.jpg",
+              "description": "Left click throw"
+            },
+            {
+              "type": "image",
+              "url": "public/images/maps/mirage/6.4.jpg",
+              "description": "Left click throw"
             }
           ]
         }
