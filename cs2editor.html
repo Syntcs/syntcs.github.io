@@ -426,7 +426,7 @@
 
     <!-- Save -->
     <div class="save-row">
-      <button class="save-all-btn" id="save-btn" onclick="saveData()">SAVE CHANGES</button>
+      <button class="save-all-btn" id="save-btn" onclick="saveData()">COPY JSON TO CLIPBOARD</button>
     </div>
 
     <footer>
@@ -488,7 +488,7 @@
 
     async function loadData() {
       try {
-        const res = await fetch('index-data.json?t=' + Date.now());
+        const res = await fetch('cs2.json?t=' + Date.now());
         data = await res.json();
       } catch (e) {
         // use defaults
@@ -608,19 +608,13 @@
       data.subtitle = document.getElementById('page-subtitle').value.trim();
 
       const json = JSON.stringify(data, null, 2);
-      const blob = new Blob([json], { type: 'application/json' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'index-data.json';
-      a.click();
-      URL.revokeObjectURL(url);
+      await navigator.clipboard.writeText(json);
 
       const btn = document.getElementById('save-btn');
-      btn.textContent = 'DOWNLOADED!';
+      btn.textContent = 'COPIED!';
       btn.classList.add('saved');
       setTimeout(() => {
-        btn.textContent = 'SAVE CHANGES';
+        btn.textContent = 'COPY JSON TO CLIPBOARD';
         btn.classList.remove('saved');
       }, 2500);
     }
